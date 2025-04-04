@@ -7,9 +7,12 @@
     "lint": "bunx @biomejs/biome check --write --unsafe ."
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.3",
     "next": "latest",
+    "postcss": "^8.5.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^4.1.3"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
