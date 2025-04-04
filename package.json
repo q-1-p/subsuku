@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "bunx @biomejs/biome check --write --unsafe ."
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "20.8.10",
+    "@types/react": "18.2.33",
+    "@types/react-dom": "18.2.14",
+    "typescript": "^5.2.2"
+  }
+}
