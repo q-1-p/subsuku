@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import Footer from "@/components/base/footer";
 
 export default function RootLayout({
   children,
@@ -6,8 +7,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja">
-      <body>{children}</body>
+    <html lang="ja" suppressHydrationWarning>
+      <head>
+        <title>さぶ空く</title>
+      </head>
+      <body className="flex min-h-screen flex-col">
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
