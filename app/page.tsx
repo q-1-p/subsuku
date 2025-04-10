@@ -6,20 +6,14 @@ import BellIcon from "@/components/common/bell-icon";
 import CancelIcon from "@/components/common/cancel-icon";
 import ClockIcon from "@/components/common/clock-icon";
 import FunctionCard from "@/components/common/function-card";
-import { LoginDialog } from "@/components/domain/login-dialog";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
     <>
       <Header>
-        <LoginDialog>
-          <Button variant="ghost" size="sm">
-            ログイン
-          </Button>
-        </LoginDialog>
-        <Link href="/register">
-          <Button size="sm">登録</Button>
+        <Link href="/app/dashboard">
+          <Button size="sm">ログイン</Button>
         </Link>
       </Header>
       <main className="flex-1">
@@ -36,12 +30,12 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <LoginDialog>
+                  <Link href="/app/dashboard">
                     <Button size="lg" className="gap-1">
                       無料で始める
                       <ArrowRight className="h-4 w-4" />
                     </Button>
-                  </LoginDialog>
+                  </Link>
                   <Link href="/features">
                     <Button size="lg" variant="outline">
                       機能を見る
