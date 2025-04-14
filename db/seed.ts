@@ -35,7 +35,7 @@ async function seed() {
         userId: userId,
         fee: "1490",
         currencyId: 1, // 1 = JPY
-        nextUpdate: new Date(2025, 4, 30), // 2025年5月30日
+        nextUpdate: new Date(2025, 4, 1).toISOString().split('T')[0], // 2025年5月1日
         intervalCycle: 1,
         intervalUnitId: 2, // 2 = 月
       },
@@ -46,7 +46,7 @@ async function seed() {
         userId: userId,
         fee: "600",
         currencyId: 1,
-        nextUpdate: new Date(2025, 5, 15), // 2025年6月15日
+        nextUpdate: new Date(2025, 3, 15).toISOString().split('T')[0], // 2025年4月15日
         intervalCycle: 1,
         intervalUnitId: 2,
       },
@@ -57,7 +57,7 @@ async function seed() {
         userId: userId,
         fee: "980",
         currencyId: 1,
-        nextUpdate: new Date(2025, 4, 20), // 2025年5月20日
+        nextUpdate: new Date(2025, 4, 20).toISOString().split('T')[0], // 2025年5月20日
         intervalCycle: 1,
         intervalUnitId: 2,
       },
@@ -68,7 +68,7 @@ async function seed() {
         userId: userId,
         fee: "1180",
         currencyId: 1,
-        nextUpdate: new Date(2025, 5, 5), // 2025年6月5日
+        nextUpdate: new Date(2025, 5, 5).toISOString().split('T')[0], // 2025年6月5日
         intervalCycle: 1,
         intervalUnitId: 2,
       },
@@ -79,7 +79,7 @@ async function seed() {
         userId: userId,
         fee: "400",
         currencyId: 1,
-        nextUpdate: new Date(2025, 4, 25), // 2025年5月25日
+        nextUpdate: new Date(2025, 4, 25).toISOString().split('T')[0], // 2025年5月25日
         intervalCycle: 1,
         intervalUnitId: 2,
       },

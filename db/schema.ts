@@ -1,10 +1,10 @@
 import {
   boolean,
+  date,
   decimal,
   index,
   integer,
   pgTable,
-  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -24,7 +24,7 @@ export const subscriptions = pgTable(
     userId: uuid("user_id").notNull(),
     fee: decimal("fee", { precision: 10, scale: 2 }).notNull(),
     currencyId: integer("currency_id").notNull(),
-    nextUpdate: timestamp("next_update").notNull(),
+    nextUpdate: date("next_update").notNull(),
     intervalCycle: integer("interval_cycle").notNull(),
     intervalUnitId: integer("interval_unit_id").notNull(),
   },
