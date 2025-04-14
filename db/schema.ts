@@ -1,14 +1,32 @@
-import { index, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  decimal,
+  index,
+  integer,
+  pgTable,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
-export const users = pgTable(
-  "users",
+export const users = pgTable("users", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  clerkId: varchar("clerk_id", { length: 32 }).notNull().unique(),
+});
+
+export const subscriptions = pgTable(
+  "subscriptions",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    email: varchar("email", { length: 255 }).notNull().unique(),
-    clerkId: varchar("clerk_id", { length: 32 }).notNull().unique(),
+    name: varchar("name", { length: 255 }).notNull(),
+    active: boolean("active").notNull().default(false),
+    userId: uuid("user_id").notNull(),
+    fee: decimal("fee", { precision: 10, scale: 2 }).notNull(),
+    currencyId: integer("currency_id").notNull(),
+    nextUpdate: timestamp("next_update").notNull(),
+    intervalCycle: integer("interval_cycle").notNull(),
+    intervalUnitId: integer("interval_unit_id").notNull(),
   },
-  (table) => [
-    index("idx_user_email").on(table.email),
-    index("idx_user_clerk_id").on(table.clerkId),
-  ],
+  (table) => [index("idx_subscription_id").on(table.id)],
 );
