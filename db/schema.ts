@@ -11,7 +11,7 @@ import {
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
+  mailAddress: varchar("mail_address", { length: 255 }).notNull().unique(),
   clerkId: varchar("clerk_id", { length: 32 }).notNull().unique(),
 });
 
@@ -22,7 +22,7 @@ export const subscriptions = pgTable(
     name: varchar("name", { length: 255 }).notNull(),
     active: boolean("active").notNull().default(false),
     userId: uuid("user_id").notNull(),
-    fee: decimal("fee", { precision: 10, scale: 2 }).notNull(),
+    price: decimal("price", { precision: 10, scale: 2 }).notNull(),
     currencyId: integer("currency_id").notNull(),
     nextUpdate: date("next_update").notNull(),
     intervalCycle: integer("interval_cycle").notNull(),

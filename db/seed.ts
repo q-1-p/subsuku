@@ -15,8 +15,8 @@ async function seed() {
         .insert(users)
         .values({
           id: uuidv4(),
-          email: "test@example.com",
-          clerkId: `user_${Math.random().toString(36).substring(2, 10)}`,
+          mailAddress: "test@example.com",
+          clerkId: "user_2vftzsgfsdmGACPA98396ejadso",
         })
         .returning();
 
@@ -33,9 +33,9 @@ async function seed() {
         name: "Netflix",
         active: true,
         userId: userId,
-        fee: "1490",
+        price: "1490",
         currencyId: 1, // 1 = JPY
-        nextUpdate: new Date(2025, 4, 1).toISOString().split('T')[0], // 2025年5月1日
+        nextUpdate: new Date(2025, 4, 1).toISOString().split("T")[0], // 2025年5月1日
         intervalCycle: 1,
         intervalUnitId: 2, // 2 = 月
       },
@@ -44,9 +44,9 @@ async function seed() {
         name: "Amazon Prime",
         active: true,
         userId: userId,
-        fee: "600",
+        price: "600",
         currencyId: 1,
-        nextUpdate: new Date(2025, 3, 15).toISOString().split('T')[0], // 2025年4月15日
+        nextUpdate: new Date(2025, 3, 15).toISOString().split("T")[0], // 2025年4月15日
         intervalCycle: 1,
         intervalUnitId: 2,
       },
@@ -55,9 +55,9 @@ async function seed() {
         name: "Spotify",
         active: true,
         userId: userId,
-        fee: "980",
+        price: "980",
         currencyId: 1,
-        nextUpdate: new Date(2025, 4, 20).toISOString().split('T')[0], // 2025年5月20日
+        nextUpdate: new Date(2025, 4, 20).toISOString().split("T")[0], // 2025年5月20日
         intervalCycle: 1,
         intervalUnitId: 2,
       },
@@ -66,9 +66,9 @@ async function seed() {
         name: "YouTube Premium",
         active: true,
         userId: userId,
-        fee: "1180",
+        price: "1180",
         currencyId: 1,
-        nextUpdate: new Date(2025, 5, 5).toISOString().split('T')[0], // 2025年6月5日
+        nextUpdate: new Date(2025, 5, 5).toISOString().split("T")[0], // 2025年6月5日
         intervalCycle: 1,
         intervalUnitId: 2,
       },
@@ -77,9 +77,9 @@ async function seed() {
         name: "iCloud+",
         active: true,
         userId: userId,
-        fee: "400",
+        price: "400",
         currencyId: 1,
-        nextUpdate: new Date(2025, 4, 25).toISOString().split('T')[0], // 2025年5月25日
+        nextUpdate: new Date(2025, 4, 25).toISOString().split("T")[0], // 2025年5月25日
         intervalCycle: 1,
         intervalUnitId: 2,
       },

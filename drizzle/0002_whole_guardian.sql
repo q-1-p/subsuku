@@ -1,0 +1,1 @@
+ALTER TABLE "subscriptions" RENAME COLUMN "fee" TO "price";
