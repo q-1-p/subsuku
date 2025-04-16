@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { intervalUnit } from "@/domain/interval";
 import type { ISubscription } from "@/domain/subscription/subscription";
 
 export function SubscriptionCard({
@@ -27,7 +28,8 @@ export function SubscriptionCard({
       <div className="ml-4 space-y-1">
         <p className="font-medium text-sm leading-none">{subscription.name}</p>
         <p className="text-muted-foreground text-sm">
-          年額 ¥{subscription.fee.toLocaleString()}
+          {subscription.intervalUnit === intervalUnit.yearly ? "年額" : "月額"}{" "}
+          ¥{subscription.fee.toLocaleString()}
         </p>
       </div>
       <div className="ml-auto flex items-center gap-2">

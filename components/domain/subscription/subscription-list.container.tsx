@@ -1,4 +1,5 @@
 import type { ISubscription } from "@/domain/subscription/subscription";
+import { currentUser } from "@clerk/nextjs/server";
 import SubscriptionListPresentation from "./subscription-list.presentation";
 
 export default async function SubscriptionList({
@@ -8,39 +9,23 @@ export default async function SubscriptionList({
   upcoming: boolean;
   isOverView: boolean;
 }) {
-  // ダミーデータを入れて
-  const subscriptions: ISubscription[] = [
+  const clerkUser = await currentUser();
+  const subscriptions: ISubscription[] = await fetch(
+    `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions?clerkUserid=${clerkUser?.id}&active=true&upcoming=${upcoming}`,
     {
-      id: "1",
-      name: "Netflix",
-      active: true,
-      fee: 1490,
-      currency: 1,
-      nextUpdate: new Date("2024-08-15"),
-      intervalCycle: 1,
-      intervalUnit: 1,
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      method: "GET",
     },
-    {
-      id: "2",
-      name: "Spotify",
-      active: true,
-      fee: 980,
-      currency: 1,
-      nextUpdate: new Date("2024-07-30"),
-      intervalCycle: 1,
-      intervalUnit: 1,
-    },
-    {
-      id: "3",
-      name: "Amazon Prime",
-      active: true,
-      fee: 4900,
-      currency: 1,
-      nextUpdate: new Date("2024-12-01"),
-      intervalCycle: 1,
-      intervalUnit: 1,
-    },
-  ];
+  )
+    .then((res) => res.json())
+    .then((data) => data as ISubscription[])
+    .catch((error) => {
+      console.error("Error fetching subscriptions:", error);
+      return [];
+    });
 
   return (
     <SubscriptionListPresentation
