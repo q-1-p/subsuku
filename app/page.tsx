@@ -1,21 +1,17 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-import Header from "@/components/base/header";
 import BellIcon from "@/components/common/bell-icon";
 import CancelIcon from "@/components/common/cancel-icon";
 import ClockIcon from "@/components/common/clock-icon";
 import FunctionCard from "@/components/common/function-card";
+import SitePublicHeader from "@/components/domain/site/site-public-header";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
     <>
-      <Header>
-        <Link href="/app/dashboard">
-          <Button size="sm">ログイン</Button>
-        </Link>
-      </Header>
+      <SitePublicHeader />
       <main className="flex-1">
         <section className="w-full bg-gradient-to-b from-secondary/50 to-background py-12 md:py-24 lg:py-32">
           <div className="w-full px-4 md:px-6">
