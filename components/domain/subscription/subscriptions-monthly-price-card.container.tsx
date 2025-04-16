@@ -1,3 +1,5 @@
+import "server-only";
+
 import { fetchMonthlyPrice } from "./_functions";
 import SubscriptionsMonthlyPriceCardPresentation from "./subscriptions-monthly-price-card.presentation";
 

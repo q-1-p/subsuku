@@ -1,3 +1,5 @@
+import "server-only";
+
 import { countSubscriptions } from "./_functions";
 import SubscriptionsCountCardPresentation from "./subscriptions-count-card.presentation";
 
