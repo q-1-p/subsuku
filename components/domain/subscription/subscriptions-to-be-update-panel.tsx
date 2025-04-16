@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import SubscriptionList from "./subscription-list.container";
 
-export default function SubscriptionsPanel({
+export default function SubscriptionsToBeUpdatePanel({
   isOverView,
   className,
 }: {
@@ -19,11 +19,11 @@ export default function SubscriptionsPanel({
       className={`overflow-hidden rounded-2xl border shadow-sm transition-shadow duration-200 hover:shadow ${className}`}
     >
       <CardHeader>
-        <CardTitle>サブスク一覧</CardTitle>
-        <CardDescription>アクティブなサブスクリプションの一覧</CardDescription>
+        <CardTitle>近日更新予定</CardTitle>
+        <CardDescription>7日以内に更新予定のサブスク</CardDescription>
       </CardHeader>
       <CardContent>
-        <SubscriptionList upcoming={false} isOverView={isOverView} />
+        <SubscriptionList upcoming={true} isOverView={isOverView} />
       </CardContent>
     </Card>
   );

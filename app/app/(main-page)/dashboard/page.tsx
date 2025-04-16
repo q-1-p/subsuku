@@ -5,6 +5,7 @@ import SubscriptionsCountCard from "@/components/domain/subscription/subscriptio
 import SubscriptionsMonthlyPriceCard from "@/components/domain/subscription/subscriptions-monthly-price-card.container";
 import SubscriptionsMonthlyTotalPriceCard from "@/components/domain/subscription/subscriptions-monthly-total-price-card.container";
 import SubscriptionsPanel from "@/components/domain/subscription/subscriptions-panel";
+import SubscriptionsToBeUpdatePanel from "@/components/domain/subscription/subscriptions-to-be-update-panel";
 import SubscriptionsYearlyPriceCard from "@/components/domain/subscription/subscriptions-yearly-price-card.container";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -61,23 +62,18 @@ export default function DashboardPage() {
           </TabsList>
           <TabsContent value="overview">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-              <SubscriptionsPanel
-                className="lg:col-span-4"
-                upcoming={false}
-                isOverView={true}
-              />
-              <SubscriptionsPanel
+              <SubscriptionsPanel className="lg:col-span-4" isOverView={true} />
+              <SubscriptionsToBeUpdatePanel
                 className="lg:col-span-3"
-                upcoming={true}
                 isOverView={true}
               />
             </div>
           </TabsContent>
           <TabsContent value="all">
-            <SubscriptionsPanel upcoming={false} isOverView={false} />
+            <SubscriptionsPanel isOverView={false} />
           </TabsContent>
           <TabsContent value="upcoming">
-            <SubscriptionsPanel upcoming={true} isOverView={false} />
+            <SubscriptionsToBeUpdatePanel isOverView={false} />
           </TabsContent>
         </Tabs>
       </div>
