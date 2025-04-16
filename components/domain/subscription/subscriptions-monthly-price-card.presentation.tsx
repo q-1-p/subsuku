@@ -1,17 +1,17 @@
 import { CreditCard } from "lucide-react";
 
-import { AggregationCard } from "../../base/aggregation-card";
+import AggregationCard from "../../base/aggregation-card";
 
-export const SubscriptionsMonthlyPriceCardPresentation = ({
+export default function SubscriptionsMonthlyPriceCardPresentation({
   fee,
-}: { fee: number }) => {
+}: { fee: number }) {
   return (
     <AggregationCard
       title="月額合計"
-      totalResult={fee.toLocaleString()}
+      totalResult={`¥${Math.round(fee).toLocaleString()}`}
       description="月額サブスクのみ"
     >
       <CreditCard className="h-4 w-4 text-muted-foreground" />
     </AggregationCard>
   );
-};
+}

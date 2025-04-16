@@ -1,5 +1,14 @@
-import { SubscriptionsMonthlyPriceCardPresentation } from "./subscriptions-monthly-price-card.presentation";
+import { currentUser } from "@clerk/nextjs/server";
 
-export const SubscriptionsMonthlyPriceCard = () => {
-  return <SubscriptionsMonthlyPriceCardPresentation fee={8740} />;
-};
+import { fetchMonthlyPrice } from "./_functions";
+import SubscriptionsMonthlyPriceCardPresentation from "./subscriptions-monthly-price-card.presentation";
+
+export default async function SubscriptionsMonthlyPriceCard() {
+  const clerkUser = await currentUser();
+  if (!clerkUser) {
+    return null;
+  }
+  const monthlyPrice: number = await fetchMonthlyPrice(clerkUser);
+
+  return <SubscriptionsMonthlyPriceCardPresentation fee={monthlyPrice} />;
+}

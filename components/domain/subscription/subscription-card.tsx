@@ -11,7 +11,7 @@ import {
 import { intervalUnit } from "@/domain/interval";
 import type { ISubscription } from "@/domain/subscription/subscription";
 
-export function SubscriptionCard({
+export default function SubscriptionCard({
   subscription,
 }: {
   subscription: ISubscription;

@@ -1,17 +1,17 @@
-import { CreditCard } from "lucide-react";
+import { ReceiptText } from "lucide-react";
 
-import { AggregationCard } from "../../base/aggregation-card";
+import AggregationCard from "../../base/aggregation-card";
 
-export const SubscriptionsCountCardPresentation = ({
+export default function SubscriptionsCountCardPresentation({
   count,
-}: { count: number }) => {
+}: { count: number }) {
   return (
     <AggregationCard
       title="サブスク数"
       totalResult={count}
       description="アクティブなサブスク"
     >
-      <CreditCard className="h-4 w-4 text-muted-foreground" />
+      <ReceiptText className="h-4 w-4 text-muted-foreground" />
     </AggregationCard>
   );
-};
+}

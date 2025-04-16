@@ -1,5 +1,5 @@
-import { addDays, format } from "date-fns";
-import { eq, gte, lt } from "drizzle-orm";
+import { addDays, addMonths, addYears, format } from "date-fns";
+import { eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptions } from "@/db/schema";
@@ -50,5 +50,76 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       });
 
     return subscriptionsResult;
+  };
+
+  public countSubscriptions = async (
+    userId: UserId,
+    active = true,
+  ): Promise<Result<number, string>> => {
+    const result = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(subscriptions)
+      .where(
+        eq(subscriptions.userId, userId.value) &&
+          eq(subscriptions.active, active),
+      )
+      .then((res) => {
+        return { type: ok as typeof ok, value: Number(res[0].count) };
+      })
+      .catch((error) => {
+        return { type: err as typeof err, error: error as string };
+      });
+
+    return result;
+  };
+
+  public fetchSubscriptionsMonthlyPrice = async (
+    userId: UserId,
+    active = true,
+  ): Promise<Result<number, string>> => {
+    const today = format(new Date(), "yyyy-MM-dd");
+    const nextMonthDate = format(addMonths(new Date(), 1), "yyyy-MM-dd");
+
+    return await db
+      .select({ price: subscriptions.price })
+      .from(subscriptions)
+      .where(
+        eq(subscriptions.userId, userId.value) &&
+          eq(subscriptions.active, active) &&
+          gte(subscriptions.nextUpdate, today) &&
+          lt(subscriptions.nextUpdate, nextMonthDate),
+      )
+      .then((x) => {
+        const prices = x.map((x) => Number(x.price));
+        return { type: ok as typeof ok, value: prices.reduce((a, b) => a + b) };
+      })
+      .catch((error) => {
+        return { type: err as typeof err, error: error as string };
+      });
+  };
+
+  public fetchSubscriptionsYearlyPrice = async (
+    userId: UserId,
+    active = true,
+  ): Promise<Result<number, string>> => {
+    const today = format(new Date(), "yyyy-MM-dd");
+    const nextYearDate = format(addYears(new Date(), 1), "yyyy-MM-dd");
+
+    return await db
+      .select({ price: subscriptions.price })
+      .from(subscriptions)
+      .where(
+        eq(subscriptions.userId, userId.value) &&
+          eq(subscriptions.active, active) &&
+          gte(subscriptions.nextUpdate, today) &&
+          lt(subscriptions.nextUpdate, nextYearDate),
+      )
+      .then((x) => {
+        const prices = x.map((x) => Number(x.price));
+        return { type: ok as typeof ok, value: prices.reduce((a, b) => a + b) };
+      })
+      .catch((error) => {
+        return { type: err as typeof err, error: error as string };
+      });
   };
 }

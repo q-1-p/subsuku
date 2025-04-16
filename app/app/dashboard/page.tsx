@@ -1,11 +1,11 @@
 import { List, Plus } from "lucide-react";
 import Link from "next/link";
 
-import { SubscriptionsCountCard } from "@/components/domain/subscription/subscriptions-count-card.container";
-import { SubscriptionsMonthlyPriceCard } from "@/components/domain/subscription/subscriptions-monthly-price-card.container";
-import { SubscriptionsMonthlyTotalPriceCard } from "@/components/domain/subscription/subscriptions-monthly-total-price-card.container";
-import { SubscriptionsPanel } from "@/components/domain/subscription/subscriptions-panel";
-import { SubscriptionsYearlyPriceCard } from "@/components/domain/subscription/subscriptions-yearly-price-card.container";
+import SubscriptionsCountCard from "@/components/domain/subscription/subscriptions-count-card.container";
+import SubscriptionsMonthlyPriceCard from "@/components/domain/subscription/subscriptions-monthly-price-card.container";
+import SubscriptionsMonthlyTotalPriceCard from "@/components/domain/subscription/subscriptions-monthly-total-price-card.container";
+import SubscriptionsPanel from "@/components/domain/subscription/subscriptions-panel";
+import SubscriptionsYearlyPriceCard from "@/components/domain/subscription/subscriptions-yearly-price-card.container";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 

@@ -8,4 +8,19 @@ export interface ISubscriptionRepository {
     active?: boolean,
     upcoming?: boolean,
   ) => Promise<Result<ISubscription[], string>>;
+
+  countSubscriptions: (
+    userId: UserId,
+    active?: boolean,
+  ) => Promise<Result<number, string>>;
+
+  fetchSubscriptionsMonthlyPrice: (
+    userId: UserId,
+    active?: boolean,
+  ) => Promise<Result<number, string>>;
+
+  fetchSubscriptionsYearlyPrice: (
+    userId: UserId,
+    active?: boolean,
+  ) => Promise<Result<number, string>>;
 }

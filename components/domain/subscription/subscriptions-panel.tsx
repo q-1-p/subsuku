@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import SubscriptionList from "./subscription-list.container";
 
-export function SubscriptionsPanel({
+export default function SubscriptionsPanel({
   upcoming,
   isOverView,
   className,
