@@ -1,12 +1,13 @@
+import { auth } from "@clerk/nextjs/server";
+
 import type { ISubscription } from "@/domain/subscription/subscription";
-import { currentUser } from "@clerk/nextjs/server";
 
 export const countSubscriptions = (): Promise<number> =>
-  currentUser()
-    .then((user) =>
-      user
+  auth()
+    .then((auth) =>
+      auth
         ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-count?clerkUserid=${user.id}`,
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-count?clerkUserid=${auth.userId}`,
             {
               cache: "no-store",
               headers: {
@@ -27,11 +28,11 @@ export const countSubscriptions = (): Promise<number> =>
     });
 
 export const fetchMonthlyPrice = (): Promise<number> =>
-  currentUser()
-    .then((user) =>
-      user
+  auth()
+    .then((auth) =>
+      auth
         ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-monthly-price?clerkUserid=${user.id}`,
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-monthly-price?clerkUserid=${auth.userId}`,
             {
               cache: "no-store",
               headers: {
@@ -57,11 +58,11 @@ export const fetchMonthlyPrice = (): Promise<number> =>
     });
 
 export const fetchYearlyPrice = (): Promise<number> =>
-  currentUser()
-    .then((user) =>
-      user
+  auth()
+    .then((auth) =>
+      auth
         ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-count?clerkUserid=${user.id}`,
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-count?clerkUserid=${auth.userId}`,
             {
               cache: "no-store",
               headers: {
@@ -84,11 +85,11 @@ export const fetchYearlyPrice = (): Promise<number> =>
 export const fetchSubscriptions = async (
   upcoming: boolean,
 ): Promise<ISubscription[]> =>
-  currentUser()
-    .then((user) =>
-      user
+  auth()
+    .then((auth) =>
+      auth
         ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions?clerkUserid=${user?.id}&active=true&upcoming=${upcoming}`,
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions?clerkUserid=${auth?.userId}&active=true&upcoming=${upcoming}`,
             {
               cache: "no-store",
               headers: {
