@@ -1,16 +1,29 @@
 "use server";
 
-import { createServerValidate } from "@tanstack/react-form/nextjs";
-
-import { subscriptionFormOptions } from "./subscription-form-options";
-
-const serverValidate = createServerValidate({
-  ...subscriptionFormOptions,
-  onServerValidate: () => {},
-});
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export async function registerSubscription(prev: unknown, formData: FormData) {
-  const result = await serverValidate(formData);
-  console.log("prev", prev);
-  console.log("Name", result);
+  const { userId } = await auth();
+  const result = await fetch(
+    `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscription`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: userId ?? "",
+      },
+      body: formData,
+    },
+  )
+    .then((res) => {
+      return res.ok;
+    })
+    .catch((error) => {
+      console.log(prev);
+      console.error(error);
+
+      return false;
+    });
+
+  redirect(result ? "/app/dashboard" : "/error");
 }

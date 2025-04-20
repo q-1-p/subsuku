@@ -1,6 +1,7 @@
 import type { Result } from "../../lib/result";
 import type { UserId } from "../user/user-id";
 import type { ISubscription } from "./subscription";
+import type { SubscriptionRegistered } from "./subscription-registered";
 
 export interface ISubscriptionRepository {
   fetchSubscriptions: (
@@ -23,4 +24,9 @@ export interface ISubscriptionRepository {
     userId: UserId,
     active?: boolean,
   ) => Promise<Result<number, string>>;
+
+  registerSubscription: (
+    userId: UserId,
+    subscriptionRegistered: SubscriptionRegistered,
+  ) => Promise<boolean>;
 }

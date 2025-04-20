@@ -4,6 +4,7 @@ import { eq, gte, lt, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { subscriptions } from "@/db/schema";
 import type { ISubscription } from "@/domain/subscription/subscription";
+import type { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
@@ -122,4 +123,22 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         return { type: err as typeof err, error: error as string };
       });
   };
+
+  public registerSubscription = async (
+    userId: UserId,
+    subscriptionRegistered: SubscriptionRegistered,
+  ) =>
+    db
+      .insert(subscriptions)
+      .values({
+        name: subscriptionRegistered.name.value,
+        userId: userId.value,
+        price: subscriptionRegistered.fee.price.toString(),
+        currencyId: subscriptionRegistered.fee.currency,
+        nextUpdate: format(subscriptionRegistered.nextUpdate, "yyyy-MM-dd"),
+        intervalCycle: subscriptionRegistered.interval.cycle,
+        intervalUnitId: subscriptionRegistered.interval.unit,
+      })
+      .then(() => true)
+      .catch(() => false);
 }
