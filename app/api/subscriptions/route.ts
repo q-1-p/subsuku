@@ -12,7 +12,7 @@ const subscriptionRepository: ISubscriptionRepository =
 
 export async function GET(req: NextRequest) {
   const userResult = await userRepository.fetchUser(
-    req.nextUrl.searchParams.get("clerkUserid") as string,
+    req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
     return NextResponse.json({ message: "認証エラー" }, { status: 401 });

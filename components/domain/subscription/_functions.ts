@@ -6,16 +6,14 @@ export const countSubscriptions = (): Promise<number> =>
   auth()
     .then((auth) =>
       auth
-        ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-count?clerkUserid=${auth.userId}`,
-            {
-              cache: "no-store",
-              headers: {
-                "Content-Type": "application/json; charset=utf-8",
-              },
-              method: "GET",
+        ? fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-count`, {
+            cache: "no-store",
+            headers: {
+              Authorization: auth.userId ?? "",
+              "Content-Type": "application/json; charset=utf-8",
             },
-          ).then((res) => {
+            method: "GET",
+          }).then((res) => {
             if (!res.ok) {
               return 0;
             }
@@ -32,10 +30,11 @@ export const fetchMonthlyPrice = (): Promise<number> =>
     .then((auth) =>
       auth
         ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-monthly-price?clerkUserid=${auth.userId}`,
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-monthly-price`,
             {
               cache: "no-store",
               headers: {
+                Authorization: auth.userId ?? "",
                 "Content-Type": "application/json; charset=utf-8",
               },
               method: "GET",
@@ -61,16 +60,14 @@ export const fetchYearlyPrice = (): Promise<number> =>
   auth()
     .then((auth) =>
       auth
-        ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-count?clerkUserid=${auth.userId}`,
-            {
-              cache: "no-store",
-              headers: {
-                "Content-Type": "application/json; charset=utf-8",
-              },
-              method: "GET",
+        ? fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-count`, {
+            cache: "no-store",
+            headers: {
+              Authorization: auth.userId ?? "",
+              "Content-Type": "application/json; charset=utf-8",
             },
-          ).then((res) => {
+            method: "GET",
+          }).then((res) => {
             if (!res.ok) {
               return 0;
             }
@@ -89,10 +86,11 @@ export const fetchSubscriptions = async (
     .then((auth) =>
       auth
         ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions?clerkUserid=${auth?.userId}&active=true&upcoming=${upcoming}`,
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions?active=true&upcoming=${upcoming}`,
             {
               cache: "no-store",
               headers: {
+                Authorization: auth.userId ?? "",
                 "Content-Type": "application/json; charset=utf-8",
               },
               method: "GET",
