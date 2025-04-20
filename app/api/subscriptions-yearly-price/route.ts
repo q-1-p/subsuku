@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
-    return NextResponse.json({ message: "認証エラー" }, { status: 401 });
+    return NextResponse.json({ status: 401 });
   }
 
   const yearlyPriceResult =
@@ -25,9 +25,6 @@ export async function GET(req: NextRequest) {
     case ok:
       return NextResponse.json(yearlyPriceResult.value, { status: 200 });
     case err:
-      return NextResponse.json(
-        { message: "サブスクリプションの取得に失敗しました" },
-        { status: 416 },
-      );
+      return NextResponse.json({ status: 400 });
   }
 }

@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
-    return NextResponse.json({ message: "認証エラー" }, { status: 401 });
+    return NextResponse.json({ status: 401 });
   }
 
   const formData = await req.formData();
@@ -32,10 +32,7 @@ export async function POST(req: NextRequest) {
   );
   if (subscriptionRegistered.type === err) {
     console.log(subscriptionRegistered.error);
-    return NextResponse.json(
-      { message: "登録しようとした値が不正です" },
-      { status: 400 },
-    );
+    return NextResponse.json({ status: 400 });
   }
 
   const isRegistered = await subscriptionRepository.registerSubscription(
