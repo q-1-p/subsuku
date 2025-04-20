@@ -9,24 +9,24 @@ import { type Result, err, ok } from "@/lib/result";
 export class UserRepository implements IUserRepository {
   public fetchUser = async (
     clerkUserId: string,
-  ): Promise<Result<User, string>> =>
+  ): Promise<Result<User, undefined>> =>
     await db.query.users
       .findFirst({
         where: (user) => eq(user.clerkId, clerkUserId),
       })
       .then((user) => {
         if (!user) {
-          return { type: err as typeof err, error: "User not found" };
+          throw new Error("User not found");
         }
 
         const userIdResult = UserId.factory(user.id);
         if (userIdResult.type === err) {
-          return { type: err as typeof err, error: "" };
+          throw new Error("Invalid user ID");
         }
 
         const userResult = User.factory(userIdResult.value, user.mailAddress);
         if (userResult.type === err) {
-          return { type: err as typeof err, error: "" };
+          throw new Error("Invalid user");
         }
 
         return {
@@ -34,5 +34,5 @@ export class UserRepository implements IUserRepository {
           value: userResult.value,
         };
       })
-      .catch((error) => ({ type: err as typeof err, error: String(error) }));
+      .catch(() => ({ type: err as typeof err, error: undefined }));
 }

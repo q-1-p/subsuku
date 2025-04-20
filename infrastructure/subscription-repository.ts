@@ -14,7 +14,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     userId: UserId,
     active = true,
     upcoming = false,
-  ): Promise<Result<ISubscription[], string>> => {
+  ): Promise<Result<ISubscription[], undefined>> => {
     const today = format(new Date(), "yyyy-MM-dd");
     const upcomingDate = format(addDays(new Date(), 7), "yyyy-MM-dd");
 
@@ -46,8 +46,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         );
         return { type: ok as typeof ok, value: subscriptions };
       })
-      .catch((error) => {
-        return { type: err as typeof err, error: error as string };
+      .catch(() => {
+        return { type: err as typeof err, error: undefined };
       });
 
     return subscriptionsResult;
@@ -56,7 +56,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
   public countSubscriptions = async (
     userId: UserId,
     active = true,
-  ): Promise<Result<number, string>> => {
+  ): Promise<Result<number, undefined>> => {
     const result = await db
       .select({ count: sql<number>`count(*)` })
       .from(subscriptions)
@@ -67,8 +67,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .then((res) => {
         return { type: ok as typeof ok, value: Number(res[0].count) };
       })
-      .catch((error) => {
-        return { type: err as typeof err, error: error as string };
+      .catch(() => {
+        return { type: err as typeof err, error: undefined };
       });
 
     return result;
@@ -77,7 +77,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
   public fetchSubscriptionsMonthlyPrice = async (
     userId: UserId,
     active = true,
-  ): Promise<Result<number, string>> => {
+  ): Promise<Result<number, undefined>> => {
     const today = format(new Date(), "yyyy-MM-dd");
     const nextMonthDate = format(addMonths(new Date(), 1), "yyyy-MM-dd");
 
@@ -94,15 +94,15 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         const prices = x.map((x) => Number(x.price));
         return { type: ok as typeof ok, value: prices.reduce((a, b) => a + b) };
       })
-      .catch((error) => {
-        return { type: err as typeof err, error: error as string };
+      .catch(() => {
+        return { type: err as typeof err, error: undefined };
       });
   };
 
   public fetchSubscriptionsYearlyPrice = async (
     userId: UserId,
     active = true,
-  ): Promise<Result<number, string>> => {
+  ): Promise<Result<number, undefined>> => {
     const today = format(new Date(), "yyyy-MM-dd");
     const nextYearDate = format(addYears(new Date(), 1), "yyyy-MM-dd");
 
@@ -119,8 +119,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         const prices = x.map((x) => Number(x.price));
         return { type: ok as typeof ok, value: prices.reduce((a, b) => a + b) };
       })
-      .catch((error) => {
-        return { type: err as typeof err, error: error as string };
+      .catch(() => {
+        return { type: err as typeof err, error: undefined };
       });
   };
 

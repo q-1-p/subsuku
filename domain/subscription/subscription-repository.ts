@@ -8,22 +8,22 @@ export interface ISubscriptionRepository {
     userId: UserId,
     active?: boolean,
     upcoming?: boolean,
-  ) => Promise<Result<ISubscription[], string>>;
+  ) => Promise<Result<ISubscription[], undefined>>;
 
   countSubscriptions: (
     userId: UserId,
     active?: boolean,
-  ) => Promise<Result<number, string>>;
+  ) => Promise<Result<number, undefined>>;
 
   fetchSubscriptionsMonthlyPrice: (
     userId: UserId,
     active?: boolean,
-  ) => Promise<Result<number, string>>;
+  ) => Promise<Result<number, undefined>>;
 
   fetchSubscriptionsYearlyPrice: (
     userId: UserId,
     active?: boolean,
-  ) => Promise<Result<number, string>>;
+  ) => Promise<Result<number, undefined>>;
 
   registerSubscription: (
     userId: UserId,
