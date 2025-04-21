@@ -10,7 +10,6 @@ export const countSubscriptions = (): Promise<number> =>
             cache: "no-store",
             headers: {
               Authorization: auth.userId ?? "",
-              "Content-Type": "application/json; charset=utf-8",
             },
             method: "GET",
           }).then((res) => {
@@ -35,7 +34,6 @@ export const fetchMonthlyPrice = (): Promise<number> =>
               cache: "no-store",
               headers: {
                 Authorization: auth.userId ?? "",
-                "Content-Type": "application/json; charset=utf-8",
               },
               method: "GET",
             },
@@ -64,7 +62,6 @@ export const fetchYearlyPrice = (): Promise<number> =>
             cache: "no-store",
             headers: {
               Authorization: auth.userId ?? "",
-              "Content-Type": "application/json; charset=utf-8",
             },
             method: "GET",
           }).then((res) => {
@@ -91,7 +88,6 @@ export const fetchSubscriptions = async (
               cache: "no-store",
               headers: {
                 Authorization: auth.userId ?? "",
-                "Content-Type": "application/json; charset=utf-8",
               },
               method: "GET",
             },
