@@ -11,11 +11,12 @@ export default async function SubscriptionList({
   upcoming: boolean;
   isOverView: boolean;
 }) {
-  const subscriptions: ISubscription[] = await fetchSubscriptions(upcoming);
+  const subscriptions: ISubscription[] = await fetchSubscriptions(false);
 
   return (
     <SubscriptionListPresentation
       subscriptions={upcoming ? subscriptions : subscriptions}
+      upcoming={upcoming}
       isOverView={isOverView}
     />
   );
