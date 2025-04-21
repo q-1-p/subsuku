@@ -1,4 +1,4 @@
-import type { Currency } from "@/domain/currency";
+import type { Currency } from "@/domain/currency/currency";
 import { type Result, ok } from "@/lib/result";
 
 export class Fee {

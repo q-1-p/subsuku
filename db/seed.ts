@@ -2,7 +2,7 @@ import "dotenv/config";
 import { addDays, formatDate } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 
-import { currency } from "@/domain/currency";
+import { currency } from "@/domain/currency/currency";
 import { intervalUnit } from "@/domain/interval";
 import { db } from "./index";
 import { currencies, subscriptions, users } from "./schema";

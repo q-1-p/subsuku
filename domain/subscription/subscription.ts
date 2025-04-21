@@ -1,4 +1,4 @@
-import type { Currency } from "@/domain/currency";
+import type { Currency } from "@/domain/currency/currency";
 import type { IntervalUnit } from "@/domain/interval";
 
 export interface ISubscription {

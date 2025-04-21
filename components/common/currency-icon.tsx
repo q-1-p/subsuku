@@ -7,7 +7,7 @@ import {
   PoundSterling,
 } from "lucide-react";
 
-import { currency } from "@/domain/currency";
+import { currency } from "@/domain/currency/currency";
 
 export default function CurrencyIcon({
   className,

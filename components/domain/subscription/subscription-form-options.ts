@@ -1,4 +1,4 @@
-import { currency } from "@/domain/currency";
+import { currency } from "@/domain/currency/currency";
 import { intervalUnit } from "@/domain/interval";
 import { formOptions } from "@tanstack/react-form";
 

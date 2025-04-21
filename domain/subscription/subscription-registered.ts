@@ -1,4 +1,4 @@
-import type { Currency } from "@/domain/currency";
+import type { Currency } from "@/domain/currency/currency";
 import { Fee } from "@/domain/fee";
 import { Interval, type IntervalUnit } from "@/domain/interval";
 import { type Result, err, ok } from "@/lib/result";

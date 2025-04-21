@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import type { Currency } from "@/domain/currency";
+import type { Currency } from "@/domain/currency/currency";
 import type { IntervalUnit } from "@/domain/interval";
 import { SubscriptionId } from "@/domain/subscription/subscription-id";
 import { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";

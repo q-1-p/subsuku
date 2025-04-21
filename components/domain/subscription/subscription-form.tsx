@@ -32,7 +32,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { type Currency, currency, currencyNames } from "@/domain/currency";
+import {
+  type Currency,
+  currency,
+  currencyNames,
+} from "@/domain/currency/currency";
 import { intervalUnit, intervalUnitNames } from "@/domain/interval";
 import { registerSubscription } from "./_server-actions";
 import { subscriptionFormOptions } from "./subscription-form-options";
