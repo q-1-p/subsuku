@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { currency } from "@/domain/currency";
 import { intervalUnit } from "@/domain/interval";
 import { db } from "./index";
-import { subscriptions, users } from "./schema";
+import { currencies, subscriptions, users } from "./schema";
 
 async function seed() {
   try {
@@ -30,8 +30,8 @@ async function seed() {
       userId = existingUsers[0].id;
     }
 
-    // サブスクリプションのダミーデータ
-    const subscriptionData = [
+    // サブスクリプションデータの挿入
+    await db.insert(subscriptions).values([
       {
         id: uuidv4(),
         name: "Netflix",
@@ -98,10 +98,35 @@ async function seed() {
         intervalCycle: 1,
         intervalUnitId: intervalUnit.yearly,
       },
-    ];
+    ]);
 
-    // サブスクリプションデータの挿入
-    await db.insert(subscriptions).values(subscriptionData);
+    // 為替レートの挿入
+    await db.insert(currencies).values([
+      {
+        id: currency.jpy,
+        exchangeRate: 1,
+      },
+      {
+        id: currency.usd,
+        exchangeRate: 140.89,
+      },
+      {
+        id: currency.eur,
+        exchangeRate: 162.22,
+      },
+      {
+        id: currency.gbp,
+        exchangeRate: 188.44,
+      },
+      {
+        id: currency.cny,
+        exchangeRate: 19.3175,
+      },
+      {
+        id: currency.btc,
+        exchangeRate: 12301589,
+      },
+    ]);
 
     console.log("シードデータが正常に挿入されました");
     return { success: true, message: "シードデータが正常に挿入されました" };

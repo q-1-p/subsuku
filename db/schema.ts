@@ -1,10 +1,11 @@
 import {
   boolean,
   date,
-  decimal,
   index,
-  integer,
+  numeric,
   pgTable,
+  real,
+  smallint,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -22,11 +23,16 @@ export const subscriptions = pgTable(
     name: varchar("name", { length: 255 }).notNull(),
     active: boolean("active").notNull().default(false),
     userId: uuid("user_id").notNull(),
-    price: decimal("price", { precision: 10, scale: 2 }).notNull(),
-    currencyId: integer("currency_id").notNull(),
+    price: numeric("price", { precision: 10, scale: 2 }).notNull(),
+    currencyId: smallint("currency_id").notNull(),
     nextUpdate: date("next_update").notNull(),
-    intervalCycle: integer("interval_cycle").notNull(),
-    intervalUnitId: integer("interval_unit_id").notNull(),
+    intervalCycle: smallint("interval_cycle").notNull(),
+    intervalUnitId: smallint("interval_unit_id").notNull(),
   },
   (table) => [index("idx_subscription_id").on(table.id)],
 );
+
+export const currencies = pgTable("currencies", {
+  id: smallint("id").primaryKey(),
+  exchangeRate: real("exchange_rate").notNull(),
+});

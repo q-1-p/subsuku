@@ -147,13 +147,11 @@ export default function SubscriptionForm() {
                           <>
                             <Select
                               name="currency"
-                              defaultValue="0"
-                              onValueChange={(e) =>
-                                field.handleChange(Number(e))
-                              }
+                              defaultValue={`${currency.jpy}`}
+                              onValueChange={(e) => field.handleChange(+e)}
                             >
                               <SelectTrigger className="flex-2">
-                                <SelectValue defaultValue={"0"} />
+                                <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
                                 {Object.entries(currency).map(
@@ -205,8 +203,8 @@ export default function SubscriptionForm() {
                   {(field) => (
                     <Select
                       name="intervalUnit"
-                      defaultValue="0"
-                      onValueChange={(e) => field.handleChange(Number(e))}
+                      defaultValue={`${intervalUnit.monthly}`}
+                      onValueChange={(e) => field.handleChange(+e)}
                     >
                       <SelectTrigger className="flex-1">
                         <SelectValue />
