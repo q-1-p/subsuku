@@ -1,9 +1,10 @@
 import { addDays, addMonths, addYears, format } from "date-fns";
-import { eq, gte, lt, sql } from "drizzle-orm";
+import { and, eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptions } from "@/db/schema";
 import type { ISubscription } from "@/domain/subscription/subscription";
+import type { SubscriptionId } from "@/domain/subscription/subscription-id";
 import type { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 import type { UserId } from "@/domain/user/user-id";
@@ -139,6 +140,21 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         intervalCycle: subscriptionRegistered.interval.cycle,
         intervalUnitId: subscriptionRegistered.interval.unit,
       })
+      .then(() => true)
+      .catch(() => false);
+
+  public deleteSubscription = async (
+    userId: UserId,
+    subscriptionId: SubscriptionId,
+  ): Promise<boolean> =>
+    db
+      .delete(subscriptions)
+      .where(
+        and(
+          eq(subscriptions.userId, userId.value),
+          eq(subscriptions.id, subscriptionId.value),
+        ),
+      )
       .then(() => true)
       .catch(() => false);
 }

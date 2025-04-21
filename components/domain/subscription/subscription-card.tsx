@@ -1,3 +1,6 @@
+"use client";
+
+import { useAtom } from "jotai";
 import { Bell, Settings, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -10,14 +13,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { intervalUnit } from "@/domain/interval";
 import type { ISubscription } from "@/domain/subscription/subscription";
+import { subscriptionsAtom } from "./_jotai";
+import { deleteSubscription } from "./_server-actions";
 
 export default function SubscriptionCard({
   subscription,
-}: {
-  subscription: ISubscription;
-}) {
+}: { subscription: ISubscription }) {
+  const [subscriptions, setSubscriptions] = useAtom(subscriptionsAtom);
+
+  const handleDelete = async () => {
+    const formData = new FormData();
+    formData.append("subscriptionId", subscription.id);
+
+    if (await deleteSubscription(formData)) {
+      setSubscriptions(subscriptions.filter((s) => s.id !== subscription.id));
+    }
+  };
+
   return (
-    <div key={subscription.id} className="flex items-center">
+    <form className="flex items-center">
       <div
         className={
           "flex h-9 w-9 items-center justify-center rounded-full bg-green-600 text-white"
@@ -52,13 +66,16 @@ export default function SubscriptionCard({
               <span>通知設定</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem
+              className="text-destructive"
+              onClick={() => handleDelete()}
+            >
               <Trash2 className="mr-2 h-4 w-4" />
               <span>削除</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </div>
+    </form>
   );
 }

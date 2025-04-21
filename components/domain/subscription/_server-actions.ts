@@ -27,3 +27,20 @@ export async function registerSubscription(prev: unknown, formData: FormData) {
 
   redirect(result ? "/app/dashboard" : "/error");
 }
+
+export async function deleteSubscription(formData: FormData) {
+  const { userId } = await auth();
+  return fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscription`, {
+    method: "DELETE",
+    headers: {
+      Authorization: userId ?? "",
+    },
+    body: formData,
+  })
+    .then((res) => {
+      return res.ok;
+    })
+    .catch(() => {
+      return false;
+    });
+}

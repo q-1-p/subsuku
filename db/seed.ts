@@ -1,5 +1,9 @@
 import "dotenv/config";
+import { addDays, formatDate } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
+
+import { currency } from "@/domain/currency";
+import { intervalUnit } from "@/domain/interval";
 import { db } from "./index";
 import { subscriptions, users } from "./schema";
 
@@ -34,10 +38,10 @@ async function seed() {
         active: true,
         userId: userId,
         price: "1490",
-        currencyId: 1, // 1 = JPY
-        nextUpdate: new Date(2025, 4, 1).toISOString().split("T")[0], // 2025年5月1日
+        currencyId: currency.jpy,
+        nextUpdate: formatDate(new Date(), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: 2, // 2 = 月
+        intervalUnitId: intervalUnit.monthly,
       },
       {
         id: uuidv4(),
@@ -45,10 +49,10 @@ async function seed() {
         active: true,
         userId: userId,
         price: "600",
-        currencyId: 1,
-        nextUpdate: new Date(2025, 3, 15).toISOString().split("T")[0], // 2025年4月15日
+        currencyId: currency.usd,
+        nextUpdate: formatDate(addDays(new Date(), 6), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: 2,
+        intervalUnitId: intervalUnit.monthly,
       },
       {
         id: uuidv4(),
@@ -56,10 +60,10 @@ async function seed() {
         active: true,
         userId: userId,
         price: "980",
-        currencyId: 1,
-        nextUpdate: new Date(2025, 4, 20).toISOString().split("T")[0], // 2025年5月20日
+        currencyId: currency.eur,
+        nextUpdate: formatDate(addDays(new Date(), 20), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: 2,
+        intervalUnitId: intervalUnit.monthly,
       },
       {
         id: uuidv4(),
@@ -67,10 +71,10 @@ async function seed() {
         active: true,
         userId: userId,
         price: "1180",
-        currencyId: 1,
-        nextUpdate: new Date(2025, 5, 5).toISOString().split("T")[0], // 2025年6月5日
+        currencyId: currency.gbp,
+        nextUpdate: formatDate(addDays(new Date(), -4), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: 2,
+        intervalUnitId: intervalUnit.monthly,
       },
       {
         id: uuidv4(),
@@ -78,10 +82,21 @@ async function seed() {
         active: true,
         userId: userId,
         price: "400",
-        currencyId: 1,
-        nextUpdate: new Date(2025, 4, 25).toISOString().split("T")[0], // 2025年5月25日
+        currencyId: currency.cny,
+        nextUpdate: formatDate(addDays(new Date(), 5), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: 2,
+        intervalUnitId: intervalUnit.yearly,
+      },
+      {
+        id: uuidv4(),
+        name: "Proton Unlimited",
+        active: true,
+        userId: userId,
+        price: "400",
+        currencyId: currency.btc,
+        nextUpdate: formatDate(addDays(new Date(), 30), "yyyy-MM-dd"),
+        intervalCycle: 1,
+        intervalUnitId: intervalUnit.yearly,
       },
     ];
 

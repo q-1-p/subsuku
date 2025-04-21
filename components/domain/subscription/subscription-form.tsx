@@ -34,7 +34,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { type Currency, currency, currencyNames } from "@/domain/currency";
 import { intervalUnit, intervalUnitNames } from "@/domain/interval";
-import { registerSubscription } from "./subscription-form-actions";
+import { registerSubscription } from "./_server-actions";
 import { subscriptionFormOptions } from "./subscription-form-options";
 import { subscriptionFormScheme } from "./subscription-form-scheme";
 

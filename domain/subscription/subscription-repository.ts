@@ -1,6 +1,7 @@
 import type { Result } from "../../lib/result";
 import type { UserId } from "../user/user-id";
 import type { ISubscription } from "./subscription";
+import type { SubscriptionId } from "./subscription-id";
 import type { SubscriptionRegistered } from "./subscription-registered";
 
 export interface ISubscriptionRepository {
@@ -28,5 +29,10 @@ export interface ISubscriptionRepository {
   registerSubscription: (
     userId: UserId,
     subscriptionRegistered: SubscriptionRegistered,
+  ) => Promise<boolean>;
+
+  deleteSubscription: (
+    userId: UserId,
+    subscriptionId: SubscriptionId,
   ) => Promise<boolean>;
 }
