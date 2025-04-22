@@ -3,7 +3,7 @@ CREATE TABLE "subscriptions" (
 	"name" varchar(255) NOT NULL,
 	"active" boolean DEFAULT false NOT NULL,
 	"user_id" uuid NOT NULL,
-	"price" numeric(10, 2) NOT NULL,
+	"amount" numeric(10, 2) NOT NULL,
 	"currency_id" integer NOT NULL,
 	"next_update" date NOT NULL,
 	"interval_cycle" integer NOT NULL,

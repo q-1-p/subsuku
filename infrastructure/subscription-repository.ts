@@ -40,7 +40,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
               id: x.id,
               name: x.name,
               active: x.active,
-              fee: Number(x.price),
+              amount: Number(x.amount),
               currency: x.currencyId,
               nextUpdate: new Date(x.nextUpdate),
               intervalCycle: x.intervalCycle,
@@ -49,7 +49,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         );
         return { type: ok as typeof ok, value: subscriptions };
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
         return { type: err as typeof err, error: undefined };
       });
 
@@ -91,7 +92,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
     return await db
       .select({
-        price: subscriptions.price,
+        amount: subscriptions.amount,
         currency: subscriptions.currencyId,
       })
       .from(subscriptions)
@@ -105,12 +106,10 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         const fee = x
           .map(
             (x) =>
-              +x.price *
+              +x.amount *
               Number(currenciesResult.value.get(x.currency as CurrencyId)),
           )
           .reduce((a, b) => a + b);
-
-        console.log(fee);
         return {
           type: ok as typeof ok,
           value: fee,
@@ -135,7 +134,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
     return await db
       .select({
-        price: subscriptions.price,
+        amount: subscriptions.amount,
         currency: subscriptions.currencyId,
       })
       .from(subscriptions)
@@ -149,7 +148,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         const fee = x
           .map(
             (x) =>
-              +x.price *
+              +x.amount *
               Number(currenciesResult.value.get(x.currency as CurrencyId)),
           )
           .reduce((a, b) => a + b);
@@ -170,8 +169,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .values({
         name: subscriptionRegistered.name.value,
         userId: userId.value,
-        price: subscriptionRegistered.fee.price.toString(),
-        currencyId: subscriptionRegistered.fee.currency,
+        amount: subscriptionRegistered.fee.amount.toString(),
+        currencyId: subscriptionRegistered.fee.currencyId,
         nextUpdate: format(subscriptionRegistered.nextUpdate, "yyyy-MM-dd"),
         intervalCycle: subscriptionRegistered.interval.cycle,
         intervalId: subscriptionRegistered.interval.id,

@@ -23,7 +23,7 @@ export const subscriptions = pgTable(
     name: varchar("name", { length: 255 }).notNull(),
     active: boolean("active").notNull().default(false),
     userId: uuid("user_id").notNull(),
-    price: numeric("price", { precision: 10, scale: 2 }).notNull(),
+    amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
     currencyId: smallint("currency_id").notNull(),
     nextUpdate: date("next_update").notNull(),
     intervalCycle: smallint("interval_cycle").notNull(),

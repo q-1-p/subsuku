@@ -12,24 +12,17 @@ export const countSubscriptions = (): Promise<number> =>
               Authorization: auth.userId ?? "",
             },
             method: "GET",
-          }).then((res) => {
-            if (!res.ok) {
-              return 0;
-            }
-            return res.json();
-          })
+          }).then((res) => (res.ok ? res.json() : 0))
         : 0,
     )
-    .catch(() => {
-      return 0;
-    });
+    .catch(() => 0);
 
-export const fetchMonthlyPrice = (): Promise<number> =>
+export const fetchMonthlyFee = (): Promise<number> =>
   auth()
     .then((auth) =>
       auth
         ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-monthly-price`,
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-monthly-fee`,
             {
               cache: "no-store",
               headers: {
@@ -37,29 +30,17 @@ export const fetchMonthlyPrice = (): Promise<number> =>
               },
               method: "GET",
             },
-          )
-            .then((res) => {
-              if (!res.ok) {
-                return 0;
-              }
-              return res.json();
-            })
-            .catch((error) => {
-              console.error("Error fetching :", error);
-              return 0;
-            })
+          ).then((res) => (res.ok ? res.json() : 0))
         : 0,
     )
-    .catch(() => {
-      return 0;
-    });
+    .catch(() => 0);
 
-export const fetchYearlyPrice = (): Promise<number> =>
+export const fetchYearlyFee = (): Promise<number> =>
   auth()
     .then((auth) =>
       auth
         ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-yearly-price`,
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-yearly-fee`,
             {
               cache: "no-store",
               headers: {
@@ -67,17 +48,10 @@ export const fetchYearlyPrice = (): Promise<number> =>
               },
               method: "GET",
             },
-          ).then((res) => {
-            if (!res.ok) {
-              return 0;
-            }
-            return res.json();
-          })
+          ).then((res) => (res.ok ? res.json() : 0))
         : 0,
     )
-    .catch(() => {
-      return 0;
-    });
+    .catch(() => 0);
 
 export const fetchSubscriptions = async (
   upcoming: boolean,
@@ -95,19 +69,8 @@ export const fetchSubscriptions = async (
               method: "GET",
             },
           )
-            .then((res) => {
-              if (!res.ok) {
-                return [];
-              }
-              return res.json();
-            })
+            .then((res) => (res.ok ? res.json() : []))
             .then((data) => data as ISubscription[])
-            .catch((error) => {
-              console.error("Error fetching subscriptions:", error);
-              return [];
-            })
         : [],
     )
-    .catch(() => {
-      return [];
-    });
+    .catch(() => []);

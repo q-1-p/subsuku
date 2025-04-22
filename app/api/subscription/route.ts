@@ -25,14 +25,13 @@ export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const subscriptionRegistered = SubscriptionRegistered.factory(
     formData.get("name") as string,
-    Number(formData.get("price")),
+    Number(formData.get("amount")),
     Number(formData.get("currency")) as CurrencyId,
     new Date(formData.get("nextUpdate") as string),
     Number(formData.get("intervalId")) as IntervalId,
     Number(formData.get("intervalCycle")),
   );
   if (subscriptionRegistered.type === err) {
-    console.log(subscriptionRegistered.error);
     return NextResponse.json({ status: 400 });
   }
 
@@ -45,7 +44,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  console.log(req);
   const userResult = await userRepository.fetchUser(
     req.headers.get("Authorization") as string,
   );

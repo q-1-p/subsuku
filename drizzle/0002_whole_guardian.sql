@@ -1,1 +1,1 @@
-ALTER TABLE "subscriptions" RENAME COLUMN "fee" TO "price";
+ALTER TABLE "subscriptions" RENAME COLUMN "fee" TO "amount";

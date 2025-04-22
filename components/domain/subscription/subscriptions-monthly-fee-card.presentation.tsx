@@ -2,7 +2,7 @@ import { CreditCard } from "lucide-react";
 
 import AggregationCard from "../../base/aggregation-card";
 
-export default function SubscriptionsMonthlyPriceCardPresentation({
+export default function SubscriptionsMonthlyFeeCardPresentation({
   fee,
 }: { fee: number }) {
   return (

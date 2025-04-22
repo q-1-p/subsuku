@@ -25,14 +25,14 @@ export class SubscriptionRegistered {
 
   public static factory(
     name: string,
-    price: number,
-    currency: CurrencyId,
+    amount: number,
+    currencyId: CurrencyId,
     nextUpdate: Date,
     intervalId: IntervalId,
     intervalCycle: number,
   ): Result<SubscriptionRegistered, unknown> {
     const nameResult = SubscriptionName.factory(name);
-    const feeResult = Fee.factory(price, currency);
+    const feeResult = Fee.factory(amount, currencyId);
     const intervalResult = Interval.factory(intervalId, intervalCycle);
     if (
       nameResult.type === err ||

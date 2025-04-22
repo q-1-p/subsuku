@@ -1,9 +1,10 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { currencies } from "@/db/schema";
 import { type CurrencyId, currencyId } from "@/domain/currency/currency-id";
 import type { ICurrencyRepository } from "@/domain/currency/currency-repository";
 import { type Result, err, ok } from "@/lib/result";
-import { eq } from "drizzle-orm";
 
 export class CurrencyRepository implements ICurrencyRepository {
   public fetchExchangeRate = (

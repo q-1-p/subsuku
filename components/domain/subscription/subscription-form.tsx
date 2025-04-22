@@ -106,13 +106,13 @@ export default function SubscriptionForm() {
 
           <div className="grid grid-cols-3 gap-4 md:grid-cols-3">
             <div className="col-span-2 flex gap-2">
-              <form.Subscribe selector={(state) => [state.values.currency]}>
+              <form.Subscribe selector={(state) => [state.values.currencyId]}>
                 {([currentCurrencyId]) => (
                   <>
                     <div className="grid">
                       <h4 className="pb-3">金額</h4>
                       <div>
-                        <form.Field name="price">
+                        <form.Field name="amount">
                           {(field) => (
                             <>
                               <div className="relative">
@@ -122,7 +122,7 @@ export default function SubscriptionForm() {
                                 />
                                 <Input
                                   className="w-full pl-8"
-                                  name="price"
+                                  name="amount"
                                   value={field.state.value}
                                   onChange={(e) => {
                                     field.handleChange(e.target.value);
@@ -146,7 +146,7 @@ export default function SubscriptionForm() {
                     </div>
                     <div className="">
                       <h4 className="pb-3">通貨</h4>
-                      <form.Field name="currency">
+                      <form.Field name="currencyId">
                         {(field) => (
                           <>
                             <Select

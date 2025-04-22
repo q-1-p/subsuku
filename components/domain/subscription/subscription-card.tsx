@@ -43,7 +43,7 @@ export default function SubscriptionCard({
         <p className="font-medium text-sm leading-none">{subscription.name}</p>
         <p className="text-muted-foreground text-sm">
           {subscription.intervalId === intervalId.yearly ? "年額" : "月額"} ¥
-          {subscription.fee.toLocaleString()}
+          {subscription.amount.toLocaleString()}
         </p>
       </div>
       <div className="ml-auto flex items-center gap-2">
