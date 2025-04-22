@@ -16,12 +16,12 @@ export interface ISubscriptionRepository {
     active?: boolean,
   ) => Promise<Result<number, undefined>>;
 
-  fetchSubscriptionsMonthlyPrice: (
+  fetchSubscriptionsMonthlyFee: (
     userId: UserId,
     active?: boolean,
   ) => Promise<Result<number, undefined>>;
 
-  fetchSubscriptionsYearlyPrice: (
+  fetchSubscriptionsYearlyFee: (
     userId: UserId,
     active?: boolean,
   ) => Promise<Result<number, undefined>>;

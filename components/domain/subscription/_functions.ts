@@ -58,13 +58,16 @@ export const fetchYearlyPrice = (): Promise<number> =>
   auth()
     .then((auth) =>
       auth
-        ? fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-count`, {
-            cache: "no-store",
-            headers: {
-              Authorization: auth.userId ?? "",
+        ? fetch(
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-yearly-price`,
+            {
+              cache: "no-store",
+              headers: {
+                Authorization: auth.userId ?? "",
+              },
+              method: "GET",
             },
-            method: "GET",
-          }).then((res) => {
+          ).then((res) => {
             if (!res.ok) {
               return 0;
             }

@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   }
 
   const monthlyPriceResult =
-    await subscriptionRepository.fetchSubscriptionsMonthlyPrice(
+    await subscriptionRepository.fetchSubscriptionsMonthlyFee(
       userResult.value.id,
     );
   switch (monthlyPriceResult.type) {

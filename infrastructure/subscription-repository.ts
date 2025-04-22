@@ -3,12 +3,14 @@ import { and, eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptions } from "@/db/schema";
+import type { Currency } from "@/domain/currency/currency";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import type { SubscriptionId } from "@/domain/subscription/subscription-id";
 import type { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
+import { CurrencyRepository } from "./currency-repository";
 
 export class SubscriptionRepository implements ISubscriptionRepository {
   public fetchSubscriptions = async (
@@ -75,15 +77,23 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     return result;
   };
 
-  public fetchSubscriptionsMonthlyPrice = async (
+  public fetchSubscriptionsMonthlyFee = async (
     userId: UserId,
     active = true,
   ): Promise<Result<number, undefined>> => {
     const today = format(new Date(), "yyyy-MM-dd");
     const nextMonthDate = format(addMonths(new Date(), 1), "yyyy-MM-dd");
 
+    const currenciesResult = await new CurrencyRepository().fetchCurrencies();
+    if (currenciesResult.type === err) {
+      return { type: err as typeof err, error: undefined };
+    }
+
     return await db
-      .select({ price: subscriptions.price })
+      .select({
+        price: subscriptions.price,
+        currency: subscriptions.currencyId,
+      })
       .from(subscriptions)
       .where(
         eq(subscriptions.userId, userId.value) &&
@@ -92,23 +102,42 @@ export class SubscriptionRepository implements ISubscriptionRepository {
           lt(subscriptions.nextUpdate, nextMonthDate),
       )
       .then((x) => {
-        const prices = x.map((x) => Number(x.price));
-        return { type: ok as typeof ok, value: prices.reduce((a, b) => a + b) };
+        const fee = x
+          .map(
+            (x) =>
+              +x.price *
+              Number(currenciesResult.value.get(x.currency as Currency)),
+          )
+          .reduce((a, b) => a + b);
+
+        console.log(fee);
+        return {
+          type: ok as typeof ok,
+          value: fee,
+        };
       })
       .catch(() => {
         return { type: err as typeof err, error: undefined };
       });
   };
 
-  public fetchSubscriptionsYearlyPrice = async (
+  public fetchSubscriptionsYearlyFee = async (
     userId: UserId,
     active = true,
   ): Promise<Result<number, undefined>> => {
     const today = format(new Date(), "yyyy-MM-dd");
     const nextYearDate = format(addYears(new Date(), 1), "yyyy-MM-dd");
 
+    const currenciesResult = await new CurrencyRepository().fetchCurrencies();
+    if (currenciesResult.type === err) {
+      return { type: err as typeof err, error: undefined };
+    }
+
     return await db
-      .select({ price: subscriptions.price })
+      .select({
+        price: subscriptions.price,
+        currency: subscriptions.currencyId,
+      })
       .from(subscriptions)
       .where(
         eq(subscriptions.userId, userId.value) &&
@@ -117,8 +146,15 @@ export class SubscriptionRepository implements ISubscriptionRepository {
           lt(subscriptions.nextUpdate, nextYearDate),
       )
       .then((x) => {
-        const prices = x.map((x) => Number(x.price));
-        return { type: ok as typeof ok, value: prices.reduce((a, b) => a + b) };
+        const fee = x
+          .map(
+            (x) =>
+              +x.price *
+              Number(currenciesResult.value.get(x.currency as Currency)),
+          )
+          .reduce((a, b) => a + b);
+
+        return { type: ok as typeof ok, value: fee };
       })
       .catch(() => {
         return { type: err as typeof err, error: undefined };
