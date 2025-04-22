@@ -44,7 +44,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
               currency: x.currencyId,
               nextUpdate: new Date(x.nextUpdate),
               intervalCycle: x.intervalCycle,
-              intervalUnit: x.intervalUnitId,
+              intervalId: x.intervalId,
             }) as ISubscription,
         );
         return { type: ok as typeof ok, value: subscriptions };
@@ -174,7 +174,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         currencyId: subscriptionRegistered.fee.currency,
         nextUpdate: format(subscriptionRegistered.nextUpdate, "yyyy-MM-dd"),
         intervalCycle: subscriptionRegistered.interval.cycle,
-        intervalUnitId: subscriptionRegistered.interval.unit,
+        intervalId: subscriptionRegistered.interval.id,
       })
       .then(() => true)
       .catch(() => false);

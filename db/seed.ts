@@ -3,7 +3,7 @@ import { addDays, formatDate } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 
 import { currencyId } from "@/domain/currency/currency-id";
-import { intervalUnit } from "@/domain/interval";
+import { intervalId } from "@/domain/interval/interval-id";
 import { db } from "./index";
 import { currencies, subscriptions, users } from "./schema";
 
@@ -41,62 +41,62 @@ async function seed() {
         currencyId: currencyId.jpy,
         nextUpdate: formatDate(new Date(), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: intervalUnit.monthly,
+        intervalId: intervalId.monthly,
       },
       {
         id: uuidv4(),
         name: "Amazon Prime",
         active: true,
         userId: userId,
-        price: "600",
+        price: "10",
         currencyId: currencyId.usd,
         nextUpdate: formatDate(addDays(new Date(), 6), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: intervalUnit.monthly,
+        intervalId: intervalId.monthly,
       },
       {
         id: uuidv4(),
         name: "Spotify",
         active: true,
         userId: userId,
-        price: "980",
+        price: "8",
         currencyId: currencyId.eur,
         nextUpdate: formatDate(addDays(new Date(), 20), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: intervalUnit.monthly,
+        intervalId: intervalId.monthly,
       },
       {
         id: uuidv4(),
         name: "YouTube Premium",
         active: true,
         userId: userId,
-        price: "1180",
+        price: "5",
         currencyId: currencyId.gbp,
         nextUpdate: formatDate(addDays(new Date(), -4), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: intervalUnit.monthly,
+        intervalId: intervalId.monthly,
       },
       {
         id: uuidv4(),
         name: "iCloud+",
         active: true,
         userId: userId,
-        price: "400",
+        price: "100",
         currencyId: currencyId.cny,
         nextUpdate: formatDate(addDays(new Date(), 5), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: intervalUnit.yearly,
+        intervalId: intervalId.yearly,
       },
       {
         id: uuidv4(),
         name: "Proton Unlimited",
         active: true,
         userId: userId,
-        price: "400",
+        price: "0.000165",
         currencyId: currencyId.btc,
         nextUpdate: formatDate(addDays(new Date(), 30), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalUnitId: intervalUnit.yearly,
+        intervalId: intervalId.yearly,
       },
     ]);
 

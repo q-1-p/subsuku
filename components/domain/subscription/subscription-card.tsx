@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { intervalUnit } from "@/domain/interval";
+import { intervalId } from "@/domain/interval/interval-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import { subscriptionsAtom } from "./_jotai";
 import { deleteSubscription } from "./_server-actions";
@@ -42,8 +42,8 @@ export default function SubscriptionCard({
       <div className="ml-4 space-y-1">
         <p className="font-medium text-sm leading-none">{subscription.name}</p>
         <p className="text-muted-foreground text-sm">
-          {subscription.intervalUnit === intervalUnit.yearly ? "年額" : "月額"}{" "}
-          ¥{subscription.fee.toLocaleString()}
+          {subscription.intervalId === intervalId.yearly ? "年額" : "月額"} ¥
+          {subscription.fee.toLocaleString()}
         </p>
       </div>
       <div className="ml-auto flex items-center gap-2">

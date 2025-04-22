@@ -37,7 +37,7 @@ import {
   currencyId,
   currencyNames,
 } from "@/domain/currency/currency-id";
-import { intervalUnit, intervalUnitNames } from "@/domain/interval";
+import { intervalId, intervalNames } from "@/domain/interval/interval-id";
 import { registerSubscription } from "./_server-actions";
 import { subscriptionFormOptions } from "./subscription-form-options";
 import { subscriptionFormScheme } from "./subscription-form-scheme";
@@ -203,20 +203,20 @@ export default function SubscriptionForm() {
                     </div>
                   )}
                 </form.Field>
-                <form.Field name="intervalUnit">
+                <form.Field name="intervalId">
                   {(field) => (
                     <Select
-                      name="intervalUnit"
-                      defaultValue={`${intervalUnit.monthly}`}
+                      name="intervalId"
+                      defaultValue={`${intervalId.monthly}`}
                       onValueChange={(e) => field.handleChange(+e)}
                     >
                       <SelectTrigger className="flex-1">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {Object.entries(intervalUnit).map(([key, value]) => (
+                        {Object.entries(intervalId).map(([key, value]) => (
                           <SelectItem key={key} value={value.toString()}>
-                            {intervalUnitNames[value]}
+                            {intervalNames[value]}
                           </SelectItem>
                         ))}
                       </SelectContent>

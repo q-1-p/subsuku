@@ -5,6 +5,6 @@ export const subscriptionFormScheme = type({
   price: "string >= 0",
   currency: "number.integer",
   intervalCycle: "number.integer > 0",
-  intervalUnit: "number.integer",
+  intervalId: "number.integer",
   nextUpdate: "string > 8",
 });

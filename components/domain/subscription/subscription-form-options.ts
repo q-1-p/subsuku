@@ -1,9 +1,9 @@
 import { currencyId } from "@/domain/currency/currency-id";
-import { intervalUnit } from "@/domain/interval";
+import { intervalId } from "@/domain/interval/interval-id";
 import { formOptions } from "@tanstack/react-form";
 
 const defaultCurrency: number = currencyId.jpy;
-const defaultInterval: number = intervalUnit.monthly;
+const defaultInterval: number = intervalId.monthly;
 
 export const subscriptionFormOptions = formOptions({
   defaultValues: {
@@ -11,7 +11,7 @@ export const subscriptionFormOptions = formOptions({
     price: "100",
     currency: defaultCurrency,
     intervalCycle: 1,
-    intervalUnit: defaultInterval,
+    intervalId: defaultInterval,
     nextUpdate: "",
   },
 });

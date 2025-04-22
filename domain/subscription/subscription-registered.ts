@@ -1,6 +1,7 @@
 import type { CurrencyId } from "@/domain/currency/currency-id";
 import { Fee } from "@/domain/fee";
-import { Interval, type IntervalUnit } from "@/domain/interval";
+import { Interval } from "@/domain/interval/interval";
+import type { IntervalId } from "@/domain/interval/interval-id";
 import { type Result, err, ok } from "@/lib/result";
 import { SubscriptionName } from "./subscription-name";
 
@@ -27,12 +28,12 @@ export class SubscriptionRegistered {
     price: number,
     currency: CurrencyId,
     nextUpdate: Date,
+    intervalId: IntervalId,
     intervalCycle: number,
-    intervalUnit: IntervalUnit,
   ): Result<SubscriptionRegistered, unknown> {
     const nameResult = SubscriptionName.factory(name);
     const feeResult = Fee.factory(price, currency);
-    const intervalResult = Interval.factory(intervalCycle, intervalUnit);
+    const intervalResult = Interval.factory(intervalId, intervalCycle);
     if (
       nameResult.type === err ||
       feeResult.type === err ||

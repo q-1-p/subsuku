@@ -27,7 +27,7 @@ export const subscriptions = pgTable(
     currencyId: smallint("currency_id").notNull(),
     nextUpdate: date("next_update").notNull(),
     intervalCycle: smallint("interval_cycle").notNull(),
-    intervalUnitId: smallint("interval_unit_id").notNull(),
+    intervalId: smallint("interval_unit_id").notNull(),
   },
   (table) => [index("idx_subscription_id").on(table.id)],
 );
