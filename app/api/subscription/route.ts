@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import type { Currency } from "@/domain/currency/currency";
+import type { CurrencyId } from "@/domain/currency/currency-id";
 import type { IntervalUnit } from "@/domain/interval";
 import { SubscriptionId } from "@/domain/subscription/subscription-id";
 import { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   const subscriptionRegistered = SubscriptionRegistered.factory(
     formData.get("name") as string,
     Number(formData.get("price")),
-    Number(formData.get("currency")) as Currency,
+    Number(formData.get("currency")) as CurrencyId,
     new Date(formData.get("nextUpdate") as string),
     Number(formData.get("intervalCycle")),
     Number(formData.get("intervalUnit")) as IntervalUnit,

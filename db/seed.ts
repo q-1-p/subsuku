@@ -2,7 +2,7 @@ import "dotenv/config";
 import { addDays, formatDate } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 
-import { currency } from "@/domain/currency/currency";
+import { currencyId } from "@/domain/currency/currency-id";
 import { intervalUnit } from "@/domain/interval";
 import { db } from "./index";
 import { currencies, subscriptions, users } from "./schema";
@@ -38,7 +38,7 @@ async function seed() {
         active: true,
         userId: userId,
         price: "1490",
-        currencyId: currency.jpy,
+        currencyId: currencyId.jpy,
         nextUpdate: formatDate(new Date(), "yyyy-MM-dd"),
         intervalCycle: 1,
         intervalUnitId: intervalUnit.monthly,
@@ -49,7 +49,7 @@ async function seed() {
         active: true,
         userId: userId,
         price: "600",
-        currencyId: currency.usd,
+        currencyId: currencyId.usd,
         nextUpdate: formatDate(addDays(new Date(), 6), "yyyy-MM-dd"),
         intervalCycle: 1,
         intervalUnitId: intervalUnit.monthly,
@@ -60,7 +60,7 @@ async function seed() {
         active: true,
         userId: userId,
         price: "980",
-        currencyId: currency.eur,
+        currencyId: currencyId.eur,
         nextUpdate: formatDate(addDays(new Date(), 20), "yyyy-MM-dd"),
         intervalCycle: 1,
         intervalUnitId: intervalUnit.monthly,
@@ -71,7 +71,7 @@ async function seed() {
         active: true,
         userId: userId,
         price: "1180",
-        currencyId: currency.gbp,
+        currencyId: currencyId.gbp,
         nextUpdate: formatDate(addDays(new Date(), -4), "yyyy-MM-dd"),
         intervalCycle: 1,
         intervalUnitId: intervalUnit.monthly,
@@ -82,7 +82,7 @@ async function seed() {
         active: true,
         userId: userId,
         price: "400",
-        currencyId: currency.cny,
+        currencyId: currencyId.cny,
         nextUpdate: formatDate(addDays(new Date(), 5), "yyyy-MM-dd"),
         intervalCycle: 1,
         intervalUnitId: intervalUnit.yearly,
@@ -93,7 +93,7 @@ async function seed() {
         active: true,
         userId: userId,
         price: "400",
-        currencyId: currency.btc,
+        currencyId: currencyId.btc,
         nextUpdate: formatDate(addDays(new Date(), 30), "yyyy-MM-dd"),
         intervalCycle: 1,
         intervalUnitId: intervalUnit.yearly,
@@ -103,27 +103,27 @@ async function seed() {
     // 為替レートの挿入
     await db.insert(currencies).values([
       {
-        id: currency.jpy,
+        id: currencyId.jpy,
         exchangeRate: 1,
       },
       {
-        id: currency.usd,
+        id: currencyId.usd,
         exchangeRate: 140.89,
       },
       {
-        id: currency.eur,
+        id: currencyId.eur,
         exchangeRate: 162.22,
       },
       {
-        id: currency.gbp,
+        id: currencyId.gbp,
         exchangeRate: 188.44,
       },
       {
-        id: currency.cny,
+        id: currencyId.cny,
         exchangeRate: 19.3175,
       },
       {
-        id: currency.btc,
+        id: currencyId.btc,
         exchangeRate: 12301589,
       },
     ]);

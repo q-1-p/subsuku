@@ -1,7 +1,9 @@
 import type { Result } from "@/lib/result";
-import type { Currency } from "./currency";
+import type { CurrencyId } from "./currency-id";
 
 export interface ICurrencyRepository {
-  fetchExchangeRate: (currency: Currency) => Promise<Result<number, undefined>>;
-  fetchCurrencies: () => Promise<Result<Map<Currency, number>, undefined>>;
+  fetchExchangeRate: (
+    currency: CurrencyId,
+  ) => Promise<Result<number, undefined>>;
+  fetchCurrencies: () => Promise<Result<Map<CurrencyId, number>, undefined>>;
 }

@@ -33,10 +33,10 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import {
-  type Currency,
-  currency,
+  type CurrencyId,
+  currencyId,
   currencyNames,
-} from "@/domain/currency/currency";
+} from "@/domain/currency/currency-id";
 import { intervalUnit, intervalUnitNames } from "@/domain/interval";
 import { registerSubscription } from "./_server-actions";
 import { subscriptionFormOptions } from "./subscription-form-options";
@@ -107,7 +107,7 @@ export default function SubscriptionForm() {
           <div className="grid grid-cols-3 gap-4 md:grid-cols-3">
             <div className="col-span-2 flex gap-2">
               <form.Subscribe selector={(state) => [state.values.currency]}>
-                {([currencyId]) => (
+                {([currentCurrencyId]) => (
                   <>
                     <div className="grid">
                       <h4 className="pb-3">金額</h4>
@@ -118,7 +118,7 @@ export default function SubscriptionForm() {
                               <div className="relative">
                                 <CurrencyIcon
                                   className="absolute top-2.5 left-2 h-4 w-4 text-muted-foreground"
-                                  currencyId={currencyId}
+                                  currencyId={currentCurrencyId as CurrencyId}
                                 />
                                 <Input
                                   className="w-full pl-8"
@@ -151,20 +151,20 @@ export default function SubscriptionForm() {
                           <>
                             <Select
                               name="currency"
-                              defaultValue={`${currency.jpy}`}
+                              defaultValue={`${currencyId.jpy}`}
                               onValueChange={(e) => field.handleChange(+e)}
                             >
                               <SelectTrigger className="flex-2">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                {Object.entries(currency).map(
+                                {Object.entries(currencyId).map(
                                   ([key, value]) => (
                                     <SelectItem
                                       key={key}
                                       value={value.toString()}
                                     >
-                                      {currencyNames[value as Currency]}
+                                      {currencyNames[value as CurrencyId]}
                                     </SelectItem>
                                   ),
                                 )}

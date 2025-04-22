@@ -1,10 +1,10 @@
-import type { Currency } from "@/domain/currency/currency";
+import type { CurrencyId } from "@/domain/currency/currency-id";
 import { type Result, ok } from "@/lib/result";
 
 export class Fee {
   private constructor(
     public readonly price: number,
-    public readonly currency: Currency,
+    public readonly currency: CurrencyId,
   ) {
     this.price = price;
     this.currency = currency;
@@ -12,7 +12,7 @@ export class Fee {
 
   public static factory(
     value: number,
-    currency: Currency,
+    currency: CurrencyId,
   ): Result<Fee, string> {
     return { type: ok, value: new Fee(value, currency) };
   }

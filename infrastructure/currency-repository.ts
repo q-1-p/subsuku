@@ -1,13 +1,13 @@
 import { db } from "@/db";
 import { currencies } from "@/db/schema";
-import { type Currency, currency } from "@/domain/currency/currency";
+import { type CurrencyId, currencyId } from "@/domain/currency/currency-id";
 import type { ICurrencyRepository } from "@/domain/currency/currency-repository";
 import { type Result, err, ok } from "@/lib/result";
 import { eq } from "drizzle-orm";
 
 export class CurrencyRepository implements ICurrencyRepository {
   public fetchExchangeRate = (
-    currency: Currency,
+    currency: CurrencyId,
   ): Promise<Result<number, undefined>> =>
     db
       .select({ exchangeRate: currencies.exchangeRate })
@@ -22,19 +22,19 @@ export class CurrencyRepository implements ICurrencyRepository {
       });
 
   public fetchCurrencies = (): Promise<
-    Result<Map<Currency, number>, undefined>
+    Result<Map<CurrencyId, number>, undefined>
   > =>
     db
       .select()
       .from(currencies)
       .then((data) => {
-        if (!this.validateCurrencyIds(data.map((c) => c.id as Currency))) {
+        if (!this.validateCurrencyIds(data.map((c) => c.id as CurrencyId))) {
           return { type: err as typeof err, error: undefined };
         }
 
-        const currencyMap = new Map<Currency, number>();
+        const currencyMap = new Map<CurrencyId, number>();
         for (const currency of data) {
-          currencyMap.set(currency.id as Currency, currency.exchangeRate);
+          currencyMap.set(currency.id as CurrencyId, currency.exchangeRate);
         }
 
         return { type: ok as typeof ok, value: currencyMap };
@@ -43,14 +43,14 @@ export class CurrencyRepository implements ICurrencyRepository {
         return { type: err as typeof err, error: undefined };
       });
 
-  private validateCurrencyIds = (currencyIds: Currency[]): boolean => {
+  private validateCurrencyIds = (currencyIds: CurrencyId[]): boolean => {
     const currencies = [
-      currency.jpy,
-      currency.cny,
-      currency.gbp,
-      currency.usd,
-      currency.eur,
-      currency.btc,
+      currencyId.jpy,
+      currencyId.cny,
+      currencyId.gbp,
+      currencyId.usd,
+      currencyId.eur,
+      currencyId.btc,
     ];
 
     for (const c of currencies) {

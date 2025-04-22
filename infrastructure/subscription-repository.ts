@@ -3,7 +3,7 @@ import { and, eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptions } from "@/db/schema";
-import type { Currency } from "@/domain/currency/currency";
+import type { CurrencyId } from "@/domain/currency/currency-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import type { SubscriptionId } from "@/domain/subscription/subscription-id";
 import type { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";
@@ -106,7 +106,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
           .map(
             (x) =>
               +x.price *
-              Number(currenciesResult.value.get(x.currency as Currency)),
+              Number(currenciesResult.value.get(x.currency as CurrencyId)),
           )
           .reduce((a, b) => a + b);
 
@@ -150,7 +150,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
           .map(
             (x) =>
               +x.price *
-              Number(currenciesResult.value.get(x.currency as Currency)),
+              Number(currenciesResult.value.get(x.currency as CurrencyId)),
           )
           .reduce((a, b) => a + b);
 

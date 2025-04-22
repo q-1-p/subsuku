@@ -1,4 +1,4 @@
-import type { Currency } from "@/domain/currency/currency";
+import type { CurrencyId } from "@/domain/currency/currency-id";
 import { Fee } from "@/domain/fee";
 import { Interval, type IntervalUnit } from "@/domain/interval";
 import { type Result, err, ok } from "@/lib/result";
@@ -25,7 +25,7 @@ export class SubscriptionRegistered {
   public static factory(
     name: string,
     price: number,
-    currency: Currency,
+    currency: CurrencyId,
     nextUpdate: Date,
     intervalCycle: number,
     intervalUnit: IntervalUnit,

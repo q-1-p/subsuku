@@ -1,8 +1,8 @@
-import { currency } from "@/domain/currency/currency";
+import { currencyId } from "@/domain/currency/currency-id";
 import { intervalUnit } from "@/domain/interval";
 import { formOptions } from "@tanstack/react-form";
 
-const defaultCurrency: number = currency.jpy;
+const defaultCurrency: number = currencyId.jpy;
 const defaultInterval: number = intervalUnit.monthly;
 
 export const subscriptionFormOptions = formOptions({
