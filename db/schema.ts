@@ -6,6 +6,7 @@ import {
   pgTable,
   real,
   smallint,
+  text,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -28,6 +29,7 @@ export const subscriptions = pgTable(
     nextUpdate: date("next_update").notNull(),
     intervalCycle: smallint("interval_cycle").notNull(),
     intervalId: smallint("interval_unit_id").notNull(),
+    cancellationMethod: text("cancellation_method").notNull(),
   },
   (table) => [index("idx_subscription_id").on(table.id)],
 );

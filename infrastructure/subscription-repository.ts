@@ -174,6 +174,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         nextUpdate: format(subscriptionRegistered.nextUpdate, "yyyy-MM-dd"),
         intervalCycle: subscriptionRegistered.interval.cycle,
         intervalId: subscriptionRegistered.interval.id,
+        cancellationMethod: subscriptionRegistered.cancellationMethod,
       })
       .then(() => true)
       .catch(() => false);

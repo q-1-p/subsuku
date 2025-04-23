@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import {
   type CurrencyId,
   currencyId,
@@ -281,6 +282,25 @@ export default function SubscriptionForm() {
                 )}
               </form.Field>
             </div>
+          </div>
+
+          <Separator />
+
+          <div className="grid grid-cols-1 gap-4">
+            <form.Field name="cancellationMethod">
+              {(field) => (
+                <>
+                  <h4>解約方法</h4>
+                  <div>
+                    <Textarea
+                      name="cancellationMethod"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                  </div>
+                </>
+              )}
+            </form.Field>
           </div>
 
           <div className="flex justify-end gap-2">

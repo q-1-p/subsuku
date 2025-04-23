@@ -14,5 +14,6 @@ export const subscriptionFormOptions = formOptions({
     intervalCycle: 1,
     intervalId: defaultInterval,
     nextUpdate: "",
+    cancellationMethod: "",
   },
 });

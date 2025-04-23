@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
     new Date(formData.get("nextUpdate") as string),
     Number(formData.get("intervalId")) as IntervalId,
     Number(formData.get("intervalCycle")),
+    formData.get("cancellationMethod") as string,
   );
   if (subscriptionRegistered.type === err) {
     return NextResponse.json({ status: 400 });
