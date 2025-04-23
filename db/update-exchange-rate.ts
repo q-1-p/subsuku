@@ -1,10 +1,11 @@
-import { currencyId } from "@/domain/currency/currency-id";
 import { eq } from "drizzle-orm";
+
+import { currencyId } from "@/domain/currency/currency-id";
 import { db } from ".";
 import { currencies } from "./schema";
 
-const updateExchangeRate = () =>
-  fetch(
+async function updateExchangeRate() {
+  await fetch(
     `https://openexchangerates.org/api/latest.json?app_id=${process.env.OPEN_EXCHANGE_RATES_APP_ID}`,
   )
     .then((res) => res.json())
@@ -26,6 +27,19 @@ const updateExchangeRate = () =>
           .execute();
       }
     });
+
+  await fetch("https://api.excelapi.org/crypto/rate?pair=btc-jpy")
+    .then((res) => res.json())
+    .then(async (data) => {
+      await db
+        .update(currencies)
+        .set({
+          exchangeRate: data,
+        })
+        .where(eq(currencies.id, currencyId.btc))
+        .execute();
+    });
+}
 
 if (require.main === module) {
   updateExchangeRate()
