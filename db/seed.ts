@@ -6,18 +6,18 @@ import { currencyId } from "@/domain/currency/currency-id";
 import { intervalId } from "@/domain/interval/interval-id";
 import { sql } from "drizzle-orm";
 import { db } from "./index";
-import { currencies, subscriptions, users } from "./schema";
+import { currenciesTable, subscriptionsTable, usersTable } from "./schema";
 
 async function seed() {
   try {
     // ユーザーの存在確認
-    const existingUsers = await db.select().from(users);
+    const existingUsers = await db.select().from(usersTable);
 
     let userId: string;
     if (existingUsers.length === 0) {
       // ユーザーが存在しない場合は新規作成
       const newUser = await db
-        .insert(users)
+        .insert(usersTable)
         .values({
           id: uuidv4(),
           mailAddress: "test@example.com",
@@ -34,11 +34,11 @@ async function seed() {
     // subscriptionsテーブルに行が存在しないことを確認
     const subscriptionsCount = await db
       .select({ count: sql<number>`count(*)` })
-      .from(subscriptions)
+      .from(subscriptionsTable)
       .then((res) => +res[0].count);
     if (subscriptionsCount === 0) {
       // サブスクリプションデータの挿入
-      await db.insert(subscriptions).values([
+      await db.insert(subscriptionsTable).values([
         {
           id: uuidv4(),
           name: "Netflix",
@@ -116,11 +116,11 @@ async function seed() {
     // subscriptionsテーブルに行が存在しないことを確認
     const currenciesCount = await db
       .select({ count: sql<number>`count(*)` })
-      .from(currencies)
+      .from(currenciesTable)
       .then((res) => +res[0].count);
     if (currenciesCount === 0) {
       // 為替レートの挿入
-      await db.insert(currencies).values([
+      await db.insert(currenciesTable).values([
         {
           id: currencyId.jpy,
           exchangeRate: 1,

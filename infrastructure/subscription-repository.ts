@@ -2,7 +2,7 @@ import { addDays, addMonths, addYears, format } from "date-fns";
 import { and, eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
-import { subscriptions } from "@/db/schema";
+import { subscriptionsTable } from "@/db/schema";
 import type { CurrencyId } from "@/domain/currency/currency-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import type { SubscriptionId } from "@/domain/subscription/subscription-id";
@@ -20,11 +20,11 @@ export class SubscriptionRepository implements ISubscriptionRepository {
   ): Promise<Result<ISubscription, string>> => {
     return await db
       .select()
-      .from(subscriptions)
+      .from(subscriptionsTable)
       .where(
         and(
-          eq(subscriptions.userId, userId.value),
-          eq(subscriptions.id, subscriptionId.value),
+          eq(subscriptionsTable.userId, userId.value),
+          eq(subscriptionsTable.id, subscriptionId.value),
         ),
       )
       .then((data) => {
@@ -60,15 +60,15 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
     const subscriptionsResult = await db
       .select()
-      .from(subscriptions)
+      .from(subscriptionsTable)
       .where(
         upcoming
-          ? eq(subscriptions.active, active) &&
-              eq(subscriptions.userId, userId.value) &&
-              gte(subscriptions.nextUpdate, today) &&
-              lt(subscriptions.nextUpdate, upcomingDate)
-          : eq(subscriptions.active, active) &&
-              eq(subscriptions.userId, userId.value),
+          ? eq(subscriptionsTable.active, active) &&
+              eq(subscriptionsTable.userId, userId.value) &&
+              gte(subscriptionsTable.nextUpdate, today) &&
+              lt(subscriptionsTable.nextUpdate, upcomingDate)
+          : eq(subscriptionsTable.active, active) &&
+              eq(subscriptionsTable.userId, userId.value),
       )
       .then((x) => {
         const subscriptions = x.map(
@@ -101,10 +101,10 @@ export class SubscriptionRepository implements ISubscriptionRepository {
   ): Promise<Result<number, undefined>> => {
     const result = await db
       .select({ count: sql<number>`count(*)` })
-      .from(subscriptions)
+      .from(subscriptionsTable)
       .where(
-        eq(subscriptions.userId, userId.value) &&
-          eq(subscriptions.active, active),
+        eq(subscriptionsTable.userId, userId.value) &&
+          eq(subscriptionsTable.active, active),
       )
       .then((res) => {
         return { type: ok as typeof ok, value: Number(res[0].count) };
@@ -130,15 +130,15 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
     return await db
       .select({
-        amount: subscriptions.amount,
-        currency: subscriptions.currencyId,
+        amount: subscriptionsTable.amount,
+        currency: subscriptionsTable.currencyId,
       })
-      .from(subscriptions)
+      .from(subscriptionsTable)
       .where(
-        eq(subscriptions.userId, userId.value) &&
-          eq(subscriptions.active, active) &&
-          gte(subscriptions.nextUpdate, today) &&
-          lt(subscriptions.nextUpdate, nextMonthDate),
+        eq(subscriptionsTable.userId, userId.value) &&
+          eq(subscriptionsTable.active, active) &&
+          gte(subscriptionsTable.nextUpdate, today) &&
+          lt(subscriptionsTable.nextUpdate, nextMonthDate),
       )
       .then((x) => {
         const fee = x
@@ -172,15 +172,15 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
     return await db
       .select({
-        amount: subscriptions.amount,
-        currency: subscriptions.currencyId,
+        amount: subscriptionsTable.amount,
+        currency: subscriptionsTable.currencyId,
       })
-      .from(subscriptions)
+      .from(subscriptionsTable)
       .where(
-        eq(subscriptions.userId, userId.value) &&
-          eq(subscriptions.active, active) &&
-          gte(subscriptions.nextUpdate, today) &&
-          lt(subscriptions.nextUpdate, nextYearDate),
+        eq(subscriptionsTable.userId, userId.value) &&
+          eq(subscriptionsTable.active, active) &&
+          gte(subscriptionsTable.nextUpdate, today) &&
+          lt(subscriptionsTable.nextUpdate, nextYearDate),
       )
       .then((x) => {
         const fee = x
@@ -203,7 +203,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     subscriptionRegistered: SubscriptionRegistered,
   ) =>
     db
-      .insert(subscriptions)
+      .insert(subscriptionsTable)
       .values({
         name: subscriptionRegistered.name.value,
         userId: userId.value,
@@ -222,7 +222,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     subscriptionUpdated: SubscriptionUpdated,
   ) =>
     db
-      .update(subscriptions)
+      .update(subscriptionsTable)
       .set({
         name: subscriptionUpdated.name.value,
         userId: userId.value,
@@ -235,8 +235,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       })
       .where(
         and(
-          eq(subscriptions.userId, userId.value),
-          eq(subscriptions.id, subscriptionUpdated.id.value),
+          eq(subscriptionsTable.userId, userId.value),
+          eq(subscriptionsTable.id, subscriptionUpdated.id.value),
         ),
       )
       .then(() => true)
@@ -247,11 +247,11 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     subscriptionId: SubscriptionId,
   ): Promise<boolean> =>
     db
-      .delete(subscriptions)
+      .delete(subscriptionsTable)
       .where(
         and(
-          eq(subscriptions.userId, userId.value),
-          eq(subscriptions.id, subscriptionId.value),
+          eq(subscriptionsTable.userId, userId.value),
+          eq(subscriptionsTable.id, subscriptionId.value),
         ),
       )
       .then(() => true)

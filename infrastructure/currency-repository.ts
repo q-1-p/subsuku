@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { currencies } from "@/db/schema";
+import { currenciesTable } from "@/db/schema";
 import { type CurrencyId, currencyId } from "@/domain/currency/currency-id";
 import type { ICurrencyRepository } from "@/domain/currency/currency-repository";
 import { type Result, err, ok } from "@/lib/result";
@@ -11,9 +11,9 @@ export class CurrencyRepository implements ICurrencyRepository {
     currency: CurrencyId,
   ): Promise<Result<number, undefined>> =>
     db
-      .select({ exchangeRate: currencies.exchangeRate })
-      .from(currencies)
-      .where(eq(currencies.id, currency))
+      .select({ exchangeRate: currenciesTable.exchangeRate })
+      .from(currenciesTable)
+      .where(eq(currenciesTable.id, currency))
       .limit(1)
       .then((x) => {
         return { type: ok as typeof ok, value: x[0].exchangeRate };
@@ -27,7 +27,7 @@ export class CurrencyRepository implements ICurrencyRepository {
   > =>
     db
       .select()
-      .from(currencies)
+      .from(currenciesTable)
       .then((data) => {
         if (!this.validateCurrencyIds(data.map((c) => c.id as CurrencyId))) {
           return { type: err as typeof err, error: undefined };

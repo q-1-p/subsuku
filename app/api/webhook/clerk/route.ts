@@ -2,7 +2,7 @@ import type { WebhookEvent } from "@clerk/nextjs/server";
 import { Webhook } from "svix";
 
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { usersTable } from "@/db/schema";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -50,12 +50,12 @@ export async function POST(req: Request) {
     if (evt.type === "user.created") {
       const { id, email_addresses } = evt.data;
 
-      const existingUser = await db.query.users.findFirst({
+      const existingUser = await db.query.usersTable.findFirst({
         where: (fields, { eq }) => eq(fields.clerkId, id),
       });
 
       if (!existingUser) {
-        await db.insert(users).values({
+        await db.insert(usersTable).values({
           mailAddress: email_addresses[0]?.email_address ?? "",
           clerkId: id,
         });

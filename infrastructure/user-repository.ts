@@ -10,7 +10,7 @@ export class UserRepository implements IUserRepository {
   public fetchUser = async (
     clerkUserId: string,
   ): Promise<Result<User, undefined>> =>
-    await db.query.users
+    await db.query.usersTable
       .findFirst({
         where: (user) => eq(user.clerkId, clerkUserId),
       })

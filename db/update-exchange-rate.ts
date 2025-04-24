@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 
 import { currencyId } from "@/domain/currency/currency-id";
 import { db } from ".";
-import { currencies } from "./schema";
+import { currenciesTable } from "./schema";
 
 async function updateExchangeRate() {
   await fetch(
@@ -19,11 +19,11 @@ async function updateExchangeRate() {
 
       for (const rate of rates) {
         await db
-          .update(currencies)
+          .update(currenciesTable)
           .set({
             exchangeRate: rate.rate,
           })
-          .where(eq(currencies.id, rate.id))
+          .where(eq(currenciesTable.id, rate.id))
           .execute();
       }
     });
@@ -32,11 +32,11 @@ async function updateExchangeRate() {
     .then((res) => res.json())
     .then(async (data) => {
       await db
-        .update(currencies)
+        .update(currenciesTable)
         .set({
           exchangeRate: data,
         })
-        .where(eq(currencies.id, currencyId.btc))
+        .where(eq(currenciesTable.id, currencyId.btc))
         .execute();
     });
 }

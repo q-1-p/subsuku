@@ -11,13 +11,13 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const users = pgTable("users", {
+export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   mailAddress: varchar("mail_address", { length: 255 }).notNull().unique(),
   clerkId: varchar("clerk_id", { length: 32 }).notNull().unique(),
 });
 
-export const subscriptions = pgTable(
+export const subscriptionsTable = pgTable(
   "subscriptions",
   {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -34,7 +34,7 @@ export const subscriptions = pgTable(
   (table) => [index("idx_subscription_id").on(table.id)],
 );
 
-export const currencies = pgTable("currencies", {
+export const currenciesTable = pgTable("currencies", {
   id: smallint("id").primaryKey(),
   exchangeRate: real("exchange_rate").notNull(),
 });
