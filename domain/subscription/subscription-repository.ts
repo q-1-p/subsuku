@@ -3,8 +3,14 @@ import type { UserId } from "../user/user-id";
 import type { ISubscription } from "./subscription";
 import type { SubscriptionId } from "./subscription-id";
 import type { SubscriptionRegistered } from "./subscription-registered";
+import type { SubscriptionUpdated } from "./subscription-updated";
 
 export interface ISubscriptionRepository {
+  fetchSubscription: (
+    userId: UserId,
+    subscriptionId: SubscriptionId,
+  ) => Promise<Result<ISubscription, string>>;
+
   fetchSubscriptions: (
     userId: UserId,
     active?: boolean,
@@ -29,6 +35,11 @@ export interface ISubscriptionRepository {
   registerSubscription: (
     userId: UserId,
     subscriptionRegistered: SubscriptionRegistered,
+  ) => Promise<boolean>;
+
+  updateSubscription: (
+    userId: UserId,
+    subscriptionRegistered: SubscriptionUpdated,
   ) => Promise<boolean>;
 
   deleteSubscription: (

@@ -2,6 +2,7 @@
 
 import { useAtom } from "jotai";
 import { Bell, Settings, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -57,10 +58,12 @@ export default function SubscriptionCard({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>編集</span>
-            </DropdownMenuItem>
+            <Link href={`/app/${subscription.id}/edit-subscription`}>
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>編集</span>
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuItem>
               <Bell className="mr-2 h-4 w-4" />
               <span>通知設定</span>

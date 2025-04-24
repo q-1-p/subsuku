@@ -2,6 +2,21 @@ import { auth } from "@clerk/nextjs/server";
 
 import type { ISubscription } from "@/domain/subscription/subscription";
 
+export const fetchSubscription = async (id: string): Promise<ISubscription> =>
+  auth()
+    .then((auth) =>
+      auth
+        ? fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscription?id=${id}`, {
+            cache: "no-store",
+            headers: {
+              Authorization: auth.userId ?? "",
+            },
+            method: "GET",
+          }).then((res) => res.json())
+        : undefined,
+    )
+    .catch(() => undefined);
+
 export const countSubscriptions = (): Promise<number> =>
   auth()
     .then((auth) =>

@@ -1,7 +1,9 @@
 "use client";
 
 import { mergeForm, useForm, useTransform } from "@tanstack/react-form";
+import { formOptions } from "@tanstack/react-form";
 import { initialFormState } from "@tanstack/react-form/nextjs";
+import { type } from "arktype";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -38,14 +40,40 @@ import {
   currencyId,
   currencyNames,
 } from "@/domain/currency/currency-id";
-import { intervalId, intervalNames } from "@/domain/interval/interval-id";
-import { registerSubscription } from "./_server-actions";
-import { subscriptionFormOptions } from "./subscription-form-options";
-import { subscriptionFormScheme } from "./subscription-form-scheme";
+import {
+  type IntervalId,
+  intervalId,
+  intervalNames,
+} from "@/domain/interval/interval-id";
+import type { ISubscription } from "@/domain/subscription/subscription";
+import { registerSubscription, updateSubscription } from "./_server-actions";
 
-export default function SubscriptionForm() {
+const subscriptionFormScheme = type({
+  name: "string > 0",
+  currencyId: "number.integer",
+  intervalCycle: "number.integer > 0",
+  intervalId: "number.integer",
+  nextUpdate: "string > 8",
+});
+
+export default function SubscriptionForm({
+  subscription,
+}: { subscription?: ISubscription }) {
+  const subscriptionFormOptions = formOptions({
+    defaultValues: {
+      id: subscription?.id ?? "",
+      name: subscription?.name ?? "",
+      amount: subscription?.amount ?? "100",
+      currencyId: subscription?.currencyId ?? currencyId.jpy,
+      intervalCycle: subscription?.intervalCycle ?? 1,
+      intervalId: subscription?.intervalId ?? intervalId.monthly,
+      nextUpdate: subscription?.nextUpdate.toString() ?? "",
+      cancellationMethod: subscription?.cancellationMethod ?? "",
+    },
+  });
+
   const [state, action] = useActionState(
-    registerSubscription,
+    subscription ? updateSubscription : registerSubscription,
     initialFormState,
   );
   const form = useForm({
@@ -81,6 +109,7 @@ export default function SubscriptionForm() {
           className="space-y-6"
           onSubmit={form.handleSubmit}
         >
+          <input type="hidden" name="id" value={subscription?.id} />
           <div className="grid grid-cols-1 gap-4">
             <form.Field name="name">
               {(field) => (
@@ -153,7 +182,9 @@ export default function SubscriptionForm() {
                             <Select
                               name="currency"
                               defaultValue={`${currencyId.jpy}`}
-                              onValueChange={(e) => field.handleChange(+e)}
+                              onValueChange={(e) =>
+                                field.handleChange(+e as CurrencyId)
+                              }
                             >
                               <SelectTrigger className="flex-2">
                                 <SelectValue />
@@ -209,7 +240,9 @@ export default function SubscriptionForm() {
                     <Select
                       name="intervalId"
                       defaultValue={`${intervalId.monthly}`}
-                      onValueChange={(e) => field.handleChange(+e)}
+                      onValueChange={(e) =>
+                        field.handleChange(+e as IntervalId)
+                      }
                     >
                       <SelectTrigger className="flex-1">
                         <SelectValue />
