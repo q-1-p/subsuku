@@ -12,7 +12,6 @@ export class SubscriptionUpdated {
   public readonly fee: Fee;
   public readonly nextUpdate: Date;
   public readonly interval: Interval;
-  public readonly cancellationMethod: string;
 
   private constructor(
     id: SubscriptionId,
@@ -20,14 +19,12 @@ export class SubscriptionUpdated {
     fee: Fee,
     nextUpdate: Date,
     interval: Interval,
-    cancellationMethod: string,
   ) {
     this.id = id;
     this.name = name;
     this.fee = fee;
     this.nextUpdate = nextUpdate;
     this.interval = interval;
-    this.cancellationMethod = cancellationMethod;
   }
 
   public static factory(
@@ -38,7 +35,6 @@ export class SubscriptionUpdated {
     nextUpdate: Date,
     intervalId: IntervalId,
     intervalCycle: number,
-    cancellationMethod: string,
   ): Result<SubscriptionUpdated, unknown> {
     const idResult = SubscriptionId.factory(id);
     const nameResult = SubscriptionName.factory(name);
@@ -61,7 +57,6 @@ export class SubscriptionUpdated {
         feeResult.value,
         nextUpdate,
         intervalResult.value,
-        cancellationMethod ?? "",
       ),
     };
   }

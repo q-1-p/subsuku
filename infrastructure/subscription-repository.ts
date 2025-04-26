@@ -43,7 +43,6 @@ export class SubscriptionRepository implements ISubscriptionRepository {
             nextUpdate: new Date(data[0].nextUpdate),
             intervalId: data[0].intervalId,
             intervalCycle: data[0].intervalCycle,
-            cancellationMethod: data[0].cancellationMethod,
           } as ISubscription,
         };
       })
@@ -82,7 +81,6 @@ export class SubscriptionRepository implements ISubscriptionRepository {
               nextUpdate: new Date(data.nextUpdate),
               intervalId: data.intervalId,
               intervalCycle: data.intervalCycle,
-              cancellationMethod: data.cancellationMethod,
             }) as ISubscription,
         );
         return { type: ok as typeof ok, value: subscriptions };
@@ -212,7 +210,6 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         nextUpdate: format(subscriptionRegistered.nextUpdate, "yyyy-MM-dd"),
         intervalCycle: subscriptionRegistered.interval.cycle,
         intervalId: subscriptionRegistered.interval.id,
-        cancellationMethod: subscriptionRegistered.cancellationMethod,
       })
       .then(() => true)
       .catch(() => false);
@@ -231,7 +228,6 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         nextUpdate: format(subscriptionUpdated.nextUpdate, "yyyy-MM-dd"),
         intervalCycle: subscriptionUpdated.interval.cycle,
         intervalId: subscriptionUpdated.interval.id,
-        cancellationMethod: subscriptionUpdated.cancellationMethod,
       })
       .where(
         and(
