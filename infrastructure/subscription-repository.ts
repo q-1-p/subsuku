@@ -14,42 +14,44 @@ import { type Result, err, ok } from "@/lib/result";
 import { CurrencyRepository } from "./currency-repository";
 
 export class SubscriptionRepository implements ISubscriptionRepository {
-  public fetchSubscription = async (
+  public fetchSubscription = (
     userId: UserId,
     subscriptionId: SubscriptionId,
   ): Promise<Result<ISubscription, string>> => {
-    return await db
-      .select()
-      .from(subscriptionsTable)
-      .where(
-        and(
-          eq(subscriptionsTable.userId, userId.value),
-          eq(subscriptionsTable.id, subscriptionId.value),
-        ),
-      )
+    return db.query.subscriptionsTable
+      .findFirst({
+        where: (subscription) =>
+          and(
+            eq(subscription.userId, userId.value),
+            eq(subscription.id, subscriptionId.value),
+          ),
+      })
       .then((data) => {
-        if (data.length !== 1) {
-          throw new Error("検索結果が不正です");
+        if (!data) {
+          throw new Error("サブスクリプションが見つかりませんでした");
         }
 
         return {
           type: ok as typeof ok,
           value: {
-            id: data[0].id,
-            name: data[0].name,
-            active: data[0].active,
-            amount: +data[0].amount,
-            currencyId: data[0].currencyId,
-            nextUpdate: new Date(data[0].nextUpdate),
-            intervalId: data[0].intervalId,
-            intervalCycle: data[0].intervalCycle,
+            id: data.id,
+            name: data.name,
+            active: data.active,
+            amount: +data.amount,
+            currencyId: data.currencyId,
+            nextUpdate: new Date(data.nextUpdate),
+            intervalId: data.intervalId,
+            intervalCycle: data.intervalCycle,
           } as ISubscription,
         };
       })
-      .catch((error) => ({ type: err as typeof err, error: error.message }));
+      .catch((error) => {
+        console.error(error);
+        return { type: err as typeof err, error: error.message };
+      });
   };
 
-  public fetchSubscriptions = async (
+  public fetchSubscriptions = (
     userId: UserId,
     active = true,
     upcoming = false,
@@ -57,7 +59,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     const today = format(new Date(), "yyyy-MM-dd");
     const upcomingDate = format(addDays(new Date(), 7), "yyyy-MM-dd");
 
-    const subscriptionsResult = await db
+    return db
       .select()
       .from(subscriptionsTable)
       .where(
@@ -89,15 +91,13 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         console.error(error);
         return { type: err as typeof err, error: undefined };
       });
-
-    return subscriptionsResult;
   };
 
-  public countSubscriptions = async (
+  public countSubscriptions = (
     userId: UserId,
     active = true,
   ): Promise<Result<number, undefined>> => {
-    const result = await db
+    return db
       .select({ count: sql<number>`count(*)` })
       .from(subscriptionsTable)
       .where(
@@ -105,13 +105,12 @@ export class SubscriptionRepository implements ISubscriptionRepository {
           eq(subscriptionsTable.active, active),
       )
       .then((res) => {
-        return { type: ok as typeof ok, value: Number(res[0].count) };
+        return { type: ok as typeof ok, value: +res[0].count };
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
         return { type: err as typeof err, error: undefined };
       });
-
-    return result;
   };
 
   public fetchSubscriptionsMonthlyFee = async (
@@ -151,7 +150,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
           value: fee,
         };
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
         return { type: err as typeof err, error: undefined };
       });
   };
@@ -191,16 +191,17 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
         return { type: ok as typeof ok, value: fee };
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
         return { type: err as typeof err, error: undefined };
       });
   };
 
-  public registerSubscription = async (
+  public registerSubscription = (
     userId: UserId,
     subscriptionRegistered: SubscriptionRegistered,
-  ) =>
-    db
+  ) => {
+    return db
       .insert(subscriptionsTable)
       .values({
         name: subscriptionRegistered.name.value,
@@ -212,13 +213,17 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         intervalId: subscriptionRegistered.interval.id,
       })
       .then(() => true)
-      .catch(() => false);
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
+  };
 
-  public updateSubscription = async (
+  public updateSubscription = (
     userId: UserId,
     subscriptionUpdated: SubscriptionUpdated,
-  ) =>
-    db
+  ) => {
+    return db
       .update(subscriptionsTable)
       .set({
         name: subscriptionUpdated.name.value,
@@ -236,13 +241,17 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         ),
       )
       .then(() => true)
-      .catch(() => false);
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
+  };
 
-  public deleteSubscription = async (
+  public deleteSubscription = (
     userId: UserId,
     subscriptionId: SubscriptionId,
-  ): Promise<boolean> =>
-    db
+  ): Promise<boolean> => {
+    return db
       .delete(subscriptionsTable)
       .where(
         and(
@@ -251,5 +260,9 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         ),
       )
       .then(() => true)
-      .catch(() => false);
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
+  };
 }

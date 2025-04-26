@@ -9,8 +9,8 @@ import { type Result, err, ok } from "@/lib/result";
 export class UserRepository implements IUserRepository {
   public fetchUser = async (
     clerkUserId: string,
-  ): Promise<Result<User, undefined>> =>
-    await db.query.usersTable
+  ): Promise<Result<User, undefined>> => {
+    return db.query.usersTable
       .findFirst({
         where: (user) => eq(user.clerkId, clerkUserId),
       })
@@ -34,5 +34,9 @@ export class UserRepository implements IUserRepository {
           value: userResult.value,
         };
       })
-      .catch(() => ({ type: err as typeof err, error: undefined }));
+      .catch((error) => {
+        console.error(error);
+        return { type: err as typeof err, error: undefined };
+      });
+  };
 }
