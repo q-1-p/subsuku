@@ -25,7 +25,7 @@ export async function registerSubscription(prev: unknown, formData: FormData) {
       return false;
     });
 
-  redirect(result ? "/app/dashboard" : "/error");
+  redirect(result ? "/dashboard" : "/error");
 }
 
 export async function updateSubscription(prev: unknown, formData: FormData) {
@@ -51,7 +51,7 @@ export async function updateSubscription(prev: unknown, formData: FormData) {
     });
 
   console.log(result);
-  redirect(result ? "/app/dashboard" : "/error");
+  redirect(result ? "/dashboard" : "/error");
 }
 
 export async function deleteSubscription(formData: FormData) {

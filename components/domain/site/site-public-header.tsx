@@ -12,7 +12,7 @@ export default async function SitePublicHeader() {
         </Link>
       </div>
       <div className="flex flex-1 items-center justify-end space-x-2">
-        <Link href="/app/dashboard">
+        <Link href="/dashboard">
           <Button size="sm">ログイン</Button>
         </Link>
       </div>
