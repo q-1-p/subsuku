@@ -34,17 +34,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import {
   type CurrencyId,
   currencyId,
   currencyNames,
 } from "@/domain/currency/currency-id";
-import {
-  type IntervalId,
-  intervalId,
-  intervalNames,
-} from "@/domain/interval/interval-id";
+import { type IntervalId, intervalId } from "@/domain/interval/interval-id";
+import { intervalNames } from "@/domain/interval/interval-names";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import { registerSubscription, updateSubscription } from "./_server-actions";
 
@@ -68,7 +64,6 @@ export default function SubscriptionForm({
       intervalCycle: subscription?.intervalCycle ?? 1,
       intervalId: subscription?.intervalId ?? intervalId.monthly,
       nextUpdate: subscription?.nextUpdate.toString() ?? "",
-      cancellationMethod: subscription?.cancellationMethod ?? "",
     },
   });
 
@@ -318,23 +313,6 @@ export default function SubscriptionForm({
           </div>
 
           <Separator />
-
-          <div className="grid grid-cols-1 gap-4">
-            <form.Field name="cancellationMethod">
-              {(field) => (
-                <>
-                  <h4>解約方法</h4>
-                  <div>
-                    <Textarea
-                      name="cancellationMethod"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                  </div>
-                </>
-              )}
-            </form.Field>
-          </div>
 
           <div className="flex justify-end gap-2">
             <form.Subscribe

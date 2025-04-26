@@ -41,7 +41,14 @@ export default function SubscriptionCard({
         {subscription.name[0]}
       </div>
       <div className="ml-4 space-y-1">
-        <p className="font-medium text-sm leading-none">{subscription.name}</p>
+        <p className="font-medium text-sm leading-none">
+          <Link
+            href={`/subscription/${subscription.id}`}
+            className="hover:underline"
+          >
+            {subscription.name}
+          </Link>
+        </p>
         <p className="text-muted-foreground text-sm">
           {subscription.intervalId === intervalId.yearly ? "年額" : "月額"} ¥
           {subscription.amount.toLocaleString()}

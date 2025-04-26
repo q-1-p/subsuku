@@ -56,7 +56,7 @@ export async function updateSubscription(prev: unknown, formData: FormData) {
 
 export async function deleteSubscription(formData: FormData) {
   const { userId } = await auth();
-  return fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscription`, {
+  return await fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscription`, {
     method: "DELETE",
     headers: {
       Authorization: userId ?? "",
