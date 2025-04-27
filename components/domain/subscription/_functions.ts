@@ -21,7 +21,7 @@ export const countSubscriptions = (): Promise<number> =>
   auth()
     .then((auth) =>
       auth
-        ? fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-count`, {
+        ? fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions/count`, {
             cache: "no-store",
             headers: {
               Authorization: auth.userId ?? "",
@@ -37,7 +37,7 @@ export const fetchMonthlyFee = (): Promise<number> =>
     .then((auth) =>
       auth
         ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-monthly-fee`,
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions/fee/monthly`,
             {
               cache: "no-store",
               headers: {
@@ -55,7 +55,7 @@ export const fetchYearlyFee = (): Promise<number> =>
     .then((auth) =>
       auth
         ? fetch(
-            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions-yearly-fee`,
+            `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions/fee/yearly`,
             {
               cache: "no-store",
               headers: {
