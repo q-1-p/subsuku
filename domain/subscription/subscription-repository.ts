@@ -6,44 +6,41 @@ import type { SubscriptionRegistered } from "./subscription-registered";
 import type { SubscriptionUpdated } from "./subscription-updated";
 
 export interface ISubscriptionRepository {
-  fetchSubscription: (
+  find: (
     userId: UserId,
     subscriptionId: SubscriptionId,
   ) => Promise<Result<ISubscription, string>>;
 
-  fetchSubscriptions: (
+  findAll: (
     userId: UserId,
     active?: boolean,
     upcoming?: boolean,
   ) => Promise<Result<ISubscription[], undefined>>;
 
-  countSubscriptions: (
+  count: (
     userId: UserId,
     active?: boolean,
   ) => Promise<Result<number, undefined>>;
 
-  fetchSubscriptionsMonthlyFee: (
+  fetchMonthlyFee: (
     userId: UserId,
     active?: boolean,
   ) => Promise<Result<number, undefined>>;
 
-  fetchSubscriptionsYearlyFee: (
+  fetchYearlyFee: (
     userId: UserId,
     active?: boolean,
   ) => Promise<Result<number, undefined>>;
 
-  registerSubscription: (
+  insert: (
     userId: UserId,
     subscriptionRegistered: SubscriptionRegistered,
   ) => Promise<boolean>;
 
-  updateSubscription: (
+  update: (
     userId: UserId,
     subscriptionRegistered: SubscriptionUpdated,
   ) => Promise<boolean>;
 
-  deleteSubscription: (
-    userId: UserId,
-    subscriptionId: SubscriptionId,
-  ) => Promise<boolean>;
+  delete: (userId: UserId, subscriptionId: SubscriptionId) => Promise<boolean>;
 }

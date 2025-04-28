@@ -16,7 +16,7 @@ const subscriptionRepository: ISubscriptionRepository =
   new SubscriptionRepository();
 
 export async function GET(req: NextRequest) {
-  const userResult = await userRepository.fetchUser(
+  const userResult = await userRepository.find(
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ status: 400 });
   }
 
-  const subscriptionResult = await subscriptionRepository.fetchSubscription(
+  const subscriptionResult = await subscriptionRepository.find(
     userResult.value.id,
     subscriptionIdResult.value,
   );
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const userResult = await userRepository.fetchUser(
+  const userResult = await userRepository.find(
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
@@ -57,13 +57,12 @@ export async function POST(req: NextRequest) {
     new Date(formData.get("nextUpdate") as string),
     Number(formData.get("intervalId")) as IntervalId,
     Number(formData.get("intervalCycle")),
-    formData.get("cancellationMethod") as string,
   );
   if (subscriptionRegistered.type === err) {
     return NextResponse.json({ status: 400 });
   }
 
-  const isRegistered = await subscriptionRepository.registerSubscription(
+  const isRegistered = await subscriptionRepository.insert(
     userResult.value.id,
     subscriptionRegistered.value,
   );
@@ -72,7 +71,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const userResult = await userRepository.fetchUser(
+  const userResult = await userRepository.find(
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
@@ -88,13 +87,12 @@ export async function PUT(req: NextRequest) {
     new Date(formData.get("nextUpdate") as string),
     Number(formData.get("intervalId")) as IntervalId,
     Number(formData.get("intervalCycle")),
-    formData.get("cancellationMethod") as string,
   );
   if (subscriptionUpdated.type === err) {
     return NextResponse.json({ status: 400 });
   }
 
-  const isRegistered = await subscriptionRepository.updateSubscription(
+  const isRegistered = await subscriptionRepository.update(
     userResult.value.id,
     subscriptionUpdated.value,
   );
@@ -103,7 +101,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const userResult = await userRepository.fetchUser(
+  const userResult = await userRepository.find(
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
@@ -118,7 +116,7 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ status: 400 });
   }
 
-  const result = await subscriptionRepository.deleteSubscription(
+  const result = await subscriptionRepository.delete(
     userResult.value.id,
     subscriptionIdResult.value,
   );

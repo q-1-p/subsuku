@@ -9,17 +9,16 @@ const userRepository: IUserRepository = new UserRepository();
 const subscriptionRepository = new SubscriptionRepository();
 
 export async function GET(req: NextRequest) {
-  const userResult = await userRepository.fetchUser(
+  const userResult = await userRepository.find(
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
     return NextResponse.json({ status: 401 });
   }
 
-  const monthlyFeeResult =
-    await subscriptionRepository.fetchSubscriptionsMonthlyFee(
-      userResult.value.id,
-    );
+  const monthlyFeeResult = await subscriptionRepository.fetchMonthlyFee(
+    userResult.value.id,
+  );
   switch (monthlyFeeResult.type) {
     case ok:
       return NextResponse.json(monthlyFeeResult.value, { status: 200 });

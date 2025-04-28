@@ -7,10 +7,8 @@ import type { ICurrencyRepository } from "@/domain/currency/currency-repository"
 import { type Result, err, ok } from "@/lib/result";
 
 export class CurrencyRepository implements ICurrencyRepository {
-  public fetchExchangeRate = (
-    currency: CurrencyId,
-  ): Promise<Result<number, undefined>> =>
-    db
+  public find = (currency: CurrencyId): Promise<Result<number, undefined>> => {
+    return db
       .select({ exchangeRate: currenciesTable.exchangeRate })
       .from(currenciesTable)
       .where(eq(currenciesTable.id, currency))
@@ -21,11 +19,9 @@ export class CurrencyRepository implements ICurrencyRepository {
       .catch(() => {
         return { type: err as typeof err, error: undefined };
       });
-
-  public fetchCurrencies = (): Promise<
-    Result<Map<CurrencyId, number>, undefined>
-  > =>
-    db
+  };
+  public findAll = (): Promise<Result<Map<CurrencyId, number>, undefined>> => {
+    return db
       .select()
       .from(currenciesTable)
       .then((data) => {
@@ -43,6 +39,44 @@ export class CurrencyRepository implements ICurrencyRepository {
       .catch(() => {
         return { type: err as typeof err, error: undefined };
       });
+  };
+
+  public update = async () => {
+    await fetch(
+      `https://openexchangerates.org/api/latest.json?app_id=${process.env.OPEN_EXCHANGE_RATES_APP_ID}`,
+    )
+      .then((res) => res.json())
+      .then(async (data) => {
+        const rates: { id: number; rate: number }[] = [
+          { id: currencyId.usd, rate: data.rates.JPY / data.rates.USD },
+          { id: currencyId.eur, rate: data.rates.JPY / data.rates.EUR },
+          { id: currencyId.gbp, rate: data.rates.JPY / data.rates.GBP },
+          { id: currencyId.cny, rate: data.rates.JPY / data.rates.CNY },
+        ];
+
+        for (const rate of rates) {
+          await db
+            .update(currenciesTable)
+            .set({
+              exchangeRate: rate.rate,
+            })
+            .where(eq(currenciesTable.id, rate.id))
+            .execute();
+        }
+      });
+
+    await fetch("https://api.excelapi.org/crypto/rate?pair=btc-jpy")
+      .then((res) => res.json())
+      .then(async (data) => {
+        await db
+          .update(currenciesTable)
+          .set({
+            exchangeRate: data,
+          })
+          .where(eq(currenciesTable.id, currencyId.btc))
+          .execute();
+      });
+  };
 
   private validateCurrencyIds = (currencyIds: CurrencyId[]): boolean => {
     const currencies = [

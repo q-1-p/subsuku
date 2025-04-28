@@ -11,17 +11,16 @@ const subscriptionRepository: ISubscriptionRepository =
   new SubscriptionRepository();
 
 export async function GET(req: NextRequest) {
-  const userResult = await userRepository.fetchUser(
+  const userResult = await userRepository.find(
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
     return NextResponse.json({ status: 401 });
   }
 
-  const yearlyFeeResult =
-    await subscriptionRepository.fetchSubscriptionsYearlyFee(
-      userResult.value.id,
-    );
+  const yearlyFeeResult = await subscriptionRepository.fetchYearlyFee(
+    userResult.value.id,
+  );
 
   switch (yearlyFeeResult.type) {
     case ok:

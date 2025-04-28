@@ -24,13 +24,17 @@ export const cancellationMethodsTable = pgTable(
   (table) => [index("idx_cancellation_method_id").on(table.id)],
 );
 
-export const cancellationStepsTable = pgTable("cancellation_steps", {
-  cancellationMethodId: uuid("cancellation_method_id")
-    .notNull()
-    .references(() => cancellationMethodsTable.id),
-  sequentialOrder: smallint("sequential_order").notNull(),
-  procedure: varchar("procedure", { length: 255 }).notNull(),
-});
+export const cancellationStepsTable = pgTable(
+  "cancellation_steps",
+  {
+    cancellationMethodId: uuid("cancellation_method_id")
+      .notNull()
+      .references(() => cancellationMethodsTable.id),
+    sequentialOrder: smallint("sequential_order").notNull(),
+    procedure: varchar("procedure", { length: 255 }).notNull(),
+  },
+  (table) => ({primaryKey: [table.cancellationMethodId, table.sequentialOrder]})
+);
 
 export const currenciesTable = pgTable("currencies", {
   id: smallint("id").primaryKey(),

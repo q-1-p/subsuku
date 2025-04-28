@@ -7,7 +7,7 @@ import type { IUserRepository } from "@/domain/user/user-repository";
 import { type Result, err, ok } from "@/lib/result";
 
 export class UserRepository implements IUserRepository {
-  public fetchUser = async (
+  public find = async (
     clerkUserId: string,
   ): Promise<Result<User, undefined>> => {
     return db.query.usersTable

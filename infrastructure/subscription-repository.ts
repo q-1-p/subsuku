@@ -14,7 +14,7 @@ import { type Result, err, ok } from "@/lib/result";
 import { CurrencyRepository } from "./currency-repository";
 
 export class SubscriptionRepository implements ISubscriptionRepository {
-  public fetchSubscription = (
+  public find = (
     userId: UserId,
     subscriptionId: SubscriptionId,
   ): Promise<Result<ISubscription, string>> => {
@@ -50,8 +50,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         return { type: err as typeof err, error: error.message };
       });
   };
-
-  public fetchSubscriptions = (
+  public findAll = (
     userId: UserId,
     active = true,
     upcoming = false,
@@ -93,7 +92,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       });
   };
 
-  public countSubscriptions = (
+  public count = (
     userId: UserId,
     active = true,
   ): Promise<Result<number, undefined>> => {
@@ -112,15 +111,14 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         return { type: err as typeof err, error: undefined };
       });
   };
-
-  public fetchSubscriptionsMonthlyFee = async (
+  public fetchMonthlyFee = async (
     userId: UserId,
     active = true,
   ): Promise<Result<number, undefined>> => {
     const today = format(new Date(), "yyyy-MM-dd");
     const nextMonthDate = format(addMonths(new Date(), 1), "yyyy-MM-dd");
 
-    const currenciesResult = await new CurrencyRepository().fetchCurrencies();
+    const currenciesResult = await new CurrencyRepository().findAll();
     if (currenciesResult.type === err) {
       return { type: err as typeof err, error: undefined };
     }
@@ -155,15 +153,14 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         return { type: err as typeof err, error: undefined };
       });
   };
-
-  public fetchSubscriptionsYearlyFee = async (
+  public fetchYearlyFee = async (
     userId: UserId,
     active = true,
   ): Promise<Result<number, undefined>> => {
     const today = format(new Date(), "yyyy-MM-dd");
     const nextYearDate = format(addYears(new Date(), 1), "yyyy-MM-dd");
 
-    const currenciesResult = await new CurrencyRepository().fetchCurrencies();
+    const currenciesResult = await new CurrencyRepository().findAll();
     if (currenciesResult.type === err) {
       return { type: err as typeof err, error: undefined };
     }
@@ -197,7 +194,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       });
   };
 
-  public registerSubscription = (
+  public insert = (
     userId: UserId,
     subscriptionRegistered: SubscriptionRegistered,
   ) => {
@@ -220,7 +217,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       });
   };
 
-  public updateSubscription = (
+  public update = (
     userId: UserId,
     subscriptionUpdated: SubscriptionUpdated,
   ) => {
@@ -248,7 +245,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       });
   };
 
-  public deleteSubscription = (
+  public delete = (
     userId: UserId,
     subscriptionId: SubscriptionId,
   ): Promise<boolean> => {
