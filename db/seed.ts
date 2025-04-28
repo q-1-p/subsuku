@@ -1,12 +1,17 @@
 import "dotenv/config";
 import { addDays, formatDate } from "date-fns";
+import { sql } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 import { currencyId } from "@/domain/currency/currency-id";
 import { intervalId } from "@/domain/interval/interval-id";
-import { sql } from "drizzle-orm";
 import { db } from "./index";
-import { currenciesTable, subscriptionsTable, usersTable } from "./schema";
+import {
+  cancellationMethodsTable,
+  currenciesTable,
+  subscriptionsTable,
+  usersTable,
+} from "./schema";
 
 async function seed() {
   try {
@@ -31,6 +36,32 @@ async function seed() {
       userId = existingUsers[0].id;
     }
 
+    // キャンセル方法データの挿入
+    console.log("Seeding cancellation methods...");
+    const cancellationMethodData = [
+      { name: "website", public: true, createdUserId: userId },
+      { name: "app", public: true, createdUserId: userId },
+      { name: "email", public: true, createdUserId: userId },
+      // 必要に応じて他のメソッドも追加
+    ];
+    const insertedMethods = await db
+      .insert(cancellationMethodsTable)
+      .values(cancellationMethodData)
+      .returning({
+        id: cancellationMethodsTable.id,
+        name: cancellationMethodsTable.name,
+      });
+
+    // 挿入されたメソッドのIDを名前でルックアップできるようにする
+    const cancellationMethodIds = insertedMethods.reduce(
+      (acc, method) => {
+        acc[method.name] = method.id;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
+    console.log("Cancellation methods seeded.");
+
     // subscriptionsテーブルに行が存在しないことを確認
     const subscriptionsCount = await db
       .select({ count: sql<number>`count(*)` })
@@ -49,7 +80,7 @@ async function seed() {
           nextUpdate: formatDate(new Date(), "yyyy-MM-dd"),
           intervalCycle: 1,
           intervalId: intervalId.monthly,
-          cancellationMethod: "website",
+          cancellationMethodId: cancellationMethodIds.website, // 実際の ID を使用
         },
         {
           id: uuidv4(),
@@ -61,7 +92,7 @@ async function seed() {
           nextUpdate: formatDate(addDays(new Date(), 6), "yyyy-MM-dd"),
           intervalCycle: 1,
           intervalId: intervalId.monthly,
-          cancellationMethod: "website",
+          cancellationMethodId: cancellationMethodIds.website, // 実際の ID を使用
         },
         {
           id: uuidv4(),
@@ -73,7 +104,7 @@ async function seed() {
           nextUpdate: formatDate(addDays(new Date(), 20), "yyyy-MM-dd"),
           intervalCycle: 1,
           intervalId: intervalId.monthly,
-          cancellationMethod: "app",
+          cancellationMethodId: cancellationMethodIds.app, // 実際の ID を使用
         },
         {
           id: uuidv4(),
@@ -85,7 +116,7 @@ async function seed() {
           nextUpdate: formatDate(addDays(new Date(), -4), "yyyy-MM-dd"),
           intervalCycle: 1,
           intervalId: intervalId.monthly,
-          cancellationMethod: "website",
+          cancellationMethodId: cancellationMethodIds.website, // 実際の ID を使用
         },
         {
           id: uuidv4(),
@@ -97,7 +128,7 @@ async function seed() {
           nextUpdate: formatDate(addDays(new Date(), 5), "yyyy-MM-dd"),
           intervalCycle: 1,
           intervalId: intervalId.yearly,
-          cancellationMethod: "app",
+          cancellationMethodId: cancellationMethodIds.app, // 実際の ID を使用
         },
         {
           id: uuidv4(),
@@ -109,11 +140,11 @@ async function seed() {
           nextUpdate: formatDate(addDays(new Date(), 30), "yyyy-MM-dd"),
           intervalCycle: 1,
           intervalId: intervalId.yearly,
-          cancellationMethod: "email",
+          cancellationMethodId: cancellationMethodIds.email, // 実際の ID を使用
         },
       ]);
     }
-    // subscriptionsテーブルに行が存在しないことを確認
+
     const currenciesCount = await db
       .select({ count: sql<number>`count(*)` })
       .from(currenciesTable)

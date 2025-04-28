@@ -10,4 +10,5 @@ export interface ISubscription {
   readonly nextUpdate: Date;
   readonly intervalCycle: number;
   readonly intervalId: IntervalId;
+  readonly cancellationMethodId: string;
 }
