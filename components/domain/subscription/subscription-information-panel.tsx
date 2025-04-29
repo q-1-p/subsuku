@@ -34,11 +34,11 @@ export default async function SubscriptionInformationPanel({
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="icon">
-                  <Link href={`/subscription/edit/${subscription.id}`}>
+                <Link href={`/app/subscription/edit/${subscription.id}`}>
+                  <Button variant="outline" size="icon">
                     <Pencil className="h-4 w-4" />
-                  </Link>
-                </Button>
+                  </Button>
+                </Link>
                 <SubscriptionDeleteIcon subscriptionId={subscription.id} />
               </div>
             </div>

@@ -19,7 +19,7 @@ export default function SubscriptionDeleteIcon({
     if (await deleteSubscription(formData)) {
       setSubscriptions(subscriptions.filter((s) => s.id !== subscriptionId));
       alert("登録されたサブスクを削除しました");
-      redirect("/dashboard");
+      redirect("/app/dashboard");
     }
   };
 

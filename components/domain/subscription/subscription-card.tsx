@@ -43,7 +43,7 @@ export default function SubscriptionCard({
       <div className="ml-4 space-y-1">
         <p className="font-medium text-sm leading-none">
           <Link
-            href={`/subscription/${subscription.id}`}
+            href={`/app/subscription/${subscription.id}`}
             className="hover:underline"
           >
             {subscription.name}

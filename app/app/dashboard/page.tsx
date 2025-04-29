@@ -20,13 +20,13 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <h1 className="font-bold text-2xl">ダッシュボード</h1>
             <div className="flex gap-2">
-              <Link href="/subscriptions">
+              <Link href="/app/subscriptions">
                 <Button variant="outline">
                   <List className="mr-2 h-4 w-4" />
                   一覧表示
                 </Button>
               </Link>
-              <Link href="/subscription/add">
+              <Link href="/app/subscription/add">
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
                   サブスクを追加

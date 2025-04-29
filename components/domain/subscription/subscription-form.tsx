@@ -321,7 +321,7 @@ export default function SubscriptionForm({
               {([canSubmit, isSubmitting]) => (
                 <>
                   <Button type="button" variant="outline" asChild>
-                    <Link href="/dashboard">キャンセル</Link>
+                    <Link href="/app/dashboard">キャンセル</Link>
                   </Button>
                   <Button type="submit" disabled={!canSubmit}>
                     {isSubmitting ? "保存中..." : "保存"}

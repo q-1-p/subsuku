@@ -7,7 +7,7 @@ export default async function SubscriptionDetailPage({
   return (
     <>
       <SiteSubPageHeader
-        backLink="/dashboard"
+        backLink="/app/dashboard"
         backText="ダッシュボードに戻る"
       />
       <SubscriptionInformationPanel subscriptionId={(await params).id} />
