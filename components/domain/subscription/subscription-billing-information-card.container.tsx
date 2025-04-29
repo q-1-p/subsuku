@@ -1,6 +1,6 @@
 import "server-only";
-import { fetchSubscription } from "./_functions";
-import SubscriptionBillingInformationCardPresentation from "./subscription-billing-information-card-presentation";
+import { fetchSubscription } from "./fetcher";
+import SubscriptionBillingInformationCardPresentation from "./subscription-billing-information-card.presentation";
 
 export default async function SubscriptionBillingInformationCard(
   subscriptionId: string,

@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { ISubscription } from "@/domain/subscription/subscription";
-import { fetchSubscriptions } from "./_functions";
+import { fetchSubscriptions } from "./fetcher";
 import SubscriptionListPresentation from "./subscription-list.presentation";
 
 export default async function SubscriptionList({

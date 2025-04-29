@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { intervalId } from "@/domain/interval/interval-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
-import { subscriptionsAtom } from "./_jotai";
-import { deleteSubscription } from "./_server-actions";
+import { deleteSubscription } from "./actions";
+import { subscriptionsAtom } from "./jotai";
 
 export default function SubscriptionCard({
   subscription,

@@ -42,7 +42,7 @@ import {
 import { type IntervalId, intervalId } from "@/domain/interval/interval-id";
 import { intervalNames } from "@/domain/interval/interval-names";
 import type { ISubscription } from "@/domain/subscription/subscription";
-import { registerSubscription, updateSubscription } from "./_server-actions";
+import { registerSubscription, updateSubscription } from "./actions";
 
 const subscriptionFormScheme = type({
   name: "string > 0",

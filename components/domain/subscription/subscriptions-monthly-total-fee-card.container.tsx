@@ -1,6 +1,6 @@
 import "server-only";
 
-import { fetchMonthlyFee, fetchYearlyFee } from "./_functions";
+import { fetchMonthlyFee, fetchYearlyFee } from "./fetcher";
 import SubscriptionsMonthlyTotalFeeCardPresentation from "./subscriptions-monthly-total-fee-card.presentation";
 
 export default async function SubscriptionsMonthlyTotalFeeCard() {

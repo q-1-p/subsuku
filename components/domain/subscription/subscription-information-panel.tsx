@@ -1,11 +1,11 @@
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 
-import SubscriptionBillingInformationCardPresentation from "@/components/domain/subscription/subscription-billing-information-card-presentation";
+import SubscriptionBillingInformationCardPresentation from "@/components/domain/subscription/subscription-billing-information-card.presentation";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CancellationMethodInformationCardContainer from "../cancellation-method/cancellation-method-information-card.container";
-import { fetchSubscription } from "./_functions";
+import { fetchSubscription } from "./fetcher";
 import SubscriptionDeleteIcon from "./subscription-delete-icon";
 
 export default async function SubscriptionInformationPanel({

@@ -12,7 +12,13 @@ export const fetchSubscription = async (id: string): Promise<ISubscription> =>
               Authorization: auth.userId ?? "",
             },
             method: "GET",
-          }).then((res) => res.json())
+          }).then((res) => {
+            if (!res.ok) {
+              throw new Error("Failed to fetch subscription");
+            }
+
+            return res.json();
+          })
         : undefined,
     )
     .catch(() => undefined);
@@ -27,7 +33,13 @@ export const countSubscriptions = (): Promise<number> =>
               Authorization: auth.userId ?? "",
             },
             method: "GET",
-          }).then((res) => (res.ok ? res.json() : 0))
+          }).then((res) => {
+            if (!res.ok) {
+              throw new Error("Failed to fetch subscriptions count");
+            }
+
+            return res.json();
+          })
         : 0,
     )
     .catch(() => 0);
@@ -45,7 +57,13 @@ export const fetchMonthlyFee = (): Promise<number> =>
               },
               method: "GET",
             },
-          ).then((res) => (res.ok ? res.json() : 0))
+          ).then((res) => {
+            if (!res.ok) {
+              throw new Error("Failed to fetch monthly fee");
+            }
+
+            return res.json();
+          })
         : 0,
     )
     .catch(() => 0);
@@ -63,7 +81,13 @@ export const fetchYearlyFee = (): Promise<number> =>
               },
               method: "GET",
             },
-          ).then((res) => (res.ok ? res.json() : 0))
+          ).then((res) => {
+            if (!res.ok) {
+              throw new Error("Failed to fetch yearly fee");
+            }
+
+            return res.json();
+          })
         : 0,
     )
     .catch(() => 0);
@@ -84,7 +108,13 @@ export const fetchSubscriptions = async (
               method: "GET",
             },
           )
-            .then((res) => (res.ok ? res.json() : []))
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Failed to fetch subscriptions");
+              }
+
+              return res.json();
+            })
             .then((data) => data as ISubscription[])
         : [],
     )

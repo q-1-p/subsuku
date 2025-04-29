@@ -7,7 +7,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { ISubscription } from "@/domain/subscription/subscription";
-import { subscriptionsAtom } from "./_jotai";
+import { subscriptionsAtom } from "./jotai";
 import SubscriptionCard from "./subscription-card";
 
 export default function SubscriptionListPresentation({
