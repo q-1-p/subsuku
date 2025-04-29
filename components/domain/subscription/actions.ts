@@ -50,7 +50,6 @@ export async function updateSubscription(prev: unknown, formData: FormData) {
       return false;
     });
 
-  console.log(result);
   redirect(result ? "/app/dashboard" : "/error");
 }
 

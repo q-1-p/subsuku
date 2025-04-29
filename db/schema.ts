@@ -62,9 +62,9 @@ export const subscriptionsTable = pgTable(
     nextUpdate: date("next_update").notNull(),
     intervalCycle: smallint("interval_cycle").notNull(),
     intervalId: smallint("interval_unit_id").notNull(),
-    cancellationMethodId: uuid("cancellation_method_id")
-      .notNull()
-      .references(() => cancellationMethodsTable.id),
+    cancellationMethodId: uuid("cancellation_method_id").references(
+      () => cancellationMethodsTable.id,
+    ),
   },
   (table) => [index("idx_subscription_id").on(table.id)],
 );

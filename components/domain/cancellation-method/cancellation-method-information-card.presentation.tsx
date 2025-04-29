@@ -13,8 +13,6 @@ export default function CancellationMethodInformationCardPresentation({
 }: {
   cancellationMethod: ICancellationMethod;
 }) {
-  console.dir(cancellationMethod);
-
   return (
     <Card className="overflow-hidden rounded-2xl border shadow-sm">
       <CardHeader>

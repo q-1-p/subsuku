@@ -17,7 +17,13 @@ export const fetchCancellationMethod = async (
               },
               method: "GET",
             },
-          ).then((res) => res.json())
+          ).then((res) => {
+            if (!res.ok) {
+              throw new Error("Failed to fetch cancellation method");
+            }
+
+            return res.json();
+          })
         : undefined,
     )
     .catch(() => undefined);

@@ -6,9 +6,9 @@ export default async function CancellationMethodInformationCardContainer({
 }: {
   cancellationMethodId: string;
 }) {
-  const cancellationMethod =
-    await fetchCancellationMethod(cancellationMethodId);
-  console.dir(cancellationMethod);
+  const cancellationMethod = cancellationMethodId
+    ? await fetchCancellationMethod(cancellationMethodId)
+    : undefined;
   return (
     <>
       {cancellationMethod ? (
