@@ -101,8 +101,10 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .select({ count: sql<number>`count(*)` })
       .from(subscriptionsTable)
       .where(
-        eq(subscriptionsTable.userId, userId.value) &&
+        and(
+          eq(subscriptionsTable.userId, userId.value),
           eq(subscriptionsTable.active, active),
+        ),
       )
       .then((res) => {
         return { type: ok as typeof ok, value: +res[0].count };
@@ -131,13 +133,22 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       })
       .from(subscriptionsTable)
       .where(
-        eq(subscriptionsTable.userId, userId.value) &&
-          eq(subscriptionsTable.active, active) &&
-          gte(subscriptionsTable.nextUpdate, today) &&
+        and(
+          eq(subscriptionsTable.userId, userId.value),
+          eq(subscriptionsTable.active, active),
+          gte(subscriptionsTable.nextUpdate, today),
           lt(subscriptionsTable.nextUpdate, nextMonthDate),
+        ),
       )
-      .then((x) => {
-        const fee = x
+      .then((datum) => {
+        if (datum.length === 0) {
+          return {
+            type: ok as typeof ok,
+            value: 0,
+          };
+        }
+
+        const fee = datum
           .map(
             (x) =>
               +x.amount *
@@ -173,13 +184,22 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       })
       .from(subscriptionsTable)
       .where(
-        eq(subscriptionsTable.userId, userId.value) &&
-          eq(subscriptionsTable.active, active) &&
-          gte(subscriptionsTable.nextUpdate, today) &&
+        and(
+          eq(subscriptionsTable.userId, userId.value),
+          eq(subscriptionsTable.active, active),
+          gte(subscriptionsTable.nextUpdate, today),
           lt(subscriptionsTable.nextUpdate, nextYearDate),
+        ),
       )
-      .then((x) => {
-        const fee = x
+      .then((datum) => {
+        if (datum.length === 0) {
+          return {
+            type: ok as typeof ok,
+            value: 0,
+          };
+        }
+
+        const fee = datum
           .map(
             (x) =>
               +x.amount *
