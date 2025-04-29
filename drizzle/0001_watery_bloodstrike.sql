@@ -1,0 +1,1 @@
+ALTER TABLE "cancellation_steps" ADD CONSTRAINT "cancellation_steps_cancellation_method_id_sequential_order_pk" PRIMARY KEY("cancellation_method_id","sequential_order");

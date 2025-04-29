@@ -4,6 +4,7 @@ import {
   index,
   numeric,
   pgTable,
+  primaryKey,
   real,
   smallint,
   uuid,
@@ -33,7 +34,11 @@ export const cancellationStepsTable = pgTable(
     sequentialOrder: smallint("sequential_order").notNull(),
     procedure: varchar("procedure", { length: 255 }).notNull(),
   },
-  (table) => ({primaryKey: [table.cancellationMethodId, table.sequentialOrder]})
+  (table) => [
+    primaryKey({
+      columns: [table.cancellationMethodId, table.sequentialOrder],
+    }),
+  ],
 );
 
 export const currenciesTable = pgTable("currencies", {
