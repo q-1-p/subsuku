@@ -42,6 +42,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
             nextUpdate: new Date(data.nextUpdate),
             intervalId: data.intervalId,
             intervalCycle: data.intervalCycle,
+            cancellationMethodId: data.cancellationMethodId,
           } as ISubscription,
         };
       })

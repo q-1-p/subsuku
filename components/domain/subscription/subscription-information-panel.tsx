@@ -4,6 +4,7 @@ import Link from "next/link";
 import SubscriptionBillingInformationCardPresentation from "@/components/domain/subscription/subscription-billing-information-card-presentation";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CancellationMethodInformationCardContainer from "../cancellation-method/cancellation-method-information-card.container";
 import { fetchSubscription } from "./_functions";
 import SubscriptionDeleteIcon from "./subscription-delete-icon";
 
@@ -63,41 +64,9 @@ export default async function SubscriptionInformationPanel({
                 />
               </TabsContent>
               <TabsContent value="cancel">
-                {/* <Card className="overflow-hidden rounded-2xl border shadow-sm">
-                <CardHeader>
-                  <CardTitle>解約方法</CardTitle>
-                  <CardDescription>
-                    {subscription.name}を解約する手順
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ol className="my-4 list-decimal space-y-3 pl-5">
-                    {subscription.cancelInstructions.map((step, index) => (
-                      <li
-                        key={0}
-                        className="rounded-xl bg-secondary/30 p-3 text-base"
-                      >
-                        {step}
-                      </li>
-                    ))}
-                  </ol>
-                </CardContent>
-                <CardFooter className="flex flex-col gap-2">
-                  <Button className="w-full" asChild>
-                    <a
-                      href={subscription.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      サービスサイトに移動
-                    </a>
-                  </Button>
-                  <p className="text-center text-muted-foreground text-xs">
-                    解約手順は変更される場合があります。最新情報は公式サイトでご確認ください。
-                  </p>
-                </CardFooter>
-              </Card> */}
+                <CancellationMethodInformationCardContainer
+                  cancellationMethodId={subscription.cancellationMethodId}
+                />
               </TabsContent>
             </Tabs>
           </div>
