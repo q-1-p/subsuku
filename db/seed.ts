@@ -181,6 +181,18 @@ async function seedSubscriptions(
         intervalId: intervalId.yearly,
         cancellationMethodId: insertedMethodId, // 実際の ID を使用
       },
+      {
+        id: uuidv4(),
+        name: "Ever Note",
+        active: false,
+        userId: userId,
+        amount: "5",
+        currencyId: currencyId.usd,
+        nextUpdate: formatDate(addDays(new Date(), 3), "yyyy-MM-dd"),
+        intervalCycle: 2,
+        intervalId: intervalId.monthly,
+        cancellationMethodId: insertedMethodId, // 実際の ID を使用
+      },
     ]);
   }
 }

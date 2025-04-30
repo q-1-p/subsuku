@@ -51,7 +51,7 @@ export const subscriptionsTable = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     name: varchar("name", { length: 255 }).notNull(),
-    active: boolean("active").notNull().default(false),
+    active: boolean("active").notNull().default(true),
     userId: uuid("user_id")
       .notNull()
       .references(() => usersTable.id),

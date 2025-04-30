@@ -64,12 +64,16 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .from(subscriptionsTable)
       .where(
         upcoming
-          ? eq(subscriptionsTable.active, active) &&
-              eq(subscriptionsTable.userId, userId.value) &&
-              gte(subscriptionsTable.nextUpdate, today) &&
-              lt(subscriptionsTable.nextUpdate, upcomingDate)
-          : eq(subscriptionsTable.active, active) &&
+          ? and(
+              eq(subscriptionsTable.active, active),
               eq(subscriptionsTable.userId, userId.value),
+              gte(subscriptionsTable.nextUpdate, today),
+              lt(subscriptionsTable.nextUpdate, upcomingDate),
+            )
+          : and(
+              eq(subscriptionsTable.active, active),
+              eq(subscriptionsTable.userId, userId.value),
+            ),
       )
       .then((x) => {
         const subscriptions = x.map(
