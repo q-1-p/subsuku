@@ -13,14 +13,14 @@ export async function GET(req: NextRequest) {
     req.nextUrl.searchParams.get("cancellationMethodId") as string,
   );
   if (cancellationMethodIdResult.type === err) {
-    return NextResponse.json({ status: 400 });
+    return NextResponse.json({}, { status: 400 });
   }
 
   const cancellationMethodResult = await cancellationMethodRepository.find(
     cancellationMethodIdResult.value,
   );
   if (cancellationMethodResult.type === err) {
-    return NextResponse.json({ status: 400 });
+    return NextResponse.json({}, { status: 400 });
   }
 
   return NextResponse.json(cancellationMethodResult.value, { status: 200 });

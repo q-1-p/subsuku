@@ -20,14 +20,14 @@ export async function GET(req: NextRequest) {
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({}, { status: 401 });
   }
 
   const subscriptionIdResult = SubscriptionId.factory(
     req.nextUrl.searchParams.get("id") as string,
   );
   if (subscriptionIdResult.type === err) {
-    return NextResponse.json({ status: 400 });
+    return NextResponse.json({}, { status: 400 });
   }
 
   const subscriptionResult = await subscriptionRepository.find(
@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     subscriptionIdResult.value,
   );
   if (subscriptionResult.type === err) {
-    return NextResponse.json({ status: 400 });
+    return NextResponse.json({}, { status: 400 });
   }
 
   return NextResponse.json(subscriptionResult.value, { status: 200 });
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({}, { status: 401 });
   }
 
   const formData = await req.formData();
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     Number(formData.get("intervalCycle")),
   );
   if (subscriptionRegistered.type === err) {
-    return NextResponse.json({ status: 400 });
+    return NextResponse.json({}, { status: 400 });
   }
 
   const isRegistered = await subscriptionRepository.insert(
@@ -75,7 +75,7 @@ export async function PUT(req: NextRequest) {
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({}, { status: 401 });
   }
 
   const formData = await req.formData();
@@ -99,7 +99,7 @@ export async function PUT(req: NextRequest) {
     subscriptionUpdated.value,
   );
 
-  return NextResponse.json({ status: isUpdated ? 200 : 400 });
+  return NextResponse.json({}, { status: isUpdated ? 200 : 400 });
 }
 
 export async function DELETE(req: NextRequest) {
@@ -107,7 +107,7 @@ export async function DELETE(req: NextRequest) {
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({}, { status: 401 });
   }
 
   const formData = await req.formData();
@@ -115,7 +115,7 @@ export async function DELETE(req: NextRequest) {
     formData.get("subscriptionId") as string,
   );
   if (subscriptionIdResult.type === err) {
-    return NextResponse.json({ status: 400 });
+    return NextResponse.json({}, { status: 400 });
   }
 
   const result = await subscriptionRepository.delete(
@@ -123,5 +123,5 @@ export async function DELETE(req: NextRequest) {
     subscriptionIdResult.value,
   );
 
-  return NextResponse.json({ status: result ? 200 : 400 });
+  return NextResponse.json({}, { status: result ? 200 : 400 });
 }

@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     req.headers.get("Authorization") as string,
   );
   if (userResult.type === err) {
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({}, { status: 401 });
   }
 
   const yearlyFeeResult = await subscriptionRepository.fetchYearlyFee(
@@ -26,6 +26,6 @@ export async function GET(req: NextRequest) {
     case ok:
       return NextResponse.json(yearlyFeeResult.value, { status: 200 });
     case err:
-      return NextResponse.json({ status: 400 });
+      return NextResponse.json({}, { status: 400 });
   }
 }
