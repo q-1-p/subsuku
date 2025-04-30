@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
   const subscriptionRegistered = SubscriptionRegistered.factory(
     formData.get("name") as string,
     Number(formData.get("amount")),
-    Number(formData.get("currency")) as CurrencyId,
+    Number(formData.get("currencyId")) as CurrencyId,
     new Date(formData.get("nextUpdate") as string),
     Number(formData.get("intervalId")) as IntervalId,
     Number(formData.get("intervalCycle")),
@@ -83,21 +83,23 @@ export async function PUT(req: NextRequest) {
     formData.get("id") as string,
     formData.get("name") as string,
     Number(formData.get("amount")),
-    Number(formData.get("currency")) as CurrencyId,
+    Number(formData.get("currencyId")) as CurrencyId,
     new Date(formData.get("nextUpdate") as string),
     Number(formData.get("intervalId")) as IntervalId,
     Number(formData.get("intervalCycle")),
   );
   if (subscriptionUpdated.type === err) {
-    return NextResponse.json({ status: 400 });
+    return NextResponse.json({}, { status: 400 });
   }
 
-  const isRegistered = await subscriptionRepository.update(
+  console.dir("subscriptionUpdated", subscriptionUpdated.value);
+
+  const isUpdated = await subscriptionRepository.update(
     userResult.value.id,
     subscriptionUpdated.value,
   );
 
-  return NextResponse.json({ status: isRegistered ? 200 : 400 });
+  return NextResponse.json({ status: isUpdated ? 200 : 400 });
 }
 
 export async function DELETE(req: NextRequest) {

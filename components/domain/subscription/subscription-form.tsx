@@ -1,14 +1,14 @@
 "use client";
 
-import { mergeForm, useForm, useTransform } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { formOptions } from "@tanstack/react-form";
-import { initialFormState } from "@tanstack/react-form/nextjs";
 import { type } from "arktype";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import CurrencyIcon from "@/components/common/currency-icon";
 import { Button } from "@/components/ui/button";
@@ -66,17 +66,8 @@ export default function SubscriptionForm({
       nextUpdate: subscription?.nextUpdate.toString() ?? "",
     },
   });
-
-  const [state, action] = useActionState(
-    subscription ? updateSubscription : registerSubscription,
-    initialFormState,
-  );
   const form = useForm({
     ...subscriptionFormOptions,
-    transform: useTransform(
-      (baseForm) => mergeForm(baseForm, state ?? {}),
-      [state],
-    ),
     validators: {
       onMount: subscriptionFormScheme,
       onChangeAsync: subscriptionFormScheme,
@@ -84,13 +75,43 @@ export default function SubscriptionForm({
     },
   });
 
-  const validateInputFloat = (value: string): string => {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  function validateInputFloat(value: string): string {
     const float = value
       .replace(/^0+(?=\d)/, "")
       .replace(/\.$/, ".0")
       .replace(/^\./, "0.");
     return float.length < 1 || Number.isNaN(+float) ? "0" : float;
-  };
+  }
+
+  async function handleSubmit() {
+    setIsSubmitting(true);
+    const formData = new FormData();
+    formData.append("id", form.state.values.id);
+    formData.append("name", form.state.values.name);
+    formData.append("amount", form.state.values.amount.toString());
+    formData.append("currencyId", form.state.values.currencyId.toString());
+    formData.append(
+      "intervalCycle",
+      form.state.values.intervalCycle.toString(),
+    );
+    formData.append("intervalId", form.state.values.intervalId.toString());
+    formData.append("nextUpdate", form.state.values.nextUpdate);
+
+    if (
+      form.state.values.id === ""
+        ? await registerSubscription(undefined, formData)
+        : await updateSubscription(undefined, formData)
+    ) {
+      alert("登録完了しました");
+      router.push("/app/dashboard");
+    } else {
+      alert("登録に失敗しました");
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <Card className="overflow-hidden rounded-2xl border shadow-sm">
@@ -99,11 +120,7 @@ export default function SubscriptionForm({
         <CardDescription>サービスの基本情報を入力してください</CardDescription>
       </CardHeader>
       <CardContent>
-        <form
-          action={action as never}
-          className="space-y-6"
-          onSubmit={form.handleSubmit}
-        >
+        <form className="space-y-6">
           <input type="hidden" name="id" value={subscription?.id} />
           <div className="grid grid-cols-1 gap-4">
             <form.Field name="name">
@@ -175,7 +192,7 @@ export default function SubscriptionForm({
                         {(field) => (
                           <>
                             <Select
-                              name="currency"
+                              name="currencyId"
                               defaultValue={`${currencyId.jpy}`}
                               onValueChange={(e) =>
                                 field.handleChange(+e as CurrencyId)
@@ -315,15 +332,17 @@ export default function SubscriptionForm({
           <Separator />
 
           <div className="flex justify-end gap-2">
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-            >
-              {([canSubmit, isSubmitting]) => (
+            <form.Subscribe selector={(state) => [state.canSubmit]}>
+              {([canSubmit]) => (
                 <>
                   <Button type="button" variant="outline" asChild>
                     <Link href="/app/dashboard">キャンセル</Link>
                   </Button>
-                  <Button type="submit" disabled={!canSubmit}>
+                  <Button
+                    type="button"
+                    disabled={!canSubmit || isSubmitting}
+                    onClick={handleSubmit}
+                  >
                     {isSubmitting ? "保存中..." : "保存"}
                   </Button>
                 </>

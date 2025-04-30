@@ -65,7 +65,7 @@ export default function SubscriptionCard({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <Link href={`/subscription/edit/${subscription.id}`}>
+            <Link href={`/app/subscription/edit/${subscription.id}`}>
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>編集</span>
