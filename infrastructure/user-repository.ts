@@ -7,6 +7,34 @@ import type { IUserRepository } from "@/domain/user/user-repository";
 import { type Result, err, ok } from "@/lib/result";
 
 export class UserRepository implements IUserRepository {
+  public findId = async (
+    clerkUserId: string,
+  ): Promise<Result<UserId, undefined>> => {
+    return db.query.usersTable
+      .findFirst({
+        where: (user) => eq(user.clerkId, clerkUserId),
+      })
+      .then((user) => {
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        const userIdResult = UserId.factory(user.id);
+        if (userIdResult.type === err) {
+          throw new Error("Invalid user ID");
+        }
+
+        return {
+          type: ok as typeof ok,
+          value: userIdResult.value,
+        };
+      })
+      .catch((error) => {
+        console.error(error);
+        return { type: err as typeof err, error: undefined };
+      });
+  };
+
   public find = async (
     clerkUserId: string,
   ): Promise<Result<User, undefined>> => {

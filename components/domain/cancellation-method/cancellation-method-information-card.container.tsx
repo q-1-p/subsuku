@@ -1,5 +1,5 @@
+import { fetchCancellationMethod } from "./_lib/fetcher";
 import CancellationMethodInformationCardPresentation from "./cancellation-method-information-card.presentation";
-import { fetchCancellationMethod } from "./fetcher";
 
 export default async function CancellationMethodInformationCardContainer({
   cancellationMethodId,

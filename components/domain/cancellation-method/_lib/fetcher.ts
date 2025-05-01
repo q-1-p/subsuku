@@ -2,10 +2,10 @@ import { auth } from "@clerk/nextjs/server";
 
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
 
-export const fetchCancellationMethod = async (
+export function fetchCancellationMethod(
   id: string,
-): Promise<ICancellationMethod> =>
-  auth()
+): Promise<ICancellationMethod> {
+  return auth()
     .then((auth) =>
       auth
         ? fetch(
@@ -27,3 +27,26 @@ export const fetchCancellationMethod = async (
         : undefined,
     )
     .catch(() => undefined);
+}
+
+export function fetchCancellationMethods(): Promise<ICancellationMethod[]> {
+  return auth()
+    .then((auth) =>
+      auth
+        ? fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-methods`, {
+            cache: "no-store",
+            headers: {
+              Authorization: auth.userId ?? "",
+            },
+            method: "GET",
+          }).then((res) => {
+            if (!res.ok) {
+              throw new Error("Failed to fetch cancellation methods");
+            }
+
+            return res.json();
+          })
+        : [],
+    )
+    .catch(() => []);
+}

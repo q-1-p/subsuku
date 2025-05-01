@@ -2,11 +2,11 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 import CancellationMethodSubmissionPanel from "@/components/domain/cancellation-method/cancellation-method-submission-panel";
-import CancellationMethodsPanel from "@/components/domain/cancellation-method/cancellation-methods-panel";
+import CancellationMethodsPanel from "@/components/domain/cancellation-method/cancellation-methods-panel.container";
 import SiteSubPageHeader from "@/components/domain/site/site-sub-page-header";
 import { Button } from "@/components/ui/button";
 
-export default function CancellationGuidePage() {
+export default function Page() {
   return (
     <>
       <SiteSubPageHeader

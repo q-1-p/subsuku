@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
 import type { IUserRepository } from "@/domain/user/user-repository";
 import { CancellationMethodRepository } from "@/infrastructure/cancellation-method-repository";
@@ -12,27 +11,18 @@ const cancellationMethodRepository: ICancellationMethodRepository =
   new CancellationMethodRepository();
 
 export async function GET(req: NextRequest) {
-  const userIdResult = await userRepository.findId(
+  const useIdrResult = await userRepository.findId(
     req.headers.get("Authorization") as string,
   );
-  if (userIdResult.type === err) {
+  if (useIdrResult.type === err) {
     return NextResponse.json({}, { status: 401 });
   }
-
-  const cancellationMethodIdResult = CancellationMethodId.factory(
-    req.nextUrl.searchParams.get("cancellationMethodId") as string,
+  const cancellationMethodsResult = await cancellationMethodRepository.findAll(
+    useIdrResult.value,
   );
-  if (cancellationMethodIdResult.type === err) {
+  if (cancellationMethodsResult.type === err) {
     return NextResponse.json({}, { status: 400 });
   }
 
-  const cancellationMethodResult = await cancellationMethodRepository.find(
-    userIdResult.value,
-    cancellationMethodIdResult.value,
-  );
-  if (cancellationMethodResult.type === err) {
-    return NextResponse.json({}, { status: 400 });
-  }
-
-  return NextResponse.json(cancellationMethodResult.value, { status: 200 });
+  return NextResponse.json(cancellationMethodsResult.value, { status: 200 });
 }

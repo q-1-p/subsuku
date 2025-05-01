@@ -6,6 +6,6 @@ export interface ICancellationMethod {
   precautions: string;
   freeText: string;
   serviceUrl: string;
-  createdUserId: string;
+  mine: boolean;
   updatedAt: Date;
 }
