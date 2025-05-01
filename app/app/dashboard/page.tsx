@@ -1,4 +1,4 @@
-import { List, Plus } from "lucide-react";
+import { FileText, List, Plus } from "lucide-react";
 import Link from "next/link";
 
 import SiteLoggedInHeader from "@/components/domain/site/site-logged-in-header";
@@ -20,6 +20,12 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <h1 className="font-bold text-2xl">ダッシュボード</h1>
             <div className="flex gap-2">
+              <Link href="/app/cancellation-guide">
+                <Button variant="outline">
+                  <FileText className="mr-2 h-4 w-4" />
+                  解約ガイド
+                </Button>
+              </Link>
               <Link href="/app/subscriptions">
                 <Button variant="outline">
                   <List className="mr-2 h-4 w-4" />
