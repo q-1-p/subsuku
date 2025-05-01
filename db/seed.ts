@@ -58,16 +58,25 @@ async function seedCancellationMethods(userId: string): Promise<string[]> {
       {
         name: "メール",
         public: true,
+        precautions: "",
+        freeText: "",
+        serviceUrl: "",
         createdUserId: userId,
       },
       {
         name: "電話",
         public: true,
+        precautions: "",
+        freeText: "",
+        serviceUrl: "",
         createdUserId: userId,
       },
       {
         name: "Webフォーム",
         public: true,
+        precautions: "",
+        freeText: "",
+        serviceUrl: "",
         createdUserId: userId,
       },
     ])

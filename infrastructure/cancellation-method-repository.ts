@@ -27,8 +27,11 @@ export class CancellationMethodRepository
           value: {
             id: datum.id,
             subscriptionName: datum.name,
-            steps: cancellationSteps,
             public: datum.public,
+            steps: cancellationSteps,
+            precautions: datum.precautions,
+            freeText: datum.freeText,
+            serviceUrl: datum.serviceUrl,
             createdUserId: datum.createdUserId,
             updatedAt: new Date(datum.updatedAt),
           } as ICancellationMethod,
@@ -51,11 +54,9 @@ export class CancellationMethodRepository
             cancellationMethodId.value,
           ),
       })
-      .then((datum) => {
-        return datum
-          .sort((x) => x.sequentialOrder)
-          .map((step) => step.procedure);
-      })
+      .then((datum) =>
+        datum.sort((x) => x.sequentialOrder).map((step) => step.procedure),
+      )
       .catch((error) => {
         console.error(error);
         return [];

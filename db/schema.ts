@@ -7,6 +7,7 @@ import {
   primaryKey,
   real,
   smallint,
+  text,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -17,6 +18,9 @@ export const cancellationMethodsTable = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     name: varchar("subscription_name", { length: 255 }).notNull(),
     public: boolean("public").notNull().default(false),
+    precautions: text("precautions").notNull(),
+    freeText: text("free_text").notNull(),
+    serviceUrl: varchar("service_url", { length: 2083 }).notNull(),
     createdUserId: uuid("created_user_id")
       .notNull()
       .references(() => usersTable.id),
