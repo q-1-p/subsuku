@@ -1,9 +1,9 @@
 import { Edit, ExternalLink, Trash2 } from "lucide-react";
 import Link from "next/link";
 
-import BookmarkButton from "@/components/case/bookmark-button";
 import CopyTextToClipBoardButton from "@/components/case/copy-text-to-clipboard-button";
-import GoodButton from "@/components/case/good-button";
+import CancellationMethodBookmarkButton from "@/components/domain/cancellation-method/cancellation-method-bookmark-button";
+import CancellationMethodGoodButton from "@/components/domain/cancellation-method/cancellation-method-good-button";
 import {
   Accordion,
   AccordionContent,
@@ -136,8 +136,17 @@ export default function CancellationMethodCard({
         ) : (
           <div className="mt-1 flex w-full items-center justify-between">
             <div className="flex items-center gap-3">
-              <BookmarkButton />
-              <GoodButton text="この方法で解約できました" />
+              <CancellationMethodBookmarkButton
+                cancellationMethodId={cancellationMethod.id}
+                rated={cancellationMethod.isBookmarked}
+                count={cancellationMethod.bookmarkCount}
+              />
+              <CancellationMethodGoodButton
+                cancellationMethodId={cancellationMethod.id}
+                rated={cancellationMethod.ratedGood}
+                count={cancellationMethod.goodCount}
+                text="この方法で解約できました"
+              />
             </div>
           </div>
         )}

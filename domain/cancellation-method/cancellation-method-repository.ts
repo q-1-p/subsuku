@@ -8,8 +8,23 @@ export type ICancellationMethodRepository = {
     userId: UserId,
     cancellationMethodId: CancellationMethodId,
   ) => Promise<Result<ICancellationMethod, undefined>>;
-
   findAll: (
     userId: UserId,
   ) => Promise<Result<ICancellationMethod[], undefined>>;
+
+  isBookmarked: (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ) => Promise<Result<boolean, undefined>>;
+  ratedGood: (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ) => Promise<Result<boolean, undefined>>;
+
+  countBookmarks: (
+    cancellationMethodId: CancellationMethodId,
+  ) => Promise<Result<number, undefined>>;
+  countGoods: (
+    cancellationMethodId: CancellationMethodId,
+  ) => Promise<Result<number, undefined>>;
 };
