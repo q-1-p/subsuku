@@ -1,4 +1,8 @@
 import { db } from "@/db";
+import {
+  cancellationMethodBookmarksTable,
+  cancellationMethodGoodsTable,
+} from "@/db/schema";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
 import { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
@@ -231,6 +235,39 @@ export class CancellationMethodRepository
       .catch((error) => {
         console.error(error);
         return { type: err as typeof err, error: undefined };
+      });
+  };
+
+  public addBookmark = (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ): Promise<boolean> => {
+    return db
+      .insert(cancellationMethodBookmarksTable)
+      .values({
+        userId: userId.value,
+        cancellationMethodId: cancellationMethodId.value,
+      })
+      .then(() => true)
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
+  };
+  public addGood = (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ): Promise<boolean> => {
+    return db
+      .insert(cancellationMethodGoodsTable)
+      .values({
+        userId: userId.value,
+        cancellationMethodId: cancellationMethodId.value,
+      })
+      .then(() => true)
+      .catch((error) => {
+        console.error(error);
+        return false;
       });
   };
 

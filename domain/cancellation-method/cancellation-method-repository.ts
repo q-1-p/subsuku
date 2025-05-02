@@ -27,4 +27,13 @@ export type ICancellationMethodRepository = {
   countGoods: (
     cancellationMethodId: CancellationMethodId,
   ) => Promise<Result<number, undefined>>;
+
+  addBookmark: (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ) => Promise<boolean>;
+  addGood: (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ) => Promise<boolean>;
 };

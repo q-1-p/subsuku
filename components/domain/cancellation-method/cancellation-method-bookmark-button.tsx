@@ -8,7 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { goodCancellationMethod } from "./_lib/actions";
+import { bookmarkCancellationMethod } from "./_lib/actions";
 
 export default function CancellationMethodBookmarkButton({
   cancellationMethodId,
@@ -22,7 +22,7 @@ export default function CancellationMethodBookmarkButton({
   const [bookmarked, setRated] = useState(rated);
 
   return (
-    <form action={goodCancellationMethod as never}>
+    <form action={bookmarkCancellationMethod as never}>
       <input
         type="hidden"
         name="cancellationMethodId"
