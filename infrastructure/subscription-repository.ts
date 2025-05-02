@@ -3,6 +3,7 @@ import { and, eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
+import type { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
 import type { CurrencyId } from "@/domain/currency/currency-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import type { SubscriptionId } from "@/domain/subscription/subscription-id";
@@ -260,6 +261,29 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         and(
           eq(subscriptionsTable.userId, userId.value),
           eq(subscriptionsTable.id, subscriptionUpdated.id.value),
+        ),
+      )
+      .then(() => true)
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
+  };
+
+  public linkCancellationMethod = (
+    userId: UserId,
+    subscriptionId: SubscriptionId,
+    cancellationMethodId: CancellationMethodId,
+  ) => {
+    return db
+      .update(subscriptionsTable)
+      .set({
+        cancellationMethodId: cancellationMethodId.value,
+      })
+      .where(
+        and(
+          eq(subscriptionsTable.userId, userId.value),
+          eq(subscriptionsTable.id, subscriptionId.value),
         ),
       )
       .then(() => true)

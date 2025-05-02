@@ -1,4 +1,4 @@
-import { Edit, ExternalLink, Trash2 } from "lucide-react";
+import { EditIcon, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 import CopyTextToClipBoardButton from "@/components/case/copy-text-to-clipboard-button";
@@ -19,6 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import { CancellationMethodLinkIcon } from "./cancellation-method-link-icon";
 
 export default function CancellationMethodCard({
   cancellationMethod,
@@ -116,40 +117,29 @@ export default function CancellationMethodCard({
             </Button>
           )}
         </div>
-        {cancellationMethod.mine ? (
-          <div className="mt-1 flex w-full justify-between">
-            <Button variant="outline" size="sm" className="rounded-xl" asChild>
-              <Link href={`/cancellation-guide/edit/${cancellationMethod.id}`}>
-                <Edit className="mr-2 h-4 w-4" />
-                編集
-              </Link>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-xl text-destructive"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              削除
-            </Button>
+        <div className="mt-1 flex w-full items-center justify-between">
+          <div className="flex items-center gap-3">
+            <CancellationMethodBookmarkButton
+              cancellationMethodId={cancellationMethod.id}
+              evaluated={cancellationMethod.isBookmarked}
+              count={cancellationMethod.bookmarkCount}
+            />
+            <CancellationMethodGoodButton
+              cancellationMethodId={cancellationMethod.id}
+              evaluated={cancellationMethod.evaluatedGood}
+              count={cancellationMethod.goodCount}
+              text="この方法で解約できました"
+            />
           </div>
-        ) : (
-          <div className="mt-1 flex w-full items-center justify-between">
-            <div className="flex items-center gap-3">
-              <CancellationMethodBookmarkButton
-                cancellationMethodId={cancellationMethod.id}
-                evaluated={cancellationMethod.isBookmarked}
-                count={cancellationMethod.bookmarkCount}
-              />
-              <CancellationMethodGoodButton
-                cancellationMethodId={cancellationMethod.id}
-                evaluated={cancellationMethod.evaluatedGood}
-                count={cancellationMethod.goodCount}
-                text="この方法で解約できました"
-              />
-            </div>
+          <div className="flex items-center gap-4">
+            <Link href={`/cancellation-guide/edit/${cancellationMethod.id}`}>
+              <EditIcon className="h-4 w-4" />
+            </Link>
+            <CancellationMethodLinkIcon
+              cancellationMethodId={cancellationMethod.id}
+            />
           </div>
-        )}
+        </div>
       </CardFooter>
     </Card>
   );

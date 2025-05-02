@@ -14,7 +14,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import type { ISubscription } from "@/domain/subscription/subscription";
 import { useAtom } from "jotai";
+import { useHydrateAtoms } from "jotai/utils";
+import { subscriptionsAtom } from "../subscription/jotai";
 import { cancellationMethodsAtom } from "./_lib/jotai";
 import CancellationMethodCard from "./cancellation-method-card";
 
@@ -28,7 +31,11 @@ type SortItem = (typeof sortItem)[keyof typeof sortItem];
 
 export default function CancellationMethodsPanelPresentation({
   cancellationMethods,
-}: { cancellationMethods: ICancellationMethod[] }) {
+  subscriptions,
+}: {
+  cancellationMethods: ICancellationMethod[];
+  subscriptions?: ISubscription[];
+}) {
   const [cancellationMethodsCache, setCancellationMethodsCache] = useAtom(
     cancellationMethodsAtom,
   );
@@ -36,6 +43,8 @@ export default function CancellationMethodsPanelPresentation({
   const [mine, setMine] = useState(false);
   const [onlyBookmark, setOnlyBookmark] = useState(false);
   const [sort, setSort] = useState<SortItem>(sortItem.none);
+
+  useHydrateAtoms([[subscriptionsAtom, subscriptions ?? []]]);
 
   useEffect(() => {
     let temp =

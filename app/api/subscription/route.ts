@@ -92,8 +92,6 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({}, { status: 400 });
   }
 
-  console.dir("subscriptionUpdated", subscriptionUpdated.value);
-
   const isUpdated = await subscriptionRepository.update(
     userResult.value.id,
     subscriptionUpdated.value,
