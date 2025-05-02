@@ -28,7 +28,38 @@ export const cancellationMethodsTable = pgTable(
   },
   (table) => [index("idx_cancellation_method_id").on(table.id)],
 );
-
+export const cancellationMethodBookmarksTable = pgTable(
+  "cancellation_method_bookmarks",
+  {
+    cancellationMethodId: uuid("cancellation_method_id")
+      .notNull()
+      .references(() => cancellationMethodsTable.id),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => usersTable.id),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.cancellationMethodId, table.userId],
+    }),
+  ],
+);
+export const cancellationMethodGoodsTable = pgTable(
+  "cancellation_method_goods",
+  {
+    cancellationMethodId: uuid("cancellation_method_id")
+      .notNull()
+      .references(() => cancellationMethodsTable.id),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => usersTable.id),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.cancellationMethodId, table.userId],
+    }),
+  ],
+);
 export const cancellationStepsTable = pgTable(
   "cancellation_steps",
   {

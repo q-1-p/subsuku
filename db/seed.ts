@@ -56,7 +56,7 @@ async function seedCancellationMethods(userId: string): Promise<string[]> {
     .insert(cancellationMethodsTable)
     .values([
       {
-        name: "メール",
+        name: "Amazon Prime",
         public: true,
         precautions: "",
         freeText: "",
@@ -64,7 +64,7 @@ async function seedCancellationMethods(userId: string): Promise<string[]> {
         createdUserId: userId,
       },
       {
-        name: "電話",
+        name: "Netflix",
         public: true,
         precautions: "",
         freeText: "",
@@ -72,7 +72,7 @@ async function seedCancellationMethods(userId: string): Promise<string[]> {
         createdUserId: userId,
       },
       {
-        name: "Webフォーム",
+        name: "Spotify",
         public: true,
         precautions: "",
         freeText: "",
