@@ -6,10 +6,8 @@ export async function bookmarkCancellationMethod(formData: FormData) {
   return auth()
     .then((auth) => {
       if (!auth) {
-        return false;
+        throw new Error("Unauthorized");
       }
-
-      console.dir(formData);
 
       const res = fetch(
         `${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-method/bookmark`,
@@ -30,18 +28,70 @@ export async function bookmarkCancellationMethod(formData: FormData) {
       return false;
     });
 }
+export async function releaseBookmarkForCancellationMethod(formData: FormData) {
+  return auth()
+    .then((auth) => {
+      if (!auth) {
+        throw new Error("Unauthorized");
+      }
+
+      const res = fetch(
+        `${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-method/bookmark`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: auth.userId ?? "",
+          },
+          body: formData,
+        },
+      );
+
+      return res.then((res) => res.ok);
+    })
+    .catch((error) => {
+      console.error(error);
+
+      return false;
+    });
+}
 
 export async function evaluateGoodToCancellationMethod(formData: FormData) {
   return auth()
     .then((auth) => {
       if (!auth) {
-        return false;
+        throw new Error("Unauthorized");
       }
 
       const res = fetch(
         `${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-method/good`,
         {
           method: "POST",
+          headers: {
+            Authorization: auth.userId ?? "",
+          },
+          body: formData,
+        },
+      );
+
+      return res.then((res) => res.ok);
+    })
+    .catch((error) => {
+      console.error(error);
+
+      return false;
+    });
+}
+export async function deleteGoodForCancellationMethod(formData: FormData) {
+  return auth()
+    .then((auth) => {
+      if (!auth) {
+        throw new Error("Unauthorized");
+      }
+
+      const res = fetch(
+        `${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-method/good`,
+        {
+          method: "DELETE",
           headers: {
             Authorization: auth.userId ?? "",
           },

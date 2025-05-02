@@ -34,3 +34,27 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({}, { status: result ? 200 : 400 });
 }
+
+export async function DELETE(req: NextRequest) {
+  const userIdResult = await userRepository.findId(
+    req.headers.get("Authorization") as string,
+  );
+  if (userIdResult.type === err) {
+    return NextResponse.json({}, { status: 401 });
+  }
+
+  const formData = await req.formData();
+  const cancellationMethodIdResult = CancellationMethodId.factory(
+    formData.get("cancellationMethodId") as string,
+  );
+  if (cancellationMethodIdResult.type === err) {
+    return NextResponse.json({}, { status: 400 });
+  }
+
+  const result = await cancellationMethodRepository.deleteGood(
+    userIdResult.value,
+    cancellationMethodIdResult.value,
+  );
+
+  return NextResponse.json({}, { status: result ? 200 : 400 });
+}

@@ -36,4 +36,13 @@ export type ICancellationMethodRepository = {
     userId: UserId,
     cancellationMethodId: CancellationMethodId,
   ) => Promise<boolean>;
+
+  deleteBookmark: (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ) => Promise<boolean>;
+  deleteGood: (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ) => Promise<boolean>;
 };
