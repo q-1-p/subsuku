@@ -31,7 +31,7 @@ export async function bookmarkCancellationMethod(formData: FormData) {
     });
 }
 
-export async function goodCancellationMethod(formData: FormData) {
+export async function evaluateGoodToCancellationMethod(formData: FormData) {
   return auth()
     .then((auth) => {
       if (!auth) {

@@ -1,3 +1,5 @@
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import {
   cancellationMethodBookmarksTable,
@@ -40,7 +42,7 @@ export class CancellationMethodRepository
           userId,
           cancellationMethodIdResult.value,
         );
-        const ratedGoodResult = await this.ratedGood(
+        const evaluatedGoodResult = await this.evaluatedGood(
           userId,
           cancellationMethodIdResult.value,
         );
@@ -53,7 +55,7 @@ export class CancellationMethodRepository
 
         if (
           isBookmarkedResult.type === err ||
-          ratedGoodResult.type === err ||
+          evaluatedGoodResult.type === err ||
           cancellationStepsResult.type === err ||
           bookmarkCountResult.type === err ||
           goodCountResult.type === err
@@ -71,7 +73,7 @@ export class CancellationMethodRepository
             precautions: datum.precautions,
             freeText: datum.freeText,
             isBookmarked: isBookmarkedResult.value,
-            ratedGood: ratedGoodResult.value,
+            evaluatedGood: evaluatedGoodResult.value,
             bookmarkCount: bookmarkCountResult.value,
             goodCount: goodCountResult.value,
             serviceUrl: datum.serviceUrl,
@@ -110,7 +112,7 @@ export class CancellationMethodRepository
               userId,
               cancellationMethodIdResult.value,
             );
-            const ratedGoodResult = await this.ratedGood(
+            const evaluatedGoodResult = await this.evaluatedGood(
               userId,
               cancellationMethodIdResult.value,
             );
@@ -123,7 +125,7 @@ export class CancellationMethodRepository
 
             if (
               isBookmarkedResult.type === err ||
-              ratedGoodResult.type === err ||
+              evaluatedGoodResult.type === err ||
               cancellationStepsResult.type === err ||
               bookmarkCountResult.type === err ||
               goodCountResult.type === err
@@ -139,7 +141,7 @@ export class CancellationMethodRepository
               precautions: datum.precautions,
               freeText: datum.freeText,
               isBookmarked: isBookmarkedResult.value,
-              ratedGood: ratedGoodResult.value,
+              evaluatedGood: evaluatedGoodResult.value,
               bookmarkCount: bookmarkCountResult.value,
               goodCount: goodCountResult.value,
               serviceUrl: datum.serviceUrl,
@@ -181,7 +183,7 @@ export class CancellationMethodRepository
         return { type: err as typeof err, error: undefined };
       });
   };
-  public ratedGood = (
+  public evaluatedGood = (
     userId: UserId,
     cancellationMethodId: CancellationMethodId,
   ): Promise<Result<boolean, undefined>> => {
@@ -264,6 +266,49 @@ export class CancellationMethodRepository
         userId: userId.value,
         cancellationMethodId: cancellationMethodId.value,
       })
+      .then(() => true)
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
+  };
+
+  public deleteBookmark = (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ): Promise<boolean> => {
+    return db
+      .delete(cancellationMethodBookmarksTable)
+      .where(
+        and(
+          eq(cancellationMethodBookmarksTable.userId, userId.value),
+          eq(
+            cancellationMethodBookmarksTable.cancellationMethodId,
+            cancellationMethodId.value,
+          ),
+        ),
+      )
+      .then(() => true)
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
+  };
+  public deleteGood = (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ): Promise<boolean> => {
+    return db
+      .delete(cancellationMethodGoodsTable)
+      .where(
+        and(
+          eq(cancellationMethodGoodsTable.userId, userId.value),
+          eq(
+            cancellationMethodGoodsTable.cancellationMethodId,
+            cancellationMethodId.value,
+          ),
+        ),
+      )
       .then(() => true)
       .catch((error) => {
         console.error(error);

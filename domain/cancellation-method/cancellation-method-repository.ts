@@ -16,7 +16,7 @@ export type ICancellationMethodRepository = {
     userId: UserId,
     cancellationMethodId: CancellationMethodId,
   ) => Promise<Result<boolean, undefined>>;
-  ratedGood: (
+  evaluatedGood: (
     userId: UserId,
     cancellationMethodId: CancellationMethodId,
   ) => Promise<Result<boolean, undefined>>;

@@ -6,7 +6,7 @@ export interface ICancellationMethod {
   precautions: string;
   freeText: string;
   isBookmarked: boolean;
-  ratedGood: boolean;
+  evaluatedGood: boolean;
   bookmarkCount: number;
   goodCount: number;
   serviceUrl: string;

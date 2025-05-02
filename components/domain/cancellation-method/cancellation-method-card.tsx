@@ -138,12 +138,12 @@ export default function CancellationMethodCard({
             <div className="flex items-center gap-3">
               <CancellationMethodBookmarkButton
                 cancellationMethodId={cancellationMethod.id}
-                rated={cancellationMethod.isBookmarked}
+                evaluated={cancellationMethod.isBookmarked}
                 count={cancellationMethod.bookmarkCount}
               />
               <CancellationMethodGoodButton
                 cancellationMethodId={cancellationMethod.id}
-                rated={cancellationMethod.ratedGood}
+                evaluated={cancellationMethod.evaluatedGood}
                 count={cancellationMethod.goodCount}
                 text="この方法で解約できました"
               />

@@ -12,14 +12,14 @@ import { bookmarkCancellationMethod } from "./_lib/actions";
 
 export default function CancellationMethodBookmarkButton({
   cancellationMethodId,
-  rated,
+  evaluated,
   count,
 }: {
   cancellationMethodId: string;
-  rated: boolean;
+  evaluated: boolean;
   count: number;
 }) {
-  const [bookmarked, setRated] = useState(rated);
+  const [bookmarked, setEvaluated] = useState(evaluated);
 
   return (
     <form action={bookmarkCancellationMethod as never}>
@@ -36,26 +36,26 @@ export default function CancellationMethodBookmarkButton({
               className="h-8 px-2"
               variant="ghost"
               size="sm"
-              onClick={() => setRated(!bookmarked)} // そこまで真正性が求められる機能ではない為、楽観的更新で実装
+              onClick={() => setEvaluated(!bookmarked)} // そこまで真正性が求められる機能ではない為、楽観的更新で実装
             >
-              {rated ? (
+              {evaluated ? (
                 <BookmarkCheckIcon className="mr-1 h-4 w-4" />
               ) : (
                 <BookmarkPlusIcon className="mr-1 h-4 w-4" />
               )}
               <span className={`${bookmarked && "text-red-500"} text-xs`}>
                 {bookmarked
-                  ? rated
+                  ? evaluated
                     ? count
                     : count + 1
-                  : rated
+                  : evaluated
                     ? count - 1
                     : count}
               </span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>{rated ? "ブックマーク解除" : "ブックマーク"}</p>
+            <p>{evaluated ? "ブックマーク解除" : "ブックマーク"}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

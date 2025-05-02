@@ -11,23 +11,23 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { goodCancellationMethod } from "./_lib/actions";
+import { evaluateGoodToCancellationMethod } from "./_lib/actions";
 
 export default function CancellationMethodGoodButton({
   cancellationMethodId,
-  rated,
+  evaluated,
   count,
   text,
 }: {
   cancellationMethodId: string;
-  rated: boolean;
+  evaluated: boolean;
   count: number;
   text?: string;
 }) {
-  const [ratedGood, setRated] = useState(rated);
+  const [evaluatedGood, setEvaluated] = useState(evaluated);
 
   return (
-    <form action={goodCancellationMethod as never}>
+    <form action={evaluateGoodToCancellationMethod as never}>
       <input
         type="hidden"
         name="cancellationMethodId"
@@ -42,15 +42,15 @@ export default function CancellationMethodGoodButton({
               className="h-8 px-2"
               variant="ghost"
               size="sm"
-              onClick={() => setRated(!ratedGood)} // そこまで真正性が求められる機能ではない為、楽観的更新で実装
+              onClick={() => setEvaluated(!evaluatedGood)} // そこまで真正性が求められる機能ではない為、楽観的更新で実装
             >
               <ThumbsUp className="mr-1 h-4 w-4" />
-              <span className={`${ratedGood && "text-red-500"} text-xs`}>
-                {ratedGood
-                  ? rated
+              <span className={`${evaluatedGood && "text-red-500"} text-xs`}>
+                {evaluatedGood
+                  ? evaluated
                     ? count
                     : count + 1
-                  : rated
+                  : evaluated
                     ? count - 1
                     : count}
               </span>
