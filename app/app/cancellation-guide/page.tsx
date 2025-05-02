@@ -10,7 +10,7 @@ export default function Page() {
   return (
     <>
       <SiteSubPageHeader
-        backLink="/dashboard"
+        backLink="/app/dashboard"
         backText="ダッシュボードに戻る"
       />
       <main className="flex-1 p-6">
