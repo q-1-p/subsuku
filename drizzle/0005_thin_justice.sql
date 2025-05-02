@@ -1,1 +1,0 @@
-ALTER TABLE "cancellation_methods" ADD COLUMN "service_url" varchar(2083) NOT NULL;

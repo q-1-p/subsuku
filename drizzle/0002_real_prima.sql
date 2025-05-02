@@ -1,1 +1,0 @@
-ALTER TABLE "subscriptions" ALTER COLUMN "cancellation_method_id" DROP NOT NULL;

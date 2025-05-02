@@ -1,1 +1,0 @@
-ALTER TABLE "cancellation_methods" RENAME COLUMN "name" TO "subscription_name";

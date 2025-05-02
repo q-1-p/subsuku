@@ -1,1 +1,0 @@
-ALTER TABLE "subscriptions" ADD COLUMN "cancellation_method" text NOT NULL;
