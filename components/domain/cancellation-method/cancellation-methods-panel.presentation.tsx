@@ -17,7 +17,7 @@ import type { ICancellationMethod } from "@/domain/cancellation-method/cancellat
 import type { ISubscription } from "@/domain/subscription/subscription";
 import { useAtom } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
-import { subscriptionsAtom } from "../subscription/jotai";
+import { subscriptionsAtom } from "../subscription/_lib/jotai";
 import { cancellationMethodsAtom } from "./_lib/jotai";
 import CancellationMethodCard from "./cancellation-method-card";
 

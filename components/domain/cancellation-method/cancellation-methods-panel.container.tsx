@@ -1,6 +1,6 @@
 import "server-only";
 
-import { fetchSubscriptions } from "../subscription/fetcher";
+import { fetchSubscriptions } from "../subscription/_lib/fetcher";
 import { fetchCancellationMethods } from "./_lib/fetcher";
 import CancellationMethodsPanelPresentation from "./cancellation-methods-panel.presentation";
 

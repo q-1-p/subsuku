@@ -1,5 +1,5 @@
 import SiteSubPageHeader from "@/components/domain/site/site-sub-page-header";
-import { fetchSubscription } from "@/components/domain/subscription/fetcher";
+import { fetchSubscription } from "@/components/domain/subscription/_lib/fetcher";
 import SubscriptionForm from "@/components/domain/subscription/subscription-form";
 
 export default async function Page({

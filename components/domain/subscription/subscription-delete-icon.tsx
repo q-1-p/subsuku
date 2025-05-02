@@ -5,8 +5,8 @@ import { redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { useAtom } from "jotai";
-import { deleteSubscription } from "./actions";
-import { subscriptionsAtom } from "./jotai";
+import { deleteSubscription } from "./_lib/actions";
+import { subscriptionsAtom } from "./_lib/jotai";
 
 export default function SubscriptionDeleteIcon({
   subscriptionId,

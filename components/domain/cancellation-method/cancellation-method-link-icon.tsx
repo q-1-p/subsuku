@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { subscriptionsAtom } from "../subscription/jotai";
+import { subscriptionsAtom } from "../subscription/_lib/jotai";
 import { linkCancellationMethod } from "./_lib/actions";
 
 export function CancellationMethodLinkIcon({

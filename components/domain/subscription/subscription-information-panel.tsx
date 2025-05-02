@@ -5,7 +5,7 @@ import SubscriptionBillingInformationCardPresentation from "@/components/domain/
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CancellationMethodInformationCardContainer from "../cancellation-method/cancellation-method-information-card.container";
-import { fetchSubscription } from "./fetcher";
+import { fetchSubscription } from "./_lib/fetcher";
 import SubscriptionDeleteIcon from "./subscription-delete-icon";
 
 export default async function SubscriptionInformationPanel({

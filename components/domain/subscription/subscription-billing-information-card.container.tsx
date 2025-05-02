@@ -1,5 +1,5 @@
 import "server-only";
-import { fetchSubscription } from "./fetcher";
+import { fetchSubscription } from "./_lib/fetcher";
 import SubscriptionBillingInformationCardPresentation from "./subscription-billing-information-card.presentation";
 
 export default async function SubscriptionBillingInformationCard(
