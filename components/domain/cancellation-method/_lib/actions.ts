@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 
 export async function linkCancellationMethod(
+  _prev: unknown,
   formData: FormData,
 ): Promise<boolean> {
   return auth().then((auth) => {
@@ -20,7 +21,10 @@ export async function linkCancellationMethod(
   });
 }
 
-export async function bookmarkCancellationMethod(formData: FormData) {
+export async function bookmarkCancellationMethod(
+  _prev: unknown,
+  formData: FormData,
+): Promise<boolean> {
   return auth().then((auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
@@ -38,7 +42,10 @@ export async function bookmarkCancellationMethod(formData: FormData) {
     ).then((res) => res.ok);
   });
 }
-export async function releaseBookmarkForCancellationMethod(formData: FormData) {
+export async function releaseBookmarkForCancellationMethod(
+  _prev: unknown,
+  formData: FormData,
+): Promise<boolean> {
   return auth().then((auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
@@ -53,11 +60,14 @@ export async function releaseBookmarkForCancellationMethod(formData: FormData) {
         },
         body: formData,
       },
-    );
+    ).then((res) => res.ok);
   });
 }
 
-export async function evaluateGoodToCancellationMethod(formData: FormData) {
+export async function evaluateGoodToCancellationMethod(
+  _prev: unknown,
+  formData: FormData,
+): Promise<boolean> {
   return auth().then((auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
@@ -75,7 +85,10 @@ export async function evaluateGoodToCancellationMethod(formData: FormData) {
     ).then((res) => res.ok);
   });
 }
-export async function deleteGoodForCancellationMethod(formData: FormData) {
+export async function deleteGoodForCancellationMethod(
+  _prev: unknown,
+  formData: FormData,
+): Promise<boolean> {
   return auth().then((auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
@@ -90,6 +103,6 @@ export async function deleteGoodForCancellationMethod(formData: FormData) {
         },
         body: formData,
       },
-    );
+    ).then((res) => res.ok);
   });
 }

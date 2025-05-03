@@ -34,7 +34,7 @@ export async function updateSubscription(_prev: unknown, formData: FormData) {
   });
 }
 
-export async function deleteSubscription(formData: FormData) {
+export async function deleteSubscription(_prev: unknown, formData: FormData) {
   return auth().then((auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");

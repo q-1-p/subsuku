@@ -1,8 +1,9 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { Bell, Settings, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useActionState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,19 +21,20 @@ import { subscriptionsAtom } from "./_lib/jotai";
 export default function SubscriptionCard({
   subscription,
 }: { subscription: ISubscription }) {
-  const [subscriptions, setSubscriptions] = useAtom(subscriptionsAtom);
+  const [result, action] = useActionState<boolean, FormData>(
+    deleteSubscription,
+    false,
+  );
+  const setSubscriptions = useSetAtom(subscriptionsAtom);
 
-  const handleDelete = async () => {
-    const formData = new FormData();
-    formData.append("subscriptionId", subscription.id);
-
-    if (await deleteSubscription(formData)) {
-      setSubscriptions(subscriptions.filter((s) => s.id !== subscription.id));
+  useEffect(() => {
+    if (result) {
+      setSubscriptions((prev) => prev.filter((s) => s.id !== subscription.id));
     }
-  };
+  }, [result, setSubscriptions, subscription.id]);
 
   return (
-    <form className="flex items-center">
+    <div className="flex items-center">
       <div
         className={
           "flex h-9 w-9 items-center justify-center rounded-full bg-green-600 text-white"
@@ -76,16 +78,22 @@ export default function SubscriptionCard({
               <span>通知設定</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive"
-              onClick={() => handleDelete()}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              <span>削除</span>
+            <DropdownMenuItem className="py-0 text-destructive">
+              <form action={action as never}>
+                <input
+                  type="hidden"
+                  name="subscriptionId"
+                  value={subscription.id}
+                />
+                <Button type="submit" variant="ghost" className="m-0 p-0">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  <span>削除</span>
+                </Button>
+              </form>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </form>
+    </div>
   );
 }

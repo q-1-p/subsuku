@@ -1,8 +1,7 @@
 "use client";
 
 import { ThumbsUp } from "lucide-react";
-import { useState } from "react";
-import { Toaster } from "sonner";
+import { useActionState, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,14 +27,16 @@ export default function CancellationMethodGoodButton({
   text?: string;
 }) {
   const [evaluatedGood, setEvaluated] = useState(evaluated);
+  const [_, action] = useActionState(
+    evaluatedGood
+      ? deleteGoodForCancellationMethod
+      : evaluateGoodToCancellationMethod,
+    undefined,
+  );
 
   return (
     <form
-      action={
-        evaluatedGood // 先にonClickが走る為、演算子を逆転
-          ? (deleteGoodForCancellationMethod as never)
-          : (evaluateGoodToCancellationMethod as never)
-      }
+      action={action as never}
       onSubmit={() => setEvaluated(!evaluatedGood)} // そこまで真正性が求められる機能ではない為、楽観的更新で実装
     >
       <input
@@ -43,7 +44,6 @@ export default function CancellationMethodGoodButton({
         name="cancellationMethodId"
         value={cancellationMethodId}
       />
-      <Toaster />
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

@@ -1,5 +1,5 @@
 import { BookmarkCheckIcon, BookmarkPlusIcon } from "lucide-react";
-import { useState } from "react";
+import { useActionState, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -22,17 +22,16 @@ export default function CancellationMethodBookmarkButton({
   evaluated: boolean;
   count: number;
 }) {
-  const [bookmarked, setEvaluated] = useState(evaluated);
+  const [bookmarked, setBookmarked] = useState(evaluated);
+  const [_, action] = useActionState(
+    bookmarked
+      ? releaseBookmarkForCancellationMethod
+      : bookmarkCancellationMethod,
+    undefined,
+  );
 
   return (
-    <form
-      action={
-        bookmarked // 先にonClickが走る為、演算子を逆転
-          ? (releaseBookmarkForCancellationMethod as never)
-          : (bookmarkCancellationMethod as never)
-      }
-      onSubmit={() => setEvaluated(!bookmarked)} // そこまで真正性が求められる機能ではない為、楽観的更新で実装
-    >
+    <form action={action as never} onSubmit={() => setBookmarked(!bookmarked)}>
       <input
         type="hidden"
         name="cancellationMethodId"
