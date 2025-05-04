@@ -8,6 +8,7 @@
     "db:seed": "bun db/seed.ts",
     "db:studio": "drizzle-kit studio",
     "dev": "next dev --turbopack",
+    "deploy": "bun opennextjs-cloudflare build && bunx wrangler deploy ",
     "lint": "bunx @biomejs/biome check --write --unsafe .",
     "start": "next start"
   },
@@ -52,6 +53,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "latest",
+    "@opennextjs/cloudflare": "^1.0.0-beta.4",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
