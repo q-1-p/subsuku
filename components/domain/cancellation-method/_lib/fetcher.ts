@@ -22,7 +22,7 @@ export function fetchCancellationMethod(
       },
     ).then((res) => {
       if (!res.ok) {
-        throw new Error("Failed to fetch cancellation method");
+        throw new Error(`${res.status} Failed to fetch cancellation method`);
       }
 
       return res.json();
@@ -44,7 +44,7 @@ export function fetchCancellationMethods(): Promise<ICancellationMethod[]> {
       method: "GET",
     }).then((res) => {
       if (!res.ok) {
-        throw new Error("Failed to fetch cancellation methods");
+        throw new Error(`${res.status} Failed to fetch cancellation methods`);
       }
 
       return res.json();

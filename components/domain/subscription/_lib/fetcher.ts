@@ -20,7 +20,7 @@ export const fetchSubscription = async (id: string): Promise<ISubscription> =>
       },
     ).then((res) => {
       if (!res.ok) {
-        throw new Error("Failed to fetch subscription");
+        throw new Error(`${res.status} Failed to fetch subscription`);
       }
 
       return res.json();
@@ -41,7 +41,7 @@ export const countSubscriptions = (): Promise<number> =>
       method: "GET",
     }).then((res) => {
       if (!res.ok) {
-        throw new Error("Failed to fetch subscriptions count");
+        throw new Error(`${res.status} Failed to fetch subscriptions count`);
       }
 
       return res.json();
@@ -62,7 +62,7 @@ export const fetchMonthlyFee = (): Promise<number> =>
           },
         ).then((res) => {
           if (!res.ok) {
-            throw new Error("Failed to fetch monthly fee");
+            throw new Error(`${res.status} Failed to fetch monthly fee`);
           }
 
           return res.json();
@@ -87,7 +87,7 @@ export const fetchYearlyFee = (): Promise<number> =>
       },
     ).then((res) => {
       if (!res.ok) {
-        throw new Error("Failed to fetch yearly fee");
+        throw new Error(`${res.status} Failed to fetch yearly fee`);
       }
 
       return res.json();
@@ -114,7 +114,7 @@ export const fetchSubscriptions = async (
     )
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Failed to fetch subscriptions");
+          throw new Error(`${res.status} Failed to fetch subscriptions`);
         }
 
         return res.json();
