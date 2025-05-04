@@ -1,17 +1,18 @@
 "use server";
 
+import { getOrigin } from "@/components/url";
 import { auth } from "@clerk/nextjs/server";
 
 export async function linkCancellationMethod(
   _prev: unknown,
   formData: FormData,
 ): Promise<boolean> {
-  return auth().then((auth) => {
+  return auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscription/link`, {
+    return fetch(`${await getOrigin()}/api/subscription/link`, {
       method: "PATCH",
       headers: {
         Authorization: auth.userId,
@@ -25,42 +26,36 @@ export async function bookmarkCancellationMethod(
   _prev: unknown,
   formData: FormData,
 ): Promise<boolean> {
-  return auth().then((auth) => {
+  return auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(
-      `${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-method/bookmark`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: auth.userId,
-        },
-        body: formData,
+    return fetch(`${await getOrigin()}/api/cancellation-method/bookmark`, {
+      method: "POST",
+      headers: {
+        Authorization: auth.userId,
       },
-    ).then((res) => res.ok);
+      body: formData,
+    }).then((res) => res.ok);
   });
 }
 export async function releaseBookmarkForCancellationMethod(
   _prev: unknown,
   formData: FormData,
 ): Promise<boolean> {
-  return auth().then((auth) => {
+  return auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(
-      `${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-method/bookmark`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: auth.userId,
-        },
-        body: formData,
+    return fetch(`${await getOrigin()}/api/cancellation-method/bookmark`, {
+      method: "DELETE",
+      headers: {
+        Authorization: auth.userId,
       },
-    ).then((res) => res.ok);
+      body: formData,
+    }).then((res) => res.ok);
   });
 }
 
@@ -68,41 +63,35 @@ export async function evaluateGoodToCancellationMethod(
   _prev: unknown,
   formData: FormData,
 ): Promise<boolean> {
-  return auth().then((auth) => {
+  return auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(
-      `${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-method/good`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: auth.userId,
-        },
-        body: formData,
+    return fetch(`${await getOrigin()}/api/cancellation-method/good`, {
+      method: "POST",
+      headers: {
+        Authorization: auth.userId,
       },
-    ).then((res) => res.ok);
+      body: formData,
+    }).then((res) => res.ok);
   });
 }
 export async function deleteGoodForCancellationMethod(
   _prev: unknown,
   formData: FormData,
 ): Promise<boolean> {
-  return auth().then((auth) => {
+  return auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(
-      `${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-method/good`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: auth.userId,
-        },
-        body: formData,
+    return fetch(`${await getOrigin()}/api/cancellation-method/good`, {
+      method: "DELETE",
+      headers: {
+        Authorization: auth.userId,
       },
-    ).then((res) => res.ok);
+      body: formData,
+    }).then((res) => res.ok);
   });
 }

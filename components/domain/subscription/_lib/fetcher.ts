@@ -1,24 +1,22 @@
 import "server-only";
 import { auth } from "@clerk/nextjs/server";
 
+import { getOrigin } from "@/components/url";
 import type { ISubscription } from "@/domain/subscription/subscription";
 
 export const fetchSubscription = async (id: string): Promise<ISubscription> =>
-  auth().then((auth) => {
+  auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(
-      `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscription?id=${id}`,
-      {
-        cache: "no-store",
-        headers: {
-          Authorization: auth.userId,
-        },
-        method: "GET",
+    return fetch(`${await getOrigin()}/api/subscription?id=${id}`, {
+      cache: "no-store",
+      headers: {
+        Authorization: auth.userId,
       },
-    ).then((res) => {
+      method: "GET",
+    }).then((res) => {
       if (!res.ok) {
         throw new Error(`${res.status} Failed to fetch subscription`);
       }
@@ -28,12 +26,12 @@ export const fetchSubscription = async (id: string): Promise<ISubscription> =>
   });
 
 export const countSubscriptions = (): Promise<number> =>
-  auth().then((auth) => {
+  auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions/count`, {
+    return fetch(`${await getOrigin()}/api/subscriptions/count`, {
       cache: "no-store",
       headers: {
         Authorization: auth.userId,
@@ -49,18 +47,15 @@ export const countSubscriptions = (): Promise<number> =>
   });
 
 export const fetchMonthlyFee = (): Promise<number> =>
-  auth().then((auth) =>
+  auth().then(async (auth) =>
     auth
-      ? fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions/fee/monthly`,
-          {
-            cache: "no-store",
-            headers: {
-              Authorization: auth.userId ?? "",
-            },
-            method: "GET",
+      ? fetch(`${await getOrigin()}/api/subscriptions/fee/monthly`, {
+          cache: "no-store",
+          headers: {
+            Authorization: auth.userId ?? "",
           },
-        ).then((res) => {
+          method: "GET",
+        }).then((res) => {
           if (!res.ok) {
             throw new Error(`${res.status} Failed to fetch monthly fee`);
           }
@@ -71,21 +66,18 @@ export const fetchMonthlyFee = (): Promise<number> =>
   );
 
 export const fetchYearlyFee = (): Promise<number> =>
-  auth().then((auth) => {
+  auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(
-      `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions/fee/yearly`,
-      {
-        cache: "no-store",
-        headers: {
-          Authorization: auth.userId,
-        },
-        method: "GET",
+    return fetch(`${await getOrigin()}/api/subscriptions/fee/yearly`, {
+      cache: "no-store",
+      headers: {
+        Authorization: auth.userId,
       },
-    ).then((res) => {
+      method: "GET",
+    }).then((res) => {
       if (!res.ok) {
         throw new Error(`${res.status} Failed to fetch yearly fee`);
       }
@@ -97,13 +89,13 @@ export const fetchYearlyFee = (): Promise<number> =>
 export const fetchSubscriptions = async (
   upcoming: boolean,
 ): Promise<ISubscription[]> =>
-  auth().then((auth) => {
+  auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
     return fetch(
-      `${process.env.NEXT_PUBLIC_DOMAIN}/api/subscriptions?active=true&upcoming=${upcoming}`,
+      `${await getOrigin()}/api/subscriptions?active=true&upcoming=${upcoming}`,
       {
         cache: "no-store",
         headers: {

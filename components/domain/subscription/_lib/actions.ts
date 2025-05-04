@@ -2,13 +2,15 @@
 
 import { auth } from "@clerk/nextjs/server";
 
+import { getOrigin } from "@/components/url";
+
 export async function registerSubscription(_prev: unknown, formData: FormData) {
-  return auth().then((auth) => {
+  return auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscription`, {
+    return fetch(`${await getOrigin()}/api/subscription`, {
       method: "POST",
       headers: {
         Authorization: auth.userId,
@@ -19,12 +21,12 @@ export async function registerSubscription(_prev: unknown, formData: FormData) {
 }
 
 export async function updateSubscription(_prev: unknown, formData: FormData) {
-  return auth().then((auth) => {
+  return auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscription`, {
+    return fetch(`${await getOrigin()}/api/subscription`, {
       method: "PUT",
       headers: {
         Authorization: auth.userId,
@@ -35,11 +37,11 @@ export async function updateSubscription(_prev: unknown, formData: FormData) {
 }
 
 export async function deleteSubscription(_prev: unknown, formData: FormData) {
-  return auth().then((auth) => {
+  return auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
-    return fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/subscription`, {
+    return fetch(`${await getOrigin()}/api/subscription`, {
       method: "DELETE",
       headers: {
         Authorization: auth.userId,

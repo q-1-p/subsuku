@@ -1,18 +1,19 @@
 import "server-only";
 import { auth } from "@clerk/nextjs/server";
 
+import { getOrigin } from "@/components/url";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
 
 export function fetchCancellationMethod(
   id: string,
 ): Promise<ICancellationMethod> {
-  return auth().then((auth) => {
+  return auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
     return fetch(
-      `${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-method?cancellationMethodId=${id}`,
+      `${await getOrigin()}/api/cancellation-method?cancellationMethodId=${id}`,
       {
         cache: "no-store",
         headers: {
@@ -31,12 +32,12 @@ export function fetchCancellationMethod(
 }
 
 export function fetchCancellationMethods(): Promise<ICancellationMethod[]> {
-  return auth().then((auth) => {
+  return auth().then(async (auth) => {
     if (!auth?.userId) {
       throw new Error("Unauthorized");
     }
 
-    return fetch(`${process.env.NEXT_PUBLIC_DOMAIN}/api/cancellation-methods`, {
+    return fetch(`${await getOrigin()}/api/cancellation-methods`, {
       cache: "no-store",
       headers: {
         Authorization: auth.userId,
