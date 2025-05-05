@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
-import { useAtomValue } from "jotai";
 import { LinkIcon } from "lucide-react";
+import { useActionState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,8 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useActionState, useEffect } from "react";
-import { subscriptionsAtom } from "../subscription/_lib/jotai";
+import type { ISubscription } from "@/domain/subscription/subscription";
+import { fetchSubscriptions } from "../subscription/_lib/actions";
 import { linkCancellationMethod } from "./_lib/actions";
 
 export function CancellationMethodLinkIcon({
@@ -28,8 +28,14 @@ export function CancellationMethodLinkIcon({
 }: {
   cancellationMethodId: string;
 }) {
-  const [result, action] = useActionState(linkCancellationMethod, false);
-  const subscriptions = useAtomValue(subscriptionsAtom);
+  const [subscriptions, action] = useActionState<ISubscription[], FormData>(
+    fetchSubscriptions,
+    [],
+  );
+  const [linkResult, linkAction] = useActionState<boolean, FormData>(
+    linkCancellationMethod,
+    false,
+  );
   const form = useForm({
     defaultValues: {
       subscriptionId: subscriptions.at(0)?.id ?? "",
@@ -37,18 +43,22 @@ export function CancellationMethodLinkIcon({
   });
 
   useEffect(() => {
-    if (result) {
+    if (linkResult) {
       window.location.href = `/app/subscription/${form.state.values.subscriptionId}`;
     }
-  }, [result, form.state.values.subscriptionId]);
+  }, [linkResult, form.state.values.subscriptionId]);
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <LinkIcon className="h-4 w-4 hover:cursor-pointer" />
-      </DialogTrigger>
+      <form action={action as never}>
+        <DialogTrigger asChild>
+          <Button type="submit" variant="ghost" size="icon">
+            <LinkIcon className="h-4 w-4 hover:cursor-pointer" />
+          </Button>
+        </DialogTrigger>
+      </form>
       <DialogContent className="sm:max-w-[425px]">
-        <form action={action as never}>
+        <form action={linkAction as never}>
           <input
             type="hidden"
             name="cancellationMethodId"

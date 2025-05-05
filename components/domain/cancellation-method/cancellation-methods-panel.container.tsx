@@ -1,6 +1,5 @@
 import "server-only";
 
-import { fetchSubscriptions } from "../subscription/_lib/fetcher";
 import { fetchCancellationMethods } from "./_lib/fetcher";
 import CancellationMethodsPanelPresentation from "./cancellation-methods-panel.presentation";
 
@@ -10,7 +9,6 @@ export default async function CancellationMethodsPanel() {
   return (
     <CancellationMethodsPanelPresentation
       cancellationMethods={cancellationMethods}
-      subscriptions={await fetchSubscriptions(false)}
     />
   );
 }

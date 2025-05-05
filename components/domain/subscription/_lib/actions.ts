@@ -3,6 +3,11 @@
 import { auth } from "@clerk/nextjs/server";
 
 import { getOrigin } from "@/components/url";
+import { fetchSubscriptions as fetchSubscriptionsFetcher } from "./fetcher";
+
+export async function fetchSubscriptions(_prev: unknown, _formData: FormData) {
+  return fetchSubscriptionsFetcher(false);
+}
 
 export async function registerSubscription(_prev: unknown, formData: FormData) {
   const { userId } = await auth();
