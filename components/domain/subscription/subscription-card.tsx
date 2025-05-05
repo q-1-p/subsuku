@@ -1,7 +1,7 @@
 "use client";
 
 import { useSetAtom } from "jotai";
-import { Bell, Settings, Trash2 } from "lucide-react";
+import { Settings, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 
@@ -73,10 +73,6 @@ export default function SubscriptionCard({
                 <span>編集</span>
               </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem>
-              <Bell className="mr-2 h-4 w-4" />
-              <span>通知設定</span>
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="py-0 text-destructive">
               <form action={action as never}>
