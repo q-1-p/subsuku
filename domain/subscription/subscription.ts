@@ -5,6 +5,7 @@ export interface ISubscription {
   readonly id: string;
   readonly name: string;
   readonly active: boolean;
+  readonly fee: number;
   readonly amount: number;
   readonly currencyId: CurrencyId;
   readonly nextUpdate: Date;

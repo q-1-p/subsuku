@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
 import type { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
 import type { CurrencyId } from "@/domain/currency/currency-id";
+import type { ICurrencyRepository } from "@/domain/currency/currency-repository";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import type { SubscriptionId } from "@/domain/subscription/subscription-id";
 import type { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";
@@ -15,10 +16,21 @@ import { type Result, err, ok } from "@/lib/result";
 import { CurrencyRepository } from "./currency-repository";
 
 export class SubscriptionRepository implements ISubscriptionRepository {
-  public find = (
+  private currencyRepository: ICurrencyRepository;
+
+  constructor(currencyRepository: ICurrencyRepository) {
+    this.currencyRepository = currencyRepository;
+  }
+
+  public find = async (
     userId: UserId,
     subscriptionId: SubscriptionId,
   ): Promise<Result<ISubscription, string>> => {
+    const currenciesResult = await this.currencyRepository.findAll();
+    if (currenciesResult.type === err) {
+      return { type: err as typeof err, error: "" };
+    }
+
     return db.query.subscriptionsTable
       .findFirst({
         where: (subscription) =>
@@ -38,6 +50,9 @@ export class SubscriptionRepository implements ISubscriptionRepository {
             id: data.id,
             name: data.name,
             active: data.active,
+            fee:
+              +data.amount *
+              Number(currenciesResult.value.get(data.currencyId as CurrencyId)),
             amount: +data.amount,
             currencyId: data.currencyId,
             nextUpdate: new Date(data.nextUpdate),
@@ -52,13 +67,17 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         return { type: err as typeof err, error: error.message };
       });
   };
-  public findAll = (
+  public findAll = async (
     userId: UserId,
     active = true,
     upcoming = false,
   ): Promise<Result<ISubscription[], undefined>> => {
     const today = format(new Date(), "yyyy-MM-dd");
     const upcomingDate = format(addDays(new Date(), 7), "yyyy-MM-dd");
+    const currenciesResult = await this.currencyRepository.findAll();
+    if (currenciesResult.type === err) {
+      return { type: err as typeof err, error: undefined };
+    }
 
     return db
       .select()
@@ -83,6 +102,11 @@ export class SubscriptionRepository implements ISubscriptionRepository {
               id: data.id,
               name: data.name,
               active: data.active,
+              fee:
+                +data.amount *
+                Number(
+                  currenciesResult.value.get(data.currencyId as CurrencyId),
+                ),
               amount: +data.amount,
               currencyId: data.currencyId,
               nextUpdate: new Date(data.nextUpdate),

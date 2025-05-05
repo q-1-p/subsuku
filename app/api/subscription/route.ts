@@ -7,13 +7,14 @@ import { SubscriptionRegistered } from "@/domain/subscription/subscription-regis
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 import { SubscriptionUpdated } from "@/domain/subscription/subscription-updated";
 import type { IUserRepository } from "@/domain/user/user-repository";
+import { CurrencyRepository } from "@/infrastructure/currency-repository";
 import { SubscriptionRepository } from "@/infrastructure/subscription-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
 import { err } from "@/lib/result";
 
 const userRepository: IUserRepository = new UserRepository();
 const subscriptionRepository: ISubscriptionRepository =
-  new SubscriptionRepository();
+  new SubscriptionRepository(new CurrencyRepository());
 
 export async function GET(req: NextRequest) {
   const userResult = await userRepository.find(
