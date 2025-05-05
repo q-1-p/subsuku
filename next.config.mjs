@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Cloudflare Workersでの動作に最適化
-  output: 'standalone',
-  
+  output: "standalone",
+
   // 画像最適化の設定
   images: {
     unoptimized: true,
@@ -16,7 +16,7 @@ const nextConfig = {
     //   },
     // ],
   },
-  
+
   // 実験的機能の有効化（必要に応じて）
   experimental: {
     serverActions: {
