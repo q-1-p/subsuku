@@ -90,7 +90,7 @@ export const subscriptionsTable = pgTable(
     userId: uuid("user_id")
       .notNull()
       .references(() => usersTable.id),
-    amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
+    amount: numeric("amount", { precision: 20, scale: 10 }).notNull(),
     currencyId: smallint("currency_id")
       .notNull()
       .references(() => currenciesTable.id),
