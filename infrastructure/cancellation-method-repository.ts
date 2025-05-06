@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import {
@@ -10,6 +10,14 @@ import { CancellationMethodId } from "@/domain/cancellation-method/cancellation-
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
 import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
+
+const bookmarksQuery = db
+  .select({
+    cancellationMethodId: cancellationMethodBookmarksTable.cancellationMethodId,
+  })
+  .from(cancellationMethodBookmarksTable)
+  .where(eq(cancellationMethodBookmarksTable.userId, sql.placeholder("userId")))
+  .prepare("bookmarks");
 
 export class CancellationMethodRepository
   implements ICancellationMethodRepository
@@ -87,11 +95,29 @@ export class CancellationMethodRepository
         return { type: err as typeof err, error: undefined };
       });
   };
-  public findAll = (
+  public search = async (
     userId: UserId,
+    searchQuery: string,
+    onlyMine: boolean,
+    onlyBookmarked: boolean,
   ): Promise<Result<ICancellationMethod[], undefined>> => {
+    const bookmarkedIds = await bookmarksQuery
+      .execute({ userId: userId.value })
+      .then((res) => res.map((b) => b.cancellationMethodId));
+
     return db.query.cancellationMethodsTable
-      .findMany()
+      .findMany({
+        where: (cancellationMethodsTable, { and, eq, like }) =>
+          and(
+            like(cancellationMethodsTable.name, `%${searchQuery}%`),
+            onlyMine
+              ? eq(cancellationMethodsTable.createdUserId, userId.value)
+              : undefined,
+            onlyBookmarked
+              ? inArray(cancellationMethodsTable.id, bookmarkedIds)
+              : undefined,
+          ),
+      })
       .then(async (data) => {
         const cancellationMethods = await Promise.all(
           data.map(async (datum) => {

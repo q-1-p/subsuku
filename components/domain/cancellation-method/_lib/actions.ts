@@ -1,7 +1,21 @@
 "use server";
 
-import { getOrigin } from "@/components/url";
 import { auth } from "@clerk/nextjs/server";
+
+import { getOrigin } from "@/components/url";
+import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import { searchCancellationMethods as search } from "./fetcher";
+
+export async function searchCancellationMethods(
+  _prev: unknown,
+  formData: FormData,
+): Promise<ICancellationMethod[]> {
+  return search(
+    formData.get("searchQuery") as string,
+    formData.get("onlyMine") === "on",
+    formData.get("onlyBookmarked") === "on",
+  );
+}
 
 export async function linkCancellationMethod(
   _prev: unknown,

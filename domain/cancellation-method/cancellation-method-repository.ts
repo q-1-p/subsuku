@@ -8,8 +8,11 @@ export type ICancellationMethodRepository = {
     userId: UserId,
     cancellationMethodId: CancellationMethodId,
   ) => Promise<Result<ICancellationMethod, undefined>>;
-  findAll: (
+  search: (
     userId: UserId,
+    searchQuery: string,
+    onlyMine: boolean,
+    onlyBookmarked: boolean,
   ) => Promise<Result<ICancellationMethod[], undefined>>;
 
   isBookmarked: (

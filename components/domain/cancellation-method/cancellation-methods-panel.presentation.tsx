@@ -1,7 +1,8 @@
 "use client";
 
+import { useForm, useTransform } from "@tanstack/react-form";
 import { Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,8 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
-import { useAtom } from "jotai";
-import { cancellationMethodsAtom } from "./_lib/jotai";
+import { type } from "arktype";
+import { searchCancellationMethods } from "./_lib/actions";
 import CancellationMethodCard from "./cancellation-method-card";
 
 const sortItem = {
@@ -26,33 +27,38 @@ const sortItem = {
 } as const;
 type SortItem = (typeof sortItem)[keyof typeof sortItem];
 
-export default function CancellationMethodsPanelPresentation({
-  cancellationMethods,
-}: {
-  cancellationMethods: ICancellationMethod[];
-}) {
-  const [cancellationMethodsCache, setCancellationMethodsCache] = useAtom(
-    cancellationMethodsAtom,
-  );
-  const [searchQuery, setSearchQuery] = useState("");
-  const [mine, setMine] = useState(false);
-  const [onlyBookmark, setOnlyBookmark] = useState(false);
+const scheme = type({
+  searchQuery: "string > 0",
+  onlyMine: "boolean",
+  onlyBookmarked: "boolean",
+});
+
+export default function CancellationMethodsPanelPresentation() {
+  const [cancellationMethods, action] = useActionState<
+    ICancellationMethod[],
+    FormData
+  >(searchCancellationMethods, []);
+  const [sortedCancellationMethods, setSortedCancellationMethods] = useState<
+    ICancellationMethod[]
+  >([]);
+  const form = useForm({
+    defaultValues: {
+      searchQuery: "",
+      onlyMine: false,
+      onlyBookmarked: false,
+    },
+    transform: useTransform((baseForm) => baseForm, [cancellationMethods]),
+    validators: {
+      onMount: scheme,
+      onChangeAsync: scheme,
+      onChangeAsyncDebounceMs: 500,
+    },
+  });
+
   const [sort, setSort] = useState<SortItem>(sortItem.none);
 
   useEffect(() => {
-    let temp =
-      cancellationMethods?.filter((cancellationMethod) =>
-        cancellationMethod.subscriptionName.includes(searchQuery),
-      ) ?? [];
-
-    if (mine) {
-      temp = temp.filter((cancellationMethod) => cancellationMethod.mine);
-    }
-    if (onlyBookmark) {
-      temp = temp.filter(
-        (cancellationMethod) => cancellationMethod.isBookmarked,
-      );
-    }
+    let temp = cancellationMethods ?? [];
 
     switch (sort) {
       case sortItem.name:
@@ -68,15 +74,8 @@ export default function CancellationMethodsPanelPresentation({
         break;
     }
 
-    setCancellationMethodsCache(temp);
-  }, [
-    cancellationMethods,
-    searchQuery,
-    mine,
-    onlyBookmark,
-    sort,
-    setCancellationMethodsCache,
-  ]);
+    setSortedCancellationMethods(temp);
+  }, [cancellationMethods, sort]);
 
   return (
     <div>
@@ -87,41 +86,70 @@ export default function CancellationMethodsPanelPresentation({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div className="flex flex-1 items-center space-x-2">
+            <form
+              action={action as never}
+              className="grid flex-1 grid-cols-1 gap-4 md:flex md:items-center md:justify-between"
+            >
+              <div
+                id="search-form"
+                className="grid flex-1 grid-cols-1 items-center gap-2 space-x-2 md:flex"
+              >
                 <div className="relative min-w-64">
                   <Search className="absolute top-2.5 left-2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="サービスを検索..."
-                    className="w-full rounded-xl pl-8"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
+                  <form.Field name="searchQuery">
+                    {(field) => (
+                      <Input
+                        className="w-full rounded-xl pl-8"
+                        name="searchQuery"
+                        placeholder="サービスを検索..."
+                        value={field.state.value}
+                        onChange={(e) => {
+                          field.handleChange(e.target.value);
+                        }}
+                      />
+                    )}
+                  </form.Field>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <label className="flex cursor-pointer items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 text-primary"
-                      checked={mine}
-                      onChange={(e) => setMine(e.target.checked)}
-                    />
-                    <span className="text-sm">自分の投稿のみ</span>
-                  </label>
+                <div className="flex items-center space-x-2 px-2 md:p-0">
+                  <form.Field name="onlyMine">
+                    {(field) => (
+                      <label className="flex cursor-pointer items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 rounded border-gray-300 text-primary"
+                          name="onlyMine"
+                          checked={field.state.value}
+                          onChange={(e) => {
+                            field.handleChange(e.target.checked);
+                          }}
+                        />
+                        <span className="text-sm">自分の投稿のみ</span>
+                      </label>
+                    )}
+                  </form.Field>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <label className="flex cursor-pointer items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 text-primary"
-                      checked={onlyBookmark}
-                      onChange={(e) => setOnlyBookmark(e.target.checked)}
-                    />
-                    <span className="text-sm">ブックマークした投稿のみ</span>
-                  </label>
+                <div className="flex items-center space-x-2 px-2 md:p-0">
+                  <form.Field name="onlyBookmarked">
+                    {(field) => (
+                      <label className="flex cursor-pointer items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 rounded border-gray-300 text-primary"
+                          name="onlyBookmarked"
+                          checked={field.state.value}
+                          onChange={(e) => {
+                            field.handleChange(e.target.checked);
+                          }}
+                        />
+                        <span className="text-sm">
+                          ブックマークした投稿のみ
+                        </span>
+                      </label>
+                    )}
+                  </form.Field>
                 </div>
               </div>
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <div className="flex gap-2 sm:flex-row sm:items-center">
                 <div className="flex items-center space-x-2">
                   <Button
                     variant={sort === sortItem.name ? "secondary" : "outline"}
@@ -166,25 +194,56 @@ export default function CancellationMethodsPanelPresentation({
                   </Button>
                 </div>
               </div>
-            </div>
+              <div>
+                <form.Subscribe selector={(state) => [state.isSubmitting]}>
+                  {([isSubmitting]) => (
+                    <>
+                      <Button
+                        type="submit"
+                        variant="default"
+                        className="rounded-xl"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "検索中..." : "検索する"}
+                      </Button>
+                    </>
+                  )}
+                </form.Subscribe>
+              </div>
+            </form>
 
             <Separator />
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {cancellationMethods?.length > 0 ? (
-                cancellationMethodsCache.map((cancellationMethod) => (
-                  <CancellationMethodCard
-                    key={cancellationMethod.id}
-                    cancellationMethod={cancellationMethod}
-                  />
-                ))
-              ) : (
-                <div className="col-span-full flex h-24 items-center justify-center">
-                  <p className="text-muted-foreground">
-                    該当するサービスはありません
-                  </p>
-                </div>
-              )}
+              <form.Subscribe selector={(state) => [state.isSubmitting]}>
+                {([isSubmitting]) => {
+                  if (isSubmitting) {
+                    return (
+                      <div className="col-span-full flex h-24 items-center justify-center">
+                        <p className="text-muted-foreground">検索中...</p>
+                      </div>
+                    );
+                  }
+                  if (0 < sortedCancellationMethods.length) {
+                    return sortedCancellationMethods.map(
+                      (cancellationMethod) => (
+                        <CancellationMethodCard
+                          key={cancellationMethod.id}
+                          cancellationMethod={cancellationMethod}
+                        />
+                      ),
+                    );
+                  }
+
+                  return (
+                    <div className="col-span-full flex h-24 items-center justify-center">
+                      <p className="text-muted-foreground">
+                        該当するサービスはありません
+                      </p>
+                    </div>
+                  );
+                }}
+              </form.Subscribe>
             </div>
           </div>
         </CardContent>

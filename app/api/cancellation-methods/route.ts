@@ -17,8 +17,11 @@ export async function GET(req: NextRequest) {
   if (useIdrResult.type === err) {
     return NextResponse.json({}, { status: 401 });
   }
-  const cancellationMethodsResult = await cancellationMethodRepository.findAll(
+  const cancellationMethodsResult = await cancellationMethodRepository.search(
     useIdrResult.value,
+    req.nextUrl.searchParams.get("searchQuery") as string,
+    req.nextUrl.searchParams.get("onlyMine") === "true",
+    req.nextUrl.searchParams.get("onlyBookmarked") === "true",
   );
   if (cancellationMethodsResult.type === err) {
     return NextResponse.json({}, { status: 400 });

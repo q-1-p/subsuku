@@ -30,21 +30,26 @@ export async function fetchCancellationMethod(
   });
 }
 
-export async function fetchCancellationMethods(): Promise<
-  ICancellationMethod[]
-> {
+export async function searchCancellationMethods(
+  searchQuery: string,
+  onlyMine: boolean,
+  onlyBookmarked: boolean,
+): Promise<ICancellationMethod[]> {
   const { userId } = await auth();
   if (!userId) {
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/cancellation-methods`, {
-    cache: "no-store",
-    headers: {
-      Authorization: userId,
+  return fetch(
+    `${await getOrigin()}/api/cancellation-methods?searchQuery=${searchQuery}&onlyMine=${onlyMine}&onlyBookmarked=${onlyBookmarked}`,
+    {
+      cache: "no-store",
+      headers: {
+        Authorization: userId,
+      },
+      method: "GET",
     },
-    method: "GET",
-  }).then((res) => {
+  ).then((res) => {
     if (!res.ok) {
       throw new Error(`${res.status} Failed to fetch cancellation methods`);
     }
