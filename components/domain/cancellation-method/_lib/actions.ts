@@ -17,6 +17,23 @@ export async function searchCancellationMethods(
   );
 }
 
+export async function registerCancellationMethod(
+  _prev: unknown,
+  formData: FormData,
+): Promise<boolean> {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  return fetch(`${await getOrigin()}/api/cancellation-method`, {
+    method: "POST",
+    headers: {
+      Authorization: userId,
+    },
+    body: formData,
+  }).then((res) => res.ok);
+}
 export async function linkCancellationMethod(
   _prev: unknown,
   formData: FormData,

@@ -57,7 +57,7 @@ async function seedCancellationMethods(userId: string): Promise<string[]> {
     .values([
       {
         name: "Amazon Prime",
-        public: true,
+        private: false,
         precautions: "",
         freeText: "",
         serviceUrl: "",
@@ -65,7 +65,7 @@ async function seedCancellationMethods(userId: string): Promise<string[]> {
       },
       {
         name: "Netflix",
-        public: true,
+        private: false,
         precautions: "",
         freeText: "",
         serviceUrl: "",
@@ -73,7 +73,7 @@ async function seedCancellationMethods(userId: string): Promise<string[]> {
       },
       {
         name: "Spotify",
-        public: true,
+        private: true,
         precautions: "",
         freeText: "",
         serviceUrl: "",

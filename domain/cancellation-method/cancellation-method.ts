@@ -1,7 +1,7 @@
 export interface ICancellationMethod {
   id: string;
   subscriptionName: string;
-  public: boolean;
+  private: boolean;
   steps: string[];
   precautions: string;
   freeText: string;

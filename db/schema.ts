@@ -17,7 +17,7 @@ export const cancellationMethodsTable = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     name: varchar("subscription_name", { length: 255 }).notNull(),
-    public: boolean("public").notNull().default(false),
+    private: boolean("private").notNull().default(false),
     precautions: text("precautions").notNull(),
     freeText: text("free_text").notNull(),
     serviceUrl: varchar("service_url", { length: 2083 }).notNull(),
@@ -63,9 +63,7 @@ export const cancellationMethodGoodsTable = pgTable(
 export const cancellationStepsTable = pgTable(
   "cancellation_steps",
   {
-    cancellationMethodId: uuid("cancellation_method_id")
-      .notNull()
-      .references(() => cancellationMethodsTable.id),
+    cancellationMethodId: uuid("cancellation_method_id").notNull(),
     sequentialOrder: smallint("sequential_order").notNull(),
     procedure: varchar("procedure", { length: 255 }).notNull(),
   },

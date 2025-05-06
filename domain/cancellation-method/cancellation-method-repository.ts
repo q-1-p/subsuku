@@ -2,6 +2,7 @@ import type { Result } from "@/lib/result";
 import type { UserId } from "../user/user-id";
 import type { ICancellationMethod } from "./cancellation-method";
 import type { CancellationMethodId } from "./cancellation-method-id";
+import type { CancellationMethodRegistered } from "./cancellation-method-registered";
 
 export type ICancellationMethodRepository = {
   find: (
@@ -31,6 +32,9 @@ export type ICancellationMethodRepository = {
     cancellationMethodId: CancellationMethodId,
   ) => Promise<Result<number, undefined>>;
 
+  add: (
+    cancellationMethodRegistered: CancellationMethodRegistered,
+  ) => Promise<boolean>;
   addBookmark: (
     userId: UserId,
     cancellationMethodId: CancellationMethodId,

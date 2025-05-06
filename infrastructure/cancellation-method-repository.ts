@@ -4,9 +4,13 @@ import { db } from "@/db";
 import {
   cancellationMethodBookmarksTable,
   cancellationMethodGoodsTable,
+  cancellationMethodsTable,
+  cancellationStepsTable,
+  subscriptionsTable,
 } from "@/db/schema";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
 import { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
+import type { CancellationMethodRegistered } from "@/domain/cancellation-method/cancellation-method-registered";
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
 import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
@@ -76,7 +80,7 @@ export class CancellationMethodRepository
           value: {
             id: datum.id,
             subscriptionName: datum.name,
-            public: datum.public,
+            private: datum.private,
             steps: cancellationStepsResult.value,
             precautions: datum.precautions,
             freeText: datum.freeText,
@@ -162,7 +166,7 @@ export class CancellationMethodRepository
             return {
               id: datum.id,
               subscriptionName: datum.name,
-              public: datum.public,
+              private: datum.private,
               steps: cancellationStepsResult.value,
               precautions: datum.precautions,
               freeText: datum.freeText,
@@ -263,6 +267,80 @@ export class CancellationMethodRepository
       .catch((error) => {
         console.error(error);
         return { type: err as typeof err, error: undefined };
+      });
+  };
+
+  public add = (
+    cancellationMethodRegistered: CancellationMethodRegistered,
+  ): Promise<boolean> => {
+    return db
+      .transaction((tx) => {
+        const results = [
+          tx
+            .insert(cancellationMethodsTable)
+            .values({
+              id: cancellationMethodRegistered.id.value,
+              name: cancellationMethodRegistered.name,
+              serviceUrl: cancellationMethodRegistered.serviceUrl,
+              private: cancellationMethodRegistered.private,
+              precautions: cancellationMethodRegistered.precautions,
+              freeText: cancellationMethodRegistered.freeText,
+              createdUserId: cancellationMethodRegistered.createdUserId.value,
+            })
+            .then(() => true)
+            .catch((error) => {
+              console.error(error);
+              throw error;
+            }),
+          tx
+            .insert(cancellationStepsTable)
+            .values(
+              cancellationMethodRegistered.steps.map((step, index) => ({
+                cancellationMethodId: cancellationMethodRegistered.id.value,
+                sequentialOrder: index,
+                procedure: step,
+              })),
+            )
+            .then(() => true)
+            .catch((error) => {
+              console.error(error);
+              throw error;
+            }),
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+            cancellationMethodRegistered.linkSubscriptionId ?? "",
+          )
+            ? tx
+                .update(subscriptionsTable)
+                .set({
+                  cancellationMethodId: cancellationMethodRegistered.id.value,
+                })
+                .where(
+                  and(
+                    eq(
+                      subscriptionsTable.userId,
+                      cancellationMethodRegistered.createdUserId.value,
+                    ),
+                    eq(
+                      subscriptionsTable.id,
+                      cancellationMethodRegistered.linkSubscriptionId,
+                    ),
+                  ),
+                )
+                .then(() => true)
+                .catch((error) => {
+                  console.error(error);
+                  throw error;
+                })
+            : Promise.resolve(true),
+        ];
+
+        return Promise.all(results).then((results) =>
+          results.every((result) => result === true),
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+        return false;
       });
   };
 
