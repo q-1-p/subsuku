@@ -17,7 +17,7 @@ export default function Page() {
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <h1 className="font-bold text-2xl">サブスクリプション解約ガイド</h1>
-            <Link href="/cancellation-guide/submit">
+            <Link href="/app/cancellation-method/add">
               <Button className="rounded-xl">
                 <Plus className="mr-2 h-4 w-4" />
                 解約方法を投稿
