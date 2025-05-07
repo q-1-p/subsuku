@@ -51,21 +51,17 @@ export async function POST(req: NextRequest) {
   }
 
   const formData = await req.formData();
-  const cancellationMethodRegistered = CancellationMethodRegistered.factory(
-    String(formData.get("name")),
-    String(formData.get("serviceUrl")),
-    Boolean(formData.get("private")),
-    formData.getAll("steps[]") as unknown as string[],
-    String(formData.get("precautions")),
-    String(formData.get("freeText")),
-    String(formData.get("linkSubscriptionId")),
-    userIdResult.value,
-  );
+  const cancellationMethodRegistered = CancellationMethodRegistered.factory({
+    name: String(formData.get("name")),
+    siteUrl: String(formData.get("serviceUrl")),
+    isPrivate: Boolean(formData.get("private")),
+    steps: formData.getAll("steps[]") as unknown as string[],
+    precautions: String(formData.get("precautions")),
+    freeText: String(formData.get("freeText")),
+    linkSubscriptionId: formData.get("linkSubscriptionId") as string,
+    createdUserId: userIdResult.value,
+  });
   if (cancellationMethodRegistered.type === err) {
-    console.error(
-      "キャンセル方法登録エラー:",
-      cancellationMethodRegistered.error,
-    );
     return NextResponse.json({}, { status: 400 });
   }
 

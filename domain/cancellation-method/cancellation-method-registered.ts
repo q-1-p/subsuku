@@ -1,6 +1,8 @@
 import { v4 } from "uuid";
 
 import { type Result, err, ok } from "@/lib/result";
+import { type } from "arktype";
+import { SubscriptionId } from "../subscription/subscription-id";
 import type { UserId } from "../user/user-id";
 import { CancellationMethodId } from "./cancellation-method-id";
 
@@ -12,7 +14,7 @@ export class CancellationMethodRegistered {
   public readonly steps: string[];
   public readonly precautions: string;
   public readonly freeText: string;
-  public readonly linkSubscriptionId: string;
+  public readonly linkSubscriptionId: SubscriptionId | undefined;
   public readonly createdUserId: UserId;
 
   private constructor(
@@ -23,7 +25,7 @@ export class CancellationMethodRegistered {
     steps: string[],
     precautions: string,
     freeText: string,
-    linkSubscriptionId: string,
+    linkSubscriptionId: SubscriptionId | undefined,
     createdUserId: UserId,
   ) {
     this.id = id;
@@ -37,33 +39,75 @@ export class CancellationMethodRegistered {
     this.createdUserId = createdUserId;
   }
 
-  public static factory(
-    name: string,
-    siteUrl: string,
-    isPrivate: boolean,
-    steps: string[],
-    precautions: string,
-    freeText: string,
-    linkSubscriptionId: string,
-    createdUserId: UserId,
-  ): Result<CancellationMethodRegistered, string> {
+  public static factory(d: {
+    name: string;
+    siteUrl: string;
+    isPrivate: boolean;
+    steps: string[];
+    precautions: string;
+    freeText: string;
+    linkSubscriptionId: string;
+    createdUserId: UserId;
+  }): Result<CancellationMethodRegistered, undefined> {
     const idResult = CancellationMethodId.factory(v4());
-
     if (idResult.type === err) {
-      return { type: err, error: "登録しようとした値が不正です" };
+      return { type: err, error: undefined };
     }
+
+    console.dir(d);
+
+    const validated = type({
+      name: "string",
+      siteUrl: "string.url | string == 0",
+      isPrivate: "boolean",
+      steps: "string[] > 0",
+      precautions: "string",
+      freeText: "string",
+      linkSubscriptionId: "string.uuid | undefined | null",
+      createdUserId: { value: "string.uuid" },
+    })(d);
+    if (validated instanceof type.errors) {
+      console.error(validated.summary);
+      return { type: err, error: undefined };
+    }
+
+    if (d.linkSubscriptionId) {
+      const linkSubscriptionIdResult = SubscriptionId.factory(
+        d.linkSubscriptionId,
+      );
+
+      if (linkSubscriptionIdResult.type === err) {
+        return { type: err, error: undefined };
+      }
+
+      return {
+        type: ok,
+        value: new CancellationMethodRegistered(
+          idResult.value,
+          d.name,
+          d.siteUrl,
+          d.isPrivate,
+          d.steps,
+          d.precautions,
+          d.freeText,
+          linkSubscriptionIdResult.value,
+          d.createdUserId,
+        ),
+      };
+    }
+
     return {
       type: ok,
       value: new CancellationMethodRegistered(
         idResult.value,
-        name,
-        siteUrl,
-        isPrivate,
-        steps,
-        precautions,
-        freeText,
-        linkSubscriptionId,
-        createdUserId,
+        d.name,
+        d.siteUrl,
+        d.isPrivate,
+        d.steps,
+        d.precautions,
+        d.freeText,
+        undefined,
+        d.createdUserId,
       ),
     };
   }

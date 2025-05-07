@@ -14,7 +14,6 @@ import type { CancellationMethodRegistered } from "@/domain/cancellation-method/
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
 import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
-import { type } from "arktype";
 
 const bookmarksQuery = db
   .select({
@@ -307,11 +306,8 @@ export class CancellationMethodRepository
               console.error(error);
               throw error;
             }),
-          type("string.uuid")(
-            cancellationMethodRegistered.linkSubscriptionId,
-          ) instanceof type.errors
-            ? Promise.resolve(true)
-            : tx
+          cancellationMethodRegistered.linkSubscriptionId
+            ? tx
                 .update(subscriptionsTable)
                 .set({
                   cancellationMethodId: cancellationMethodRegistered.id.value,
@@ -324,7 +320,7 @@ export class CancellationMethodRepository
                     ),
                     eq(
                       subscriptionsTable.id,
-                      cancellationMethodRegistered.linkSubscriptionId,
+                      cancellationMethodRegistered.linkSubscriptionId.value,
                     ),
                   ),
                 )
@@ -332,7 +328,8 @@ export class CancellationMethodRepository
                 .catch((error) => {
                   console.error(error);
                   throw error;
-                }),
+                })
+            : Promise.resolve(true),
         ];
 
         return Promise.all(results).then((results) =>
