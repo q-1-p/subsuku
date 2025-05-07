@@ -1,6 +1,6 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 
-import { db } from "@/db";
+import { db, dbSocket } from "@/db";
 import {
   cancellationMethodBookmarksTable,
   cancellationMethodGoodsTable,
@@ -273,7 +273,7 @@ export class CancellationMethodRepository
   public add = (
     cancellationMethodRegistered: CancellationMethodRegistered,
   ): Promise<boolean> => {
-    return db
+    return dbSocket
       .transaction((tx) => {
         const results = [
           tx
