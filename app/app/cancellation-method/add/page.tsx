@@ -1,4 +1,4 @@
-import { CancellationMethodForm } from "@/components/domain/cancellation-method/cancellation-method-form";
+import { CancellationMethodForm } from "@/components/domain/cancellation-method/cancellation-method-form.container";
 import SiteSubPageHeader from "@/components/domain/site/site-sub-page-header";
 
 export default function Page() {

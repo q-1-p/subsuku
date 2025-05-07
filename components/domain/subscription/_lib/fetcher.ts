@@ -89,7 +89,7 @@ export async function fetchYearlyFee(): Promise<number> {
 }
 
 export const fetchSubscriptions = async (
-  upcoming: boolean,
+  upcoming = false,
 ): Promise<ISubscription[]> => {
   const { userId } = await auth();
   if (!userId) {

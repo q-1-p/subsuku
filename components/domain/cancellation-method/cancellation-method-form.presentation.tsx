@@ -4,7 +4,7 @@ import { useForm, useTransform } from "@tanstack/react-form";
 import { type } from "arktype";
 import { Plus, TrashIcon } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,8 +16,18 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import type { ISubscription } from "@/domain/subscription/subscription";
 import { registerCancellationMethod } from "./_lib/actions";
 
 const cancellationMethodEditFormScheme = type({
@@ -30,11 +40,18 @@ const cancellationMethodEditFormScheme = type({
   linkSubscriptionId: "string.uuid | string == 0",
 });
 
-export function CancellationMethodForm() {
+export function CancellationMethodFormPresentation({
+  cancellationMethod,
+  subscriptions,
+}: {
+  cancellationMethod?: ICancellationMethod;
+  subscriptions: ISubscription[];
+}) {
   const [result, action] = useActionState<boolean | undefined, FormData>(
     registerCancellationMethod,
     undefined,
   );
+  const [linkToSubscription, setLinkToSubscription] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -57,11 +74,13 @@ export function CancellationMethodForm() {
   useEffect(() => {
     if (result === true) {
       alert("解約方法を投稿しました");
-      window.location.href = "/app/cancellation-guide";
+      window.location.href = form.state.values.linkSubscriptionId
+        ? `/app/subscription/${form.state.values.linkSubscriptionId}`
+        : "/app/cancellation-guide";
     } else if (result === false) {
       alert("解約方法の投稿に失敗しました");
     }
-  }, [result]);
+  }, [result, form.state.values.linkSubscriptionId]);
 
   return (
     <Card className="overflow-hidden rounded-2xl border shadow-sm">
@@ -73,8 +92,8 @@ export function CancellationMethodForm() {
       </CardHeader>
       <CardContent>
         <form action={action as never} className="space-y-6">
-          {/* 
           <div className="flex flex-col gap-4">
+            {/*
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="private-toggle">非公開で保存</Label>
@@ -88,6 +107,7 @@ export function CancellationMethodForm() {
                 onCheckedChange={setIsPrivate}
               />
             </div>
+            */}
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
@@ -107,68 +127,26 @@ export function CancellationMethodForm() {
           </div>
 
           {linkToSubscription && (
-            <div className="space-y-2">
-              <Label>サブスクリプションを選択</Label>
-              <Popover
-                open={openSubscriptionSelect}
-                onOpenChange={setOpenSubscriptionSelect}
-              >
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={openSubscriptionSelect}
-                    className="w-full justify-between rounded-xl"
-                  >
-                    {selectedSubscription
-                      ? mySubscriptions.find(
-                          (sub) => sub.id === selectedSubscription,
-                        )?.name
-                      : "サブスクリプションを選択..."}
-                    <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-full p-0">
-                  <Command>
-                    <CommandInput placeholder="サブスクリプションを検索..." />
-                    <CommandList>
-                      <CommandEmpty>
-                        サブスクリプションが見つかりません
-                      </CommandEmpty>
-                      <CommandGroup>
-                        {mySubscriptions.map((sub) => (
-                          <CommandItem
-                            key={sub.id}
-                            value={sub.name}
-                            onSelect={() =>
-                              handleSelectSubscription(sub.id)
-                            }
-                          >
-                            <div className="flex items-center gap-2">
-                              <div
-                                className={`flex h-6 w-6 items-center justify-center rounded-full ${sub.color} font-bold text-white text-xs`}
-                              >
-                                {sub.logo}
-                              </div>
-                              <span>{sub.name}</span>
-                            </div>
-                            <Check
-                              className={cn(
-                                "ml-auto h-4 w-4",
-                                selectedSubscription === sub.id
-                                  ? "opacity-100"
-                                  : "opacity-0",
-                              )}
-                            />
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
-          )} */}
+            <form.Field name="linkSubscriptionId">
+              {(field) => (
+                <Select
+                  name="linkSubscriptionId"
+                  onValueChange={(e) => field.handleChange(e)}
+                >
+                  <SelectTrigger className="w-full flex-2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {subscriptions?.map((subscription) => (
+                      <SelectItem key={subscription.id} value={subscription.id}>
+                        {subscription.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </form.Field>
+          )}
 
           <Separator />
 
