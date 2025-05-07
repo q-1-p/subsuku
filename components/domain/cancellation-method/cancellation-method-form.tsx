@@ -23,11 +23,11 @@ import { registerCancellationMethod } from "./_lib/actions";
 const cancellationMethodEditFormScheme = type({
   name: "string > 0",
   private: "boolean",
-  serviceUrl: "string",
+  serviceUrl: "string.url | string == 0",
   steps: "string[] > 0",
   precautions: "string",
   freeText: "string",
-  linkSubscriptionId: "number | undefined",
+  linkSubscriptionId: "string.uuid | string == 0",
 });
 
 export function CancellationMethodForm() {
@@ -44,7 +44,7 @@ export function CancellationMethodForm() {
       steps: [""],
       precautions: "",
       freeText: "",
-      linkSubscriptionId: undefined,
+      linkSubscriptionId: "",
     },
     transform: useTransform((baseForm) => baseForm, [result]),
     validators: {
