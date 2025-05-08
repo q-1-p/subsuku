@@ -132,7 +132,9 @@ export default function CancellationMethodCard({
             />
           </div>
           <div className="flex items-center gap-4">
-            <Link href={`/cancellation-guide/edit/${cancellationMethod.id}`}>
+            <Link
+              href={`/app/cancellation-method/edit/${cancellationMethod.id}`}
+            >
               <EditIcon className="h-4 w-4" />
             </Link>
             <CancellationMethodLinkIcon

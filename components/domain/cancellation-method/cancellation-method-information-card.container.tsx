@@ -1,3 +1,5 @@
+import "server-only";
+
 import { fetchCancellationMethod } from "./_lib/fetcher";
 import CancellationMethodInformationCardPresentation from "./cancellation-method-information-card.presentation";
 

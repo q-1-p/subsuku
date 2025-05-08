@@ -87,6 +87,24 @@ export async function releaseBookmarkForCancellationMethod(
   }).then((res) => res.ok);
 }
 
+export async function updateCancellationMethod(
+  _prev: unknown,
+  formData: FormData,
+): Promise<boolean> {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  return fetch(`${await getOrigin()}/api/cancellation-method`, {
+    method: "PUT",
+    headers: {
+      Authorization: userId,
+    },
+    body: formData,
+  }).then((res) => res.ok);
+}
+
 export async function evaluateGoodToCancellationMethod(
   _prev: unknown,
   formData: FormData,

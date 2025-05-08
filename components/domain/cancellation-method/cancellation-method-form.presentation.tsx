@@ -28,7 +28,10 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
 import type { ISubscription } from "@/domain/subscription/subscription";
-import { registerCancellationMethod } from "./_lib/actions";
+import {
+  registerCancellationMethod,
+  updateCancellationMethod,
+} from "./_lib/actions";
 
 const cancellationMethodEditFormScheme = type({
   name: "string > 0",
@@ -48,19 +51,19 @@ export function CancellationMethodFormPresentation({
   subscriptions: ISubscription[];
 }) {
   const [result, action] = useActionState<boolean | undefined, FormData>(
-    registerCancellationMethod,
+    cancellationMethod ? updateCancellationMethod : registerCancellationMethod,
     undefined,
   );
   const [linkToSubscription, setLinkToSubscription] = useState(false);
 
   const form = useForm({
     defaultValues: {
-      name: "",
-      private: false,
-      serviceUrl: "",
-      steps: [""],
-      precautions: "",
-      freeText: "",
+      name: cancellationMethod?.subscriptionName ?? "",
+      private: cancellationMethod?.private ?? false,
+      serviceUrl: cancellationMethod?.serviceUrl ?? "",
+      steps: cancellationMethod?.steps ?? [""],
+      precautions: cancellationMethod?.precautions ?? "",
+      freeText: cancellationMethod?.freeText ?? "",
       linkSubscriptionId: "",
     },
     transform: useTransform((baseForm) => baseForm, [result]),
@@ -109,44 +112,49 @@ export function CancellationMethodFormPresentation({
             </div>
             */}
 
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="link-toggle">
-                  サブスクリプションと関連付ける
-                </Label>
-                <p className="text-muted-foreground text-xs">
-                  あなたが管理しているサブスクリプションと関連付けます
-                </p>
+            {!cancellationMethod && (
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="link-toggle">
+                    サブスクリプションと関連付ける
+                  </Label>
+                  <p className="text-muted-foreground text-xs">
+                    あなたが管理しているサブスクリプションと関連付けます
+                  </p>
+                </div>
+                <Switch
+                  id="link-toggle"
+                  checked={linkToSubscription}
+                  onCheckedChange={setLinkToSubscription}
+                />
               </div>
-              <Switch
-                id="link-toggle"
-                checked={linkToSubscription}
-                onCheckedChange={setLinkToSubscription}
-              />
-            </div>
-          </div>
+            )}
 
-          {linkToSubscription && (
-            <form.Field name="linkSubscriptionId">
-              {(field) => (
-                <Select
-                  name="linkSubscriptionId"
-                  onValueChange={(e) => field.handleChange(e)}
-                >
-                  <SelectTrigger className="w-full flex-2">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {subscriptions?.map((subscription) => (
-                      <SelectItem key={subscription.id} value={subscription.id}>
-                        {subscription.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            </form.Field>
-          )}
+            {linkToSubscription && (
+              <form.Field name="linkSubscriptionId">
+                {(field) => (
+                  <Select
+                    name="linkSubscriptionId"
+                    onValueChange={(e) => field.handleChange(e)}
+                  >
+                    <SelectTrigger className="w-full flex-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {subscriptions?.map((subscription) => (
+                        <SelectItem
+                          key={subscription.id}
+                          value={subscription.id}
+                        >
+                          {subscription.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </form.Field>
+            )}
+          </div>
 
           <Separator />
 
