@@ -53,7 +53,7 @@ export default function CancellationMethodSubmissionPanel() {
             </div>
           </div>
           <div className="mt-4 flex justify-center">
-            <Link href="/cancellation-guide/submit">
+            <Link href="/app/cancellation-method/submission">
               <Button className="rounded-xl">
                 <Plus className="mr-2 h-4 w-4" />
                 解約方法を投稿する
