@@ -34,6 +34,7 @@ import {
 } from "./_lib/actions";
 
 const cancellationMethodEditFormScheme = type({
+  id: "string.uuid | string == 0",
   name: "string > 0",
   private: "boolean",
   serviceUrl: "string.url | string == 0",
@@ -58,6 +59,7 @@ export function CancellationMethodFormPresentation({
 
   const form = useForm({
     defaultValues: {
+      id: cancellationMethod?.id ?? "",
       name: cancellationMethod?.subscriptionName ?? "",
       private: cancellationMethod?.private ?? false,
       serviceUrl: cancellationMethod?.serviceUrl ?? "",
@@ -95,6 +97,8 @@ export function CancellationMethodFormPresentation({
       </CardHeader>
       <CardContent>
         <form action={action as never} className="space-y-6">
+          <input type="hidden" name="id" value={form.state.values.id} />
+
           <div className="flex flex-col gap-4">
             {/*
             <div className="flex items-center justify-between">

@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
 import { CancellationMethodRegistered } from "@/domain/cancellation-method/cancellation-method-registered";
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
+import { CancellationMethodUpdated } from "@/domain/cancellation-method/cancellation-method-updated";
 import type { IUserRepository } from "@/domain/user/user-repository";
 import { CancellationMethodRepository } from "@/infrastructure/cancellation-method-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
@@ -70,4 +71,35 @@ export async function POST(req: NextRequest) {
   );
 
   return NextResponse.json({ status: isRegistered ? 200 : 400 });
+}
+
+export async function PUT(req: NextRequest) {
+  const userIdResult = await userRepository.findId(
+    req.headers.get("Authorization") as string,
+  );
+  if (userIdResult.type === err) {
+    console.error("認証エラー:", userIdResult.error);
+    return NextResponse.json({}, { status: 401 });
+  }
+
+  const formData = await req.formData();
+  const cancellationMethodUpdated = CancellationMethodUpdated.factory({
+    id: formData.get("id") as string,
+    name: String(formData.get("name")),
+    siteUrl: String(formData.get("serviceUrl")),
+    isPrivate: Boolean(formData.get("private")),
+    steps: formData.getAll("steps[]") as unknown as string[],
+    precautions: String(formData.get("precautions")),
+    freeText: String(formData.get("freeText")),
+  });
+  if (cancellationMethodUpdated.type === err) {
+    return NextResponse.json({}, { status: 400 });
+  }
+
+  const isUpdated = await cancellationMethodRepository.update(
+    userIdResult.value,
+    cancellationMethodUpdated.value,
+  );
+
+  return NextResponse.json({ status: isUpdated ? 200 : 400 });
 }

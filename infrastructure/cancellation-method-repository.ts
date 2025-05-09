@@ -12,6 +12,7 @@ import type { ICancellationMethod } from "@/domain/cancellation-method/cancellat
 import { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
 import type { CancellationMethodRegistered } from "@/domain/cancellation-method/cancellation-method-registered";
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
+import type { CancellationMethodUpdated } from "@/domain/cancellation-method/cancellation-method-updated";
 import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
 
@@ -369,6 +370,71 @@ export class CancellationMethodRepository
         cancellationMethodId: cancellationMethodId.value,
       })
       .then(() => true)
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
+  };
+
+  public update = (
+    userId: UserId,
+    cancellationMethodUpdated: CancellationMethodUpdated,
+  ): Promise<boolean> => {
+    return dbSocket
+      .transaction(async (tx) => {
+        await tx
+          .delete(cancellationStepsTable)
+          .where(
+            eq(
+              cancellationStepsTable.cancellationMethodId,
+              cancellationMethodUpdated.id.value,
+            ),
+          );
+
+        const results = [
+          tx
+            .update(cancellationMethodsTable)
+            .set({
+              name: cancellationMethodUpdated.name,
+              serviceUrl: cancellationMethodUpdated.serviceUrl,
+              private: cancellationMethodUpdated.private,
+              precautions: cancellationMethodUpdated.precautions,
+              freeText: cancellationMethodUpdated.freeText,
+            })
+            .where(
+              and(
+                eq(
+                  cancellationMethodsTable.id,
+                  cancellationMethodUpdated.id.value,
+                ),
+                eq(cancellationMethodsTable.createdUserId, userId.value),
+              ),
+            )
+            .then(() => true)
+            .catch((error) => {
+              console.error(error);
+              throw error;
+            }),
+          tx
+            .insert(cancellationStepsTable)
+            .values(
+              cancellationMethodUpdated.steps.map((step, index) => ({
+                cancellationMethodId: cancellationMethodUpdated.id.value,
+                sequentialOrder: index,
+                procedure: step,
+              })),
+            )
+            .then(() => true)
+            .catch((error) => {
+              console.error(error);
+              throw error;
+            }),
+        ];
+
+        return Promise.all(results).then((results) =>
+          results.every((result) => result === true),
+        );
+      })
       .catch((error) => {
         console.error(error);
         return false;
