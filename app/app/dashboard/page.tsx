@@ -1,4 +1,4 @@
-import { FileText, List, Plus } from "lucide-react";
+import { FileText, Plus } from "lucide-react";
 import Link from "next/link";
 
 import SiteLoggedInHeader from "@/components/domain/site/site-logged-in-header";
@@ -24,12 +24,6 @@ export default function DashboardPage() {
                 <Button variant="outline">
                   <FileText className="mr-2 h-4 w-4" />
                   解約ガイド
-                </Button>
-              </Link>
-              <Link href="/app/subscriptions">
-                <Button variant="outline">
-                  <List className="mr-2 h-4 w-4" />
-                  一覧表示
                 </Button>
               </Link>
               <Link href="/app/subscription/add">

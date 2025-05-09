@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import Header from "@/components/base/header";
-import NoticeIcon from "../notice/notice-icon";
 import UserIcon from "../user/user-icon";
 
 export default async function SiteLoggedInHeader() {
@@ -14,7 +13,6 @@ export default async function SiteLoggedInHeader() {
       </div>
       <div className="flex flex-1 items-center justify-end space-x-2">
         <div className="flex items-center gap-2">
-          <NoticeIcon />
           <UserIcon />
         </div>
       </div>

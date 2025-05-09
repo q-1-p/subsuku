@@ -24,10 +24,6 @@ export default function UserIcon() {
         <DropdownMenuLabel>マイアカウント</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <User className="mr-2 h-4 w-4" />
-          <span>プロフィール</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
           <Settings className="mr-2 h-4 w-4" />
           <span>設定</span>
         </DropdownMenuItem>
