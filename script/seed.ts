@@ -3,16 +3,16 @@ import { addDays, formatDate } from "date-fns";
 import { sql } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
-import { currencyId } from "@/domain/currency/currency-id";
-import { intervalId } from "@/domain/interval/interval-id";
-import { db } from "./index";
+import { db } from "@/db";
 import {
   cancellationMethodsTable,
   cancellationStepsTable,
   currenciesTable,
   subscriptionsTable,
   usersTable,
-} from "./schema";
+} from "@/db/schema";
+import { currencyId } from "@/domain/currency/currency-id";
+import { intervalId } from "@/domain/interval/interval-id";
 
 async function seed() {
   try {
