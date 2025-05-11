@@ -105,6 +105,24 @@ export async function updateCancellationMethod(
   }).then((res) => res.ok);
 }
 
+export async function deleteCancellationMethod(
+  _prev: unknown,
+  formData: FormData,
+): Promise<boolean> {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  return fetch(`${await getOrigin()}/api/cancellation-method`, {
+    method: "DELETE",
+    headers: {
+      Authorization: userId,
+    },
+    body: formData,
+  }).then((res) => res.ok);
+}
+
 export async function evaluateGoodToCancellationMethod(
   _prev: unknown,
   formData: FormData,

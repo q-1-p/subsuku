@@ -50,6 +50,11 @@ export type ICancellationMethodRepository = {
     cancellationMethodUpdated: CancellationMethodUpdated,
   ) => Promise<boolean>;
 
+  delete: (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ) => Promise<boolean>;
+
   deleteBookmark: (
     userId: UserId,
     cancellationMethodId: CancellationMethodId,

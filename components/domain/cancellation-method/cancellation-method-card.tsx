@@ -1,5 +1,7 @@
-import { EditIcon, ExternalLink } from "lucide-react";
+import { useAtom } from "jotai";
+import { EditIcon, ExternalLink, Trash2Icon } from "lucide-react";
 import Link from "next/link";
+import { useActionState, useEffect } from "react";
 
 import CopyTextToClipBoardButton from "@/components/case/copy-text-to-clipboard-button";
 import CancellationMethodBookmarkButton from "@/components/domain/cancellation-method/cancellation-method-bookmark-button";
@@ -19,6 +21,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import { deleteCancellationMethod } from "./_lib/actions";
+import { cancellationMethodsAtom } from "./_lib/jotai";
 import { CancellationMethodLinkIcon } from "./cancellation-method-link-icon";
 
 export default function CancellationMethodCard({
@@ -26,6 +30,27 @@ export default function CancellationMethodCard({
 }: {
   cancellationMethod: ICancellationMethod;
 }) {
+  const [result, action] = useActionState<boolean | undefined, FormData>(
+    deleteCancellationMethod,
+    undefined,
+  );
+  const [cancellationMethods, setCancellationMethods] = useAtom(
+    cancellationMethodsAtom,
+  );
+
+  useEffect(() => {
+    if (result) {
+      setCancellationMethods(
+        cancellationMethods.filter((cm) => cm.id !== cancellationMethod.id),
+      );
+    }
+  }, [
+    result,
+    cancellationMethod.id,
+    cancellationMethods,
+    setCancellationMethods,
+  ]);
+
   return (
     <Card
       key={cancellationMethod.id}
@@ -131,15 +156,27 @@ export default function CancellationMethodCard({
               text="この方法で解約できました"
             />
           </div>
-          <div className="flex items-center gap-4">
-            <Link
-              href={`/app/cancellation-method/edit/${cancellationMethod.id}`}
-            >
-              <EditIcon className="h-4 w-4" />
-            </Link>
+          <div className="flex items-center">
             <CancellationMethodLinkIcon
               cancellationMethodId={cancellationMethod.id}
             />
+            <Link
+              href={`/app/cancellation-method/edit/${cancellationMethod.id}`}
+            >
+              <Button variant="ghost" size="icon">
+                <EditIcon className="h-4 w-4" />
+              </Button>
+            </Link>
+            <form action={action as never}>
+              <input
+                type="hidden"
+                name="cancellationMethodId"
+                value={cancellationMethod.id}
+              />
+              <Button type="submit" variant="ghost" size="icon">
+                <Trash2Icon className="h-4 w-4" />
+              </Button>
+            </form>
           </div>
         </div>
       </CardFooter>

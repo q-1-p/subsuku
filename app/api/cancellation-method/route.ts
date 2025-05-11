@@ -103,3 +103,28 @@ export async function PUT(req: NextRequest) {
 
   return NextResponse.json({ status: isUpdated ? 200 : 400 });
 }
+
+export async function DELETE(req: NextRequest) {
+  const userIdResult = await userRepository.findId(
+    req.headers.get("Authorization") as string,
+  );
+  if (userIdResult.type === err) {
+    console.error("認証エラー:", userIdResult.error);
+    return NextResponse.json({}, { status: 401 });
+  }
+
+  const formData = await req.formData();
+  const cancellationMethodIdResult = CancellationMethodId.factory(
+    formData.get("cancellationMethodId") as string,
+  );
+  if (cancellationMethodIdResult.type === err) {
+    return NextResponse.json({}, { status: 400 });
+  }
+
+  const isDeleted = await cancellationMethodRepository.delete(
+    userIdResult.value,
+    cancellationMethodIdResult.value,
+  );
+
+  return NextResponse.json({}, { status: isDeleted ? 200 : 400 });
+}

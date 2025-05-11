@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm, useTransform } from "@tanstack/react-form";
+import { type } from "arktype";
 import { Search } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
 
@@ -15,8 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
-import { type } from "arktype";
+import { useAtom } from "jotai";
 import { searchCancellationMethods } from "./_lib/actions";
+import { cancellationMethodsAtom } from "./_lib/jotai";
 import CancellationMethodCard from "./cancellation-method-card";
 
 const sortItem = {
@@ -28,7 +30,7 @@ const sortItem = {
 type SortItem = (typeof sortItem)[keyof typeof sortItem];
 
 const scheme = type({
-  searchQuery: "string > 0",
+  searchQuery: "string >= 0",
   onlyMine: "boolean",
   onlyBookmarked: "boolean",
 });
@@ -38,9 +40,9 @@ export default function CancellationMethodsPanelPresentation() {
     ICancellationMethod[],
     FormData
   >(searchCancellationMethods, []);
-  const [sortedCancellationMethods, setSortedCancellationMethods] = useState<
-    ICancellationMethod[]
-  >([]);
+  const [sortedCancellationMethods, setSortedCancellationMethods] = useAtom(
+    cancellationMethodsAtom,
+  );
   const form = useForm({
     defaultValues: {
       searchQuery: "",
@@ -75,7 +77,7 @@ export default function CancellationMethodsPanelPresentation() {
     }
 
     setSortedCancellationMethods(temp);
-  }, [cancellationMethods, sort]);
+  }, [cancellationMethods, sort, setSortedCancellationMethods]);
 
   return (
     <div>

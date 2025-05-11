@@ -441,6 +441,39 @@ export class CancellationMethodRepository
       });
   };
 
+  public delete = (
+    userId: UserId,
+    cancellationMethodId: CancellationMethodId,
+  ): Promise<boolean> => {
+    return dbSocket
+      .transaction(async (tx) => {
+        await tx
+          .update(subscriptionsTable)
+          .set({
+            cancellationMethodId: null,
+          })
+          .where(
+            eq(
+              subscriptionsTable.cancellationMethodId,
+              cancellationMethodId.value,
+            ),
+          );
+        await tx
+          .delete(cancellationMethodsTable)
+          .where(
+            and(
+              eq(cancellationMethodsTable.id, cancellationMethodId.value),
+              eq(cancellationMethodsTable.createdUserId, userId.value),
+            ),
+          );
+      })
+      .then(() => true)
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
+  };
+
   public deleteBookmark = (
     userId: UserId,
     cancellationMethodId: CancellationMethodId,
