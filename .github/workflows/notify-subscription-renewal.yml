@@ -24,4 +24,4 @@ jobs:
       - name: Install dependencies
         run: bun install
       - name: Execute script
-        run: bun script/notify.ts
+        run: bun script/notify-subscription-renewal.ts
