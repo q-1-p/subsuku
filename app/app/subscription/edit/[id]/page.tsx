@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
+
 import SiteSubPageHeader from "@/components/domain/site/site-sub-page-header";
 import { fetchSubscription } from "@/components/domain/subscription/_lib/fetcher";
 import SubscriptionForm from "@/components/domain/subscription/subscription-form";
+
+export const metadata: Metadata = {
+  title: "サブスクリプション編集 | さぶ空く",
+  description:
+    "サブスクリプション編集ページです。サブスクリプションの詳細を修正できます。",
+};
 
 export default async function Page({
   params,

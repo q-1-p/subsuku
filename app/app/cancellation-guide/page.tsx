@@ -1,10 +1,17 @@
 import { Plus } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import CancellationMethodSubmissionPanel from "@/components/domain/cancellation-method/cancellation-method-submission-panel";
 import CancellationMethodsPanel from "@/components/domain/cancellation-method/cancellation-methods-panel.container";
 import SiteSubPageHeader from "@/components/domain/site/site-sub-page-header";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "サブスクリプション解約ガイド | さぶ空く",
+  description:
+    "サブスクリプション解約ガイドページです。解約方法を検索したり、サブスクリプションに解約方法を結びつけたりできます。",
+};
 
 export default function Page() {
   return (

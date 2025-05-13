@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
+
 import { CancellationMethodForm } from "@/components/domain/cancellation-method/cancellation-method-form.container";
 import SiteSubPageHeader from "@/components/domain/site/site-sub-page-header";
+
+export const metadata: Metadata = {
+  title: "解約方法編集 | さぶ空く",
+  description: "解約方法編集ページです。解約方法を編集できます。",
+};
 
 export default async function Page({
   params,

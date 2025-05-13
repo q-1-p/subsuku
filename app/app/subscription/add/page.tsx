@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
+
 import SiteSubPageHeader from "@/components/domain/site/site-sub-page-header";
 import SubscriptionForm from "@/components/domain/subscription/subscription-form";
+
+export const metadata: Metadata = {
+  title: "サブスクリプション追加 | さぶ空く",
+  description:
+    "サブスクリプション追加ページです。新しいサブスクリプションの詳細を入力できます。",
+};
 
 export default function Page() {
   return (

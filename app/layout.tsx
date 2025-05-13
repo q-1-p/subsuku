@@ -6,7 +6,8 @@ import Footer from "@/components/base/footer";
 
 export const metadata: Metadata = {
   title: "さぶ空く",
-  description: "",
+  description:
+    "サブスクリプションの一覧を円換算で管理し、更新日前にメール通知などを行うサービスです",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
