@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import Image from "next/image"; // Add this line
 import Link from "next/link";
 
 import BellIcon from "@/components/common/bell-icon";
@@ -22,7 +23,7 @@ export default function Home() {
                     サブスクを賢く管理
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                    サブスクリプションの一覧を円換算で管理し、更新日前にメール通知。解約方法もワンクリックで確認できます。
+                    サブスクリプションの一覧を円換算で管理し、更新日前にメール通知。解約方法もまとめて確認できます。
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -32,31 +33,16 @@ export default function Home() {
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
-                  <Link href="/features">
-                    <Button size="lg" variant="outline">
-                      機能を見る
-                    </Button>
-                  </Link>
                 </div>
               </div>
-              {/* ToDo あとで画像を入れる */}
               <div className="flex items-center justify-center">
-                <div className="relative h-[450px] w-full overflow-hidden rounded-lg bg-muted">
-                  <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                    <div className="space-y-4 p-6">
-                      <div className="h-24 w-full rounded-lg bg-muted-foreground/20" />
-                      <div className="space-y-2">
-                        <div className="h-4 w-full rounded-lg bg-muted-foreground/20" />
-                        <div className="h-4 w-[80%] rounded-lg bg-muted-foreground/20" />
-                        <div className="h-4 w-[90%] rounded-lg bg-muted-foreground/20" />
-                      </div>
-                      <div className="flex gap-2">
-                        <div className="h-8 w-24 rounded-lg bg-muted-foreground/20" />
-                        <div className="h-8 w-24 rounded-lg bg-muted-foreground/20" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <Image
+                  src="/img/dashboard.webp"
+                  className="w-full rounded-lg border border-gray-400 object-cover"
+                  width={550}
+                  height={350}
+                  alt="サブスク管理アプリのスクリーンショット"
+                />
               </div>
             </div>
           </div>
@@ -86,7 +72,7 @@ export default function Home() {
               />
               <FunctionCard
                 title="解約方法の表示"
-                description="各サービスの解約方法をワンクリックで確認。面倒な調査は必要ありません。"
+                description="各サービスの解約方法もまとめて表示。面倒な調査は必要ありません。"
                 icon={<CancelIcon />}
               />
             </div>

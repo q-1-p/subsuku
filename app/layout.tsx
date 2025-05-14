@@ -2,7 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 
 import "@/app/globals.css";
-import Footer from "@/components/base/footer";
+import SiteFooter from "@/components/domain/site/site-footer";
 
 export const metadata: Metadata = {
   title: "さぶ空く",
@@ -21,7 +21,7 @@ export default function RootLayout({
       <html lang="ja" suppressHydrationWarning>
         <body className="flex min-h-screen flex-col">
           {children}
-          <Footer />
+          <SiteFooter />
         </body>
       </html>
     </ClerkProvider>
