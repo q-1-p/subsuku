@@ -5,7 +5,6 @@ import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
 import type { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
 import type { CurrencyId } from "@/domain/currency/currency-id";
-import type { ICurrencyRepository } from "@/domain/currency/currency-repository";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import type { SubscriptionId } from "@/domain/subscription/subscription-id";
 import type { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";
@@ -16,11 +15,7 @@ import { type Result, err, ok } from "@/lib/result";
 import { CurrencyRepository } from "./currency-repository";
 
 export class SubscriptionRepository implements ISubscriptionRepository {
-  private currencyRepository: ICurrencyRepository;
-
-  constructor(currencyRepository: ICurrencyRepository) {
-    this.currencyRepository = currencyRepository;
-  }
+  private currencyRepository = new CurrencyRepository();
 
   public find = async (
     userId: UserId,
