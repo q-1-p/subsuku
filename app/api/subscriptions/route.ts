@@ -11,15 +11,15 @@ const subscriptionRepository: ISubscriptionRepository =
   new SubscriptionRepository();
 
 export async function GET(req: NextRequest) {
-  const userResult = await userRepository.find(
+  const userIdResult = await userRepository.findId(
     req.headers.get("Authorization") as string,
   );
-  if (userResult.type === err) {
+  if (userIdResult.type === err) {
     return NextResponse.json({}, { status: 401 });
   }
 
   const subscriptionsResult = await subscriptionRepository.findAll(
-    userResult.value.id,
+    userIdResult.value,
     req.nextUrl.searchParams.get("active") !== "false",
     req.nextUrl.searchParams.get("upcoming") === "true",
   );

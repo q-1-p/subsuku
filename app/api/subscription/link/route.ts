@@ -13,10 +13,10 @@ const subscriptionRepository: ISubscriptionRepository =
   new SubscriptionRepository();
 
 export async function PATCH(req: NextRequest) {
-  const userResult = await userRepository.find(
+  const userIdResult = await userRepository.findId(
     req.headers.get("Authorization") as string,
   );
-  if (userResult.type === err) {
+  if (userIdResult.type === err) {
     return NextResponse.json({}, { status: 401 });
   }
 
@@ -35,7 +35,7 @@ export async function PATCH(req: NextRequest) {
   }
 
   const result = await subscriptionRepository.linkCancellationMethod(
-    userResult.value.id,
+    userIdResult.value,
     subscriptionIdResult.value,
     cancellationMethodIdResult.value,
   );

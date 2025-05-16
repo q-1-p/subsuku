@@ -14,6 +14,52 @@ import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
 import { CurrencyRepository } from "./currency-repository";
 
+const findSubscriptionQuery = db.query.subscriptionsTable
+  .findFirst({
+    where: (subscription) =>
+      and(
+        eq(subscription.userId, sql.placeholder("userId")),
+        eq(subscription.id, sql.placeholder("subscriptionId")),
+      ),
+  })
+  .prepare("find");
+const searchSubscriptionsForNextUpdateQuery = db
+  .select({
+    amount: subscriptionsTable.amount,
+    currency: subscriptionsTable.currencyId,
+  })
+  .from(subscriptionsTable)
+  .where(
+    and(
+      eq(subscriptionsTable.userId, sql.placeholder("userId")),
+      eq(subscriptionsTable.active, sql.placeholder("active")),
+      gte(subscriptionsTable.nextUpdate, sql.placeholder("today")),
+      lt(subscriptionsTable.nextUpdate, sql.placeholder("nextUpdate")),
+    ),
+  )
+  .prepare("searchForNextUpdate");
+const findAllSubscriptionsQuery = db
+  .select()
+  .from(subscriptionsTable)
+  .where(
+    and(
+      eq(subscriptionsTable.userId, sql.placeholder("userId")),
+      eq(subscriptionsTable.active, sql.placeholder("active")),
+    ),
+  )
+  .prepare("findAll");
+
+const countSubscriptionsQuery = db
+  .select({ count: sql<number>`count(*)` })
+  .from(subscriptionsTable)
+  .where(
+    and(
+      eq(subscriptionsTable.userId, sql.placeholder("userId")),
+      eq(subscriptionsTable.active, sql.placeholder("active")),
+    ),
+  )
+  .prepare("count");
+
 export class SubscriptionRepository implements ISubscriptionRepository {
   private currencyRepository = new CurrencyRepository();
 
@@ -26,13 +72,10 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       return { type: err as typeof err, error: "" };
     }
 
-    return db.query.subscriptionsTable
-      .findFirst({
-        where: (subscription) =>
-          and(
-            eq(subscription.userId, userId.value),
-            eq(subscription.id, subscriptionId.value),
-          ),
+    return findSubscriptionQuery
+      .execute({
+        userId: userId.value,
+        subscriptionId: subscriptionId.value,
       })
       .then((data) => {
         if (!data) {
@@ -62,6 +105,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         return { type: err as typeof err, error: error.message };
       });
   };
+
   public findAll = async (
     userId: UserId,
     active = true,
@@ -74,22 +118,17 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       return { type: err as typeof err, error: undefined };
     }
 
-    return db
-      .select()
-      .from(subscriptionsTable)
-      .where(
-        upcoming
-          ? and(
-              eq(subscriptionsTable.active, active),
-              eq(subscriptionsTable.userId, userId.value),
-              gte(subscriptionsTable.nextUpdate, today),
-              lt(subscriptionsTable.nextUpdate, upcomingDate),
-            )
-          : and(
-              eq(subscriptionsTable.active, active),
-              eq(subscriptionsTable.userId, userId.value),
-            ),
-      )
+    return (
+      upcoming
+        ? searchSubscriptionsForNextUpdateQuery
+        : findAllSubscriptionsQuery
+    )
+      .execute({
+        userId: userId.value,
+        active,
+        today,
+        upcomingDate,
+      })
       .then((x) => {
         const subscriptions = x.map(
           (data) =>
@@ -121,15 +160,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     userId: UserId,
     active = true,
   ): Promise<Result<number, undefined>> => {
-    return db
-      .select({ count: sql<number>`count(*)` })
-      .from(subscriptionsTable)
-      .where(
-        and(
-          eq(subscriptionsTable.userId, userId.value),
-          eq(subscriptionsTable.active, active),
-        ),
-      )
+    return countSubscriptionsQuery
+      .execute({ userId: userId.value, active })
       .then((res) => {
         return { type: ok as typeof ok, value: +res[0].count };
       })
@@ -150,20 +182,13 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       return { type: err as typeof err, error: undefined };
     }
 
-    return await db
-      .select({
-        amount: subscriptionsTable.amount,
-        currency: subscriptionsTable.currencyId,
+    return await searchSubscriptionsForNextUpdateQuery
+      .execute({
+        userId: userId.value,
+        active,
+        today,
+        nextUpdate: nextMonthDate,
       })
-      .from(subscriptionsTable)
-      .where(
-        and(
-          eq(subscriptionsTable.userId, userId.value),
-          eq(subscriptionsTable.active, active),
-          gte(subscriptionsTable.nextUpdate, today),
-          lt(subscriptionsTable.nextUpdate, nextMonthDate),
-        ),
-      )
       .then((datum) => {
         if (datum.length === 0) {
           return {
@@ -201,20 +226,13 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       return { type: err as typeof err, error: undefined };
     }
 
-    return await db
-      .select({
-        amount: subscriptionsTable.amount,
-        currency: subscriptionsTable.currencyId,
+    return await searchSubscriptionsForNextUpdateQuery
+      .execute({
+        userId: userId.value,
+        active,
+        today,
+        nextUpdate: nextYearDate,
       })
-      .from(subscriptionsTable)
-      .where(
-        and(
-          eq(subscriptionsTable.userId, userId.value),
-          eq(subscriptionsTable.active, active),
-          gte(subscriptionsTable.nextUpdate, today),
-          lt(subscriptionsTable.nextUpdate, nextYearDate),
-        ),
-      )
       .then((datum) => {
         if (datum.length === 0) {
           return {

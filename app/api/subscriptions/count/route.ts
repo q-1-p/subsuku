@@ -9,14 +9,14 @@ const userRepository: IUserRepository = new UserRepository();
 const subscriptionRepository = new SubscriptionRepository();
 
 export async function GET(req: NextRequest) {
-  const userResult = await userRepository.find(
+  const userIdResult = await userRepository.findId(
     req.headers.get("Authorization") as string,
   );
-  if (userResult.type === err) {
+  if (userIdResult.type === err) {
     return NextResponse.json({}, { status: 401 });
   }
 
-  const countResult = await subscriptionRepository.count(userResult.value.id);
+  const countResult = await subscriptionRepository.count(userIdResult.value);
   switch (countResult.type) {
     case ok:
       return NextResponse.json(countResult.value, { status: 200 });

@@ -16,10 +16,10 @@ const subscriptionRepository: ISubscriptionRepository =
   new SubscriptionRepository();
 
 export async function GET(req: NextRequest) {
-  const userResult = await userRepository.find(
+  const userIdResult = await userRepository.findId(
     req.headers.get("Authorization") as string,
   );
-  if (userResult.type === err) {
+  if (userIdResult.type === err) {
     return NextResponse.json({}, { status: 401 });
   }
 
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
   }
 
   const subscriptionResult = await subscriptionRepository.find(
-    userResult.value.id,
+    userIdResult.value,
     subscriptionIdResult.value,
   );
   if (subscriptionResult.type === err) {
@@ -42,10 +42,10 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const userResult = await userRepository.find(
+  const userIdResult = await userRepository.findId(
     req.headers.get("Authorization") as string,
   );
-  if (userResult.type === err) {
+  if (userIdResult.type === err) {
     return NextResponse.json({}, { status: 401 });
   }
 
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
   }
 
   const isRegistered = await subscriptionRepository.insert(
-    userResult.value.id,
+    userIdResult.value,
     subscriptionRegistered.value,
   );
 
@@ -71,10 +71,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const userResult = await userRepository.find(
+  const userIdResult = await userRepository.findId(
     req.headers.get("Authorization") as string,
   );
-  if (userResult.type === err) {
+  if (userIdResult.type === err) {
     return NextResponse.json({}, { status: 401 });
   }
 
@@ -93,7 +93,7 @@ export async function PUT(req: NextRequest) {
   }
 
   const isUpdated = await subscriptionRepository.update(
-    userResult.value.id,
+    userIdResult.value,
     subscriptionUpdated.value,
   );
 
@@ -101,10 +101,10 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const userResult = await userRepository.find(
+  const userIdResult = await userRepository.findId(
     req.headers.get("Authorization") as string,
   );
-  if (userResult.type === err) {
+  if (userIdResult.type === err) {
     return NextResponse.json({}, { status: 401 });
   }
 
@@ -117,7 +117,7 @@ export async function DELETE(req: NextRequest) {
   }
 
   const result = await subscriptionRepository.delete(
-    userResult.value.id,
+    userIdResult.value,
     subscriptionIdResult.value,
   );
 
