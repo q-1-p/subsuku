@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import Header from "@/components/base/header";
+import LoginDialog from "@/components/case/login-dialog";
 import { Button } from "@/components/ui/button";
 
 export default async function SitePublicHeader() {
@@ -12,9 +13,9 @@ export default async function SitePublicHeader() {
         </Link>
       </div>
       <div className="flex flex-1 items-center justify-end space-x-2">
-        <Link href="/app/dashboard">
+        <LoginDialog>
           <Button size="sm">ログイン</Button>
-        </Link>
+        </LoginDialog>
       </div>
     </Header>
   );

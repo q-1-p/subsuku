@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image"; // Add this line
-import Link from "next/link";
 
+import LoginDialog from "@/components/case/login-dialog";
 import BellIcon from "@/components/common/bell-icon";
 import CancelIcon from "@/components/common/cancel-icon";
 import ClockIcon from "@/components/common/clock-icon";
@@ -27,12 +27,12 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Link href="/app/dashboard">
+                  <LoginDialog>
                     <Button size="lg" className="gap-1">
                       無料で始める
                       <ArrowRight className="h-4 w-4" />
                     </Button>
-                  </Link>
+                  </LoginDialog>
                 </div>
               </div>
               <div className="flex items-center justify-center">
