@@ -5,7 +5,7 @@ export default function SiteFooter() {
     <footer className="w-full border-t py-6">
       <div className="flex w-full flex-col items-center justify-center gap-4 px-4 md:flex-row md:gap-8">
         <p className="text-center text-gray-500 text-sm dark:text-gray-400">
-          2025 さぶ空く（仮）. All rights reserved.
+          2025 さぶ空く All rights reserved.
         </p>
         <div className="flex flex-col items-center gap-2 md:flex-row md:gap-4">
           <Link
