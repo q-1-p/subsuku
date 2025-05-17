@@ -22,7 +22,7 @@ export default function Page() {
       />
       <main className="flex-1 p-6">
         <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <h1 className="font-bold text-2xl">サブスクリプション解約ガイド</h1>
             <Link href="/app/cancellation-method/submission">
               <Button className="rounded-xl">

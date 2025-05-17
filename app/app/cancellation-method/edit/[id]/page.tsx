@@ -21,11 +21,10 @@ export default async function Page({
       />
       <main className="container flex-1 py-6">
         <div className="mx-auto max-w-3xl">
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 px-4">
             <div className="flex items-center justify-between">
               <h1 className="font-bold text-2xl">解約方法を編集</h1>
             </div>
-
             <CancellationMethodForm cancellationMethodId={id} />
           </div>
         </div>

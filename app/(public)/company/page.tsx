@@ -17,7 +17,8 @@ export default function CompanyPage() {
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <h1 className="mb-8 text-center font-bold text-3xl">運営者情報</h1>
 
-        <div className="mb-8 rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
+        {/* デスクトップ表示用のテーブル (md以上の画面サイズで表示) */}
+        <div className="mb-8 hidden rounded-lg bg-white p-6 shadow-md md:block dark:bg-gray-800">
           <table className="w-full border-collapse">
             <tbody>
               <tr className="border-b dark:border-gray-700">
@@ -49,6 +50,39 @@ export default function CompanyPage() {
               </tr>
             </tbody>
           </table>
+        </div>
+
+        {/* モバイル表示用のカードレイアウト (md未満の画面サイズで表示) */}
+        <div className="space-y-4 md:hidden">
+          <div className="rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+            <h2 className="mb-2 font-semibold text-gray-700 dark:text-gray-200">
+              代表者名
+            </h2>
+            <p className="text-gray-900 dark:text-gray-100">{handleName}</p>
+          </div>
+
+          <div className="rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+            <h2 className="mb-2 font-semibold text-gray-700 dark:text-gray-200">
+              プロフィール
+            </h2>
+            <p className="text-gray-900 dark:text-gray-100">
+              さぶ空くの運営をしている個人開発者です。
+            </p>
+          </div>
+
+          <div className="rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+            <h2 className="mb-2 font-semibold text-gray-700 dark:text-gray-200">
+              メールアドレス
+            </h2>
+            <p className="text-gray-900 dark:text-gray-100">
+              <a
+                href="mailto:subsuku.jp+contact@gmail.com"
+                className="text-blue-600 hover:underline"
+              >
+                subsuku.jp+contact@gmail.com
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </>

@@ -130,7 +130,7 @@ export default function SubscriptionForm({
 
           <Separator />
 
-          <div className="grid grid-cols-3 gap-4 md:grid-cols-3">
+          <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
             <div className="col-span-2 flex gap-2">
               <form.Subscribe selector={(state) => [state.values.currencyId]}>
                 {([currentCurrencyId]) => (

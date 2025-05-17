@@ -7,7 +7,7 @@ export default function SiteFooter() {
         <p className="text-center text-gray-500 text-sm dark:text-gray-400">
           2025 さぶ空く（仮）. All rights reserved.
         </p>
-        <div className="flex gap-4">
+        <div className="flex flex-col items-center gap-2 md:flex-row md:gap-4">
           <Link
             href="/legal"
             className="text-gray-500 text-sm hover:underline dark:text-gray-400"
