@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 
 import { db } from "@/db";
+import { usersTable } from "@/db/schema";
 import { UserId } from "@/domain/user/user-id";
 import type { IUserRepository } from "@/domain/user/user-repository";
 import { type Result, err, ok } from "@/lib/result";
@@ -36,6 +37,21 @@ export class UserRepository implements IUserRepository {
       .catch((error) => {
         console.error(error);
         return { type: err as typeof err, error: undefined };
+      });
+  };
+
+  public updateMailAddress = async (
+    userId: UserId,
+    mailAddress: string,
+  ): Promise<boolean> => {
+    return db
+      .update(usersTable)
+      .set({ mailAddress })
+      .where(eq(usersTable.id, userId.value))
+      .then(() => true)
+      .catch((error) => {
+        console.error("Failed to update mail address", error);
+        return false;
       });
   };
 }

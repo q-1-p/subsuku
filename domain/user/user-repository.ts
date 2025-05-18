@@ -3,4 +3,6 @@ import type { UserId } from "./user-id";
 
 export interface IUserRepository {
   findId: (clerkUserId: string) => Promise<Result<UserId, undefined>>;
+
+  updateMailAddress: (userId: UserId, mailAddress: string) => Promise<boolean>;
 }

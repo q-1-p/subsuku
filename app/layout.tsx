@@ -1,5 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
 
 import "@/app/globals.css";
 import SiteFooter from "@/components/domain/site/site-footer";
@@ -22,6 +23,7 @@ export default function RootLayout({
         <body className="flex min-h-screen flex-col">
           {children}
           <SiteFooter />
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
