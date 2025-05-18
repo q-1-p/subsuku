@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { EditIcon, ExternalLink, Trash2Icon } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 
 import CopyTextToClipBoardButton from "@/components/case/copy-text-to-clipboard-button";
 import CancellationMethodBookmarkButton from "@/components/domain/cancellation-method/cancellation-method-bookmark-button";
@@ -30,26 +30,16 @@ export default function CancellationMethodCard({
 }: {
   cancellationMethod: ICancellationMethod;
 }) {
-  const [result, action] = useActionState<boolean | undefined, FormData>(
-    deleteCancellationMethod,
-    undefined,
-  );
-  const [cancellationMethods, setCancellationMethods] = useAtom(
-    cancellationMethodsAtom,
-  );
-
-  useEffect(() => {
-    if (result) {
+  const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
+    if (await deleteCancellationMethod(_, formData)) {
       setCancellationMethods(
         cancellationMethods.filter((cm) => cm.id !== cancellationMethod.id),
       );
     }
-  }, [
-    result,
-    cancellationMethod.id,
-    cancellationMethods,
-    setCancellationMethods,
-  ]);
+  }, {});
+  const [cancellationMethods, setCancellationMethods] = useAtom(
+    cancellationMethodsAtom,
+  );
 
   return (
     <Card

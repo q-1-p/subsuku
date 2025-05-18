@@ -3,7 +3,7 @@
 import { useSetAtom } from "jotai";
 import { Settings, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,17 +21,12 @@ import { subscriptionsAtom } from "./_lib/jotai";
 export default function SubscriptionCard({
   subscription,
 }: { subscription: ISubscription }) {
-  const [result, action] = useActionState<boolean, FormData>(
-    deleteSubscription,
-    false,
-  );
-  const setSubscriptions = useSetAtom(subscriptionsAtom);
-
-  useEffect(() => {
-    if (result) {
+  const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
+    if (await deleteSubscription(_, formData)) {
       setSubscriptions((prev) => prev.filter((s) => s.id !== subscription.id));
     }
-  }, [result, setSubscriptions, subscription.id]);
+  }, {});
+  const setSubscriptions = useSetAtom(subscriptionsAtom);
 
   return (
     <div className="flex items-center">

@@ -4,7 +4,7 @@ import { useForm, useTransform } from "@tanstack/react-form";
 import { type } from "arktype";
 import { Plus, TrashIcon } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -51,10 +51,20 @@ export function CancellationMethodFormPresentation({
   cancellationMethod?: ICancellationMethod;
   subscriptions: ISubscription[];
 }) {
-  const [result, action] = useActionState<boolean | undefined, FormData>(
-    cancellationMethod ? updateCancellationMethod : registerCancellationMethod,
-    undefined,
-  );
+  const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
+    if (
+      cancellationMethod
+        ? await updateCancellationMethod(_, formData)
+        : await registerCancellationMethod(_, formData)
+    ) {
+      alert("解約方法を投稿しました");
+      window.location.href = form.state.values.linkSubscriptionId
+        ? `/app/subscription/${form.state.values.linkSubscriptionId}`
+        : "/app/cancellation-guide";
+    } else {
+      alert("解約方法の投稿に失敗しました");
+    }
+  }, {});
   const [linkToSubscription, setLinkToSubscription] = useState(false);
 
   const form = useForm({
@@ -68,24 +78,13 @@ export function CancellationMethodFormPresentation({
       freeText: cancellationMethod?.freeText ?? "",
       linkSubscriptionId: "",
     },
-    transform: useTransform((baseForm) => baseForm, [result]),
+    transform: useTransform((baseForm) => baseForm, [action]),
     validators: {
       onMount: cancellationMethodEditFormScheme,
       onChangeAsync: cancellationMethodEditFormScheme,
       onChangeAsyncDebounceMs: 500,
     },
   });
-
-  useEffect(() => {
-    if (result === true) {
-      alert("解約方法を投稿しました");
-      window.location.href = form.state.values.linkSubscriptionId
-        ? `/app/subscription/${form.state.values.linkSubscriptionId}`
-        : "/app/cancellation-guide";
-    } else if (result === false) {
-      alert("解約方法の投稿に失敗しました");
-    }
-  }, [result, form.state.values.linkSubscriptionId]);
 
   return (
     <Card className="overflow-hidden rounded-2xl border shadow-sm">

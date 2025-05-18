@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 
 import CurrencyIcon from "@/components/common/currency-icon";
 import { Button } from "@/components/ui/button";
@@ -62,10 +62,18 @@ function validateInputFloat(value: string): string {
 export default function SubscriptionForm({
   subscription,
 }: { subscription?: ISubscription }) {
-  const [result, action] = useActionState<boolean | undefined, FormData>(
-    subscription ? updateSubscription : registerSubscription,
-    undefined,
-  );
+  const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
+    if (
+      subscription
+        ? await updateSubscription(_, formData)
+        : await registerSubscription(_, formData)
+    ) {
+      alert("サブスクリプションを登録しました");
+      window.location.href = "/app/dashboard";
+    } else {
+      alert("サブスクリプションの登録に失敗しました");
+    }
+  }, {});
 
   const subscriptionFormOptions = formOptions({
     defaultValues: {
@@ -80,22 +88,13 @@ export default function SubscriptionForm({
   });
   const form = useForm({
     ...subscriptionFormOptions,
-    transform: useTransform((baseForm) => baseForm, [result]),
+    transform: useTransform((baseForm) => baseForm, [action]),
     validators: {
       onMount: subscriptionFormScheme,
       onChangeAsync: subscriptionFormScheme,
       onChangeAsyncDebounceMs: 500,
     },
   });
-
-  useEffect(() => {
-    if (result === true) {
-      alert("サブスクリプションを登録しました");
-      window.location.href = "/app/dashboard";
-    } else if (result === false) {
-      alert("サブスクリプションの登録に失敗しました");
-    }
-  }, [result]);
 
   return (
     <Card className="overflow-hidden rounded-2xl border shadow-sm">

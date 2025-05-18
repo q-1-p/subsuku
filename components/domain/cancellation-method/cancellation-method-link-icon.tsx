@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { LinkIcon } from "lucide-react";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,29 +28,25 @@ export function CancellationMethodLinkIcon({
 }: {
   cancellationMethodId: string;
 }) {
-  const [subscriptions, action] = useActionState<ISubscription[], FormData>(
-    fetchSubscriptions,
-    [],
-  );
-  const [linkResult, linkAction] = useActionState<boolean, FormData>(
-    linkCancellationMethod,
-    false,
-  );
+  const [subscriptions, fetchAction] = useActionState<
+    ISubscription[],
+    FormData
+  >(fetchSubscriptions, []);
+  const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
+    if (await linkCancellationMethod(_, formData)) {
+      window.location.href = `/app/subscription/${form.state.values.subscriptionId}`;
+    }
+  }, {});
+
   const form = useForm({
     defaultValues: {
       subscriptionId: subscriptions.at(0)?.id ?? "",
     },
   });
 
-  useEffect(() => {
-    if (linkResult) {
-      window.location.href = `/app/subscription/${form.state.values.subscriptionId}`;
-    }
-  }, [linkResult, form.state.values.subscriptionId]);
-
   return (
     <Dialog>
-      <form action={action as never}>
+      <form action={fetchAction as never}>
         <DialogTrigger asChild>
           <Button type="submit" variant="ghost" size="icon">
             <LinkIcon className="h-4 w-4 hover:cursor-pointer" />
@@ -58,7 +54,7 @@ export function CancellationMethodLinkIcon({
         </DialogTrigger>
       </form>
       <DialogContent className="sm:max-w-[425px]">
-        <form action={linkAction as never}>
+        <form action={action as never}>
           <input
             type="hidden"
             name="cancellationMethodId"

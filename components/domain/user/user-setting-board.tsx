@@ -29,7 +29,7 @@ export function UserSettingBoard() {
     } else if (result === false) {
       toast("メールアドレスの更新に失敗しました");
     }
-  }, undefined);
+  }, {});
 
   const form = useForm({
     defaultValues: {
