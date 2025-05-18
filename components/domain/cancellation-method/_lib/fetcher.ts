@@ -1,7 +1,6 @@
 import "server-only";
 import { auth } from "@clerk/nextjs/server";
 
-import { getOrigin } from "@/components/url";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
 
 export async function fetchCancellationMethod(
@@ -13,7 +12,7 @@ export async function fetchCancellationMethod(
   }
 
   return fetch(
-    `${await getOrigin()}/api/cancellation-method?cancellationMethodId=${id}`,
+    `${process.env.SITE_URL}api/cancellation-method?cancellationMethodId=${id}`,
     {
       cache: "no-store",
       headers: {
@@ -41,7 +40,7 @@ export async function searchCancellationMethods(
   }
 
   return fetch(
-    `${await getOrigin()}/api/cancellation-methods?searchQuery=${searchQuery}&onlyMine=${onlyMine}&onlyBookmarked=${onlyBookmarked}`,
+    `${process.env.SITE_URL}api/cancellation-methods?searchQuery=${searchQuery}&onlyMine=${onlyMine}&onlyBookmarked=${onlyBookmarked}`,
     {
       cache: "no-store",
       headers: {

@@ -1,7 +1,6 @@
 import "server-only";
 import { auth } from "@clerk/nextjs/server";
 
-import { getOrigin } from "@/components/url";
 import type { ISubscription } from "@/domain/subscription/subscription";
 
 export async function fetchSubscription(id: string): Promise<ISubscription> {
@@ -10,7 +9,7 @@ export async function fetchSubscription(id: string): Promise<ISubscription> {
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/subscription?id=${id}`, {
+  return fetch(`${process.env.SITE_URL}api/subscription?id=${id}`, {
     cache: "no-store",
     headers: {
       Authorization: userId,
@@ -31,7 +30,7 @@ export async function countSubscriptions(): Promise<number> {
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/subscriptions/count`, {
+  return fetch(`${process.env.SITE_URL}api/subscriptions/count`, {
     cache: "no-store",
     headers: {
       Authorization: userId,
@@ -52,7 +51,7 @@ export async function fetchMonthlyFee(): Promise<number> {
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/subscriptions/fee/monthly`, {
+  return fetch(`${process.env.SITE_URL}api/subscriptions/fee/monthly`, {
     cache: "no-store",
     headers: {
       Authorization: userId,
@@ -73,7 +72,7 @@ export async function fetchYearlyFee(): Promise<number> {
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/subscriptions/fee/yearly`, {
+  return fetch(`${process.env.SITE_URL}api/subscriptions/fee/yearly`, {
     cache: "no-store",
     headers: {
       Authorization: userId,
@@ -97,7 +96,7 @@ export const fetchSubscriptions = async (
   }
 
   return fetch(
-    `${await getOrigin()}/api/subscriptions?active=true&upcoming=${upcoming}`,
+    `${process.env.SITE_URL}api/subscriptions?active=true&upcoming=${upcoming}`,
     {
       cache: "no-store",
       headers: {

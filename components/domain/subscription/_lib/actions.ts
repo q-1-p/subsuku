@@ -2,7 +2,6 @@
 
 import { auth } from "@clerk/nextjs/server";
 
-import { getOrigin } from "@/components/url";
 import { fetchSubscriptions as fetchSubscriptionsFetcher } from "./fetcher";
 
 export async function fetchSubscriptions(_prev: unknown, _formData: FormData) {
@@ -15,7 +14,7 @@ export async function registerSubscription(_prev: unknown, formData: FormData) {
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/subscription`, {
+  return fetch(`${process.env.SITE_URL}api/subscription`, {
     method: "POST",
     headers: {
       Authorization: userId,
@@ -30,7 +29,7 @@ export async function updateSubscription(_prev: unknown, formData: FormData) {
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/subscription`, {
+  return fetch(`${process.env.SITE_URL}api/subscription`, {
     method: "PUT",
     headers: {
       Authorization: userId,
@@ -45,7 +44,7 @@ export async function deleteSubscription(_prev: unknown, formData: FormData) {
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/subscription`, {
+  return fetch(`${process.env.SITE_URL}api/subscription`, {
     method: "DELETE",
     headers: {
       Authorization: userId,

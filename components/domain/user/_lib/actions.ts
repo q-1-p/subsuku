@@ -2,8 +2,6 @@
 
 import { auth } from "@clerk/nextjs/server";
 
-import { getOrigin } from "@/components/url";
-
 export async function updateEmail(
   _: unknown,
   formData: FormData,
@@ -14,7 +12,7 @@ export async function updateEmail(
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/user`, {
+  return fetch(`${process.env.SITE_URL}api/user`, {
     method: "PATCH",
     headers: {
       Authorization: userId,

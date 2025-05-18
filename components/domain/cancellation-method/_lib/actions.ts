@@ -2,7 +2,6 @@
 
 import { auth } from "@clerk/nextjs/server";
 
-import { getOrigin } from "@/components/url";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
 import { searchCancellationMethods as search } from "./fetcher";
 
@@ -26,7 +25,7 @@ export async function registerCancellationMethod(
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/cancellation-method`, {
+  return fetch(`${process.env.SITE_URL}api/cancellation-method`, {
     method: "POST",
     headers: {
       Authorization: userId,
@@ -43,7 +42,7 @@ export async function linkCancellationMethod(
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/subscription/link`, {
+  return fetch(`${process.env.SITE_URL}api/subscription/link`, {
     method: "PATCH",
     headers: {
       Authorization: userId,
@@ -61,7 +60,7 @@ export async function bookmarkCancellationMethod(
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/cancellation-method/bookmark`, {
+  return fetch(`${process.env.SITE_URL}api/cancellation-method/bookmark`, {
     method: "POST",
     headers: {
       Authorization: userId,
@@ -78,7 +77,7 @@ export async function releaseBookmarkForCancellationMethod(
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/cancellation-method/bookmark`, {
+  return fetch(`${process.env.SITE_URL}api/cancellation-method/bookmark`, {
     method: "DELETE",
     headers: {
       Authorization: userId,
@@ -96,7 +95,7 @@ export async function updateCancellationMethod(
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/cancellation-method`, {
+  return fetch(`${process.env.SITE_URL}api/cancellation-method`, {
     method: "PUT",
     headers: {
       Authorization: userId,
@@ -114,7 +113,7 @@ export async function deleteCancellationMethod(
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/cancellation-method`, {
+  return fetch(`${process.env.SITE_URL}api/cancellation-method`, {
     method: "DELETE",
     headers: {
       Authorization: userId,
@@ -132,7 +131,7 @@ export async function evaluateGoodToCancellationMethod(
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/cancellation-method/good`, {
+  return fetch(`${process.env.SITE_URL}api/cancellation-method/good`, {
     method: "POST",
     headers: {
       Authorization: userId,
@@ -149,7 +148,7 @@ export async function deleteGoodForCancellationMethod(
     throw new Error("Unauthorized");
   }
 
-  return fetch(`${await getOrigin()}/api/cancellation-method/good`, {
+  return fetch(`${process.env.SITE_URL}api/cancellation-method/good`, {
     method: "DELETE",
     headers: {
       Authorization: userId,
