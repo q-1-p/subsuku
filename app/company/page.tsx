@@ -60,11 +60,16 @@ export default function CompanyPage() {
         {/* モバイル表示用のカードレイアウト (md未満の画面サイズで表示) */}
         <div className="space-y-4 md:hidden">
           {companyInfo.map((info) => (
-            <div key={info.id} className="rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+            <div
+              key={info.id}
+              className="rounded-lg bg-white p-4 shadow-md dark:bg-gray-800"
+            >
               <h2 className="mb-2 font-semibold text-gray-700 dark:text-gray-200">
                 {info.title}
               </h2>
-              <div className="text-gray-900 dark:text-gray-100">{info.content}</div>
+              <div className="text-gray-900 dark:text-gray-100">
+                {info.content}
+              </div>
             </div>
           ))}
         </div>
