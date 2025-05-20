@@ -11,14 +11,14 @@ const cancellationMethodRepository: ICancellationMethodRepository =
   new CancellationMethodRepository();
 
 export async function GET(req: NextRequest) {
-  const useIdrResult = await userRepository.findId(
+  const userIdResult = await userRepository.findId(
     req.headers.get("Authorization") as string,
   );
-  if (useIdrResult.type === err) {
+  if (userIdResult.type === err) {
     return NextResponse.json({}, { status: 401 });
   }
   const cancellationMethodsResult = await cancellationMethodRepository.search(
-    useIdrResult.value,
+    userIdResult.value,
     req.nextUrl.searchParams.get("searchQuery") as string,
     req.nextUrl.searchParams.get("onlyMine") === "true",
     req.nextUrl.searchParams.get("onlyBookmarked") === "true",
