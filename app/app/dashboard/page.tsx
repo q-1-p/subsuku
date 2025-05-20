@@ -2,7 +2,7 @@ import { FileText, Plus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import SiteLoggedInHeader from "@/components/domain/site/site-logged-in-header";
+import { SiteHeader } from "@/components/domain/site/site-header";
 import SubscriptionsCountCard from "@/components/domain/subscription/subscriptions-count-card.container";
 import SubscriptionsMonthlyFeeCard from "@/components/domain/subscription/subscriptions-monthly-fee-card.container";
 import SubscriptionsMonthlyTotalFeeCard from "@/components/domain/subscription/subscriptions-monthly-total-fee-card.container";
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default function DashboardPage() {
   return (
     <>
-      <SiteLoggedInHeader />
+      <SiteHeader />
       <main className="w-full flex-1 px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">

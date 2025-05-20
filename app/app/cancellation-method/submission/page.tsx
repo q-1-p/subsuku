@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { CancellationMethodForm } from "@/components/domain/cancellation-method/cancellation-method-form.container";
-import SiteSubPageHeader from "@/components/domain/site/site-sub-page-header";
+import { SiteHeader } from "@/components/domain/site/site-header";
 
 export const metadata: Metadata = {
   title: "解約方法投稿 | さぶ空く",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <SiteSubPageHeader
+      <SiteHeader
         backLink="/app/cancellation-guide"
         backText="解約ガイドに戻る"
       />

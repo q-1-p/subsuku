@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import SiteSubPageHeader from "@/components/domain/site/site-sub-page-header";
+import { SiteHeader } from "@/components/domain/site/site-header";
 import SubscriptionInformationPanel from "@/components/domain/subscription/subscription-information-panel";
 
 export const metadata: Metadata = {
@@ -14,10 +14,7 @@ export default async function SubscriptionDetailPage({
 }: { params: Promise<{ id: string }> }) {
   return (
     <>
-      <SiteSubPageHeader
-        backLink="/app/dashboard"
-        backText="ダッシュボードに戻る"
-      />
+      <SiteHeader backLink="/app/dashboard" backText="ダッシュボードに戻る" />
       <SubscriptionInformationPanel subscriptionId={(await params).id} />
     </>
   );

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import SitePublicHeader from "@/components/domain/site/site-public-header";
+import { SiteHeader } from "@/components/domain/site/site-header";
 
 export const metadata: Metadata = {
   title: "運営者情報 | さぶ空く",
@@ -37,7 +37,7 @@ export default function CompanyPage() {
 
   return (
     <>
-      <SitePublicHeader />
+      <SiteHeader />
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <h1 className="mb-8 text-center font-bold text-3xl">運営者情報</h1>
 

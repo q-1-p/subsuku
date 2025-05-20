@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import SiteSubPageHeader from "@/components/domain/site/site-sub-page-header";
+import { SiteHeader } from "@/components/domain/site/site-header";
 import SubscriptionForm from "@/components/domain/subscription/subscription-form";
 
 export const metadata: Metadata = {
@@ -12,10 +12,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <SiteSubPageHeader
-        backLink="/app/dashboard"
-        backText="ダッシュボードに戻る"
-      />
+      <SiteHeader backLink="/app/dashboard" backText="ダッシュボードに戻る" />
       <main className="flex-1 p-6">
         <div className="mx-auto max-w-2xl">
           <div className="flex flex-col gap-6">

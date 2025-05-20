@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import SitePublicHeader from "@/components/domain/site/site-public-header";
+import { SiteHeader } from "@/components/domain/site/site-header";
 
 export const metadata: Metadata = {
   title: "問い合わせ | さぶ空く",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <SitePublicHeader />
+      <SiteHeader />
       <div className="flex items-center justify-center p-4">
         <iframe
           className="h-[1200px] w-full md:h-[1000px]"
