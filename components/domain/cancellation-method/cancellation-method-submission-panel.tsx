@@ -1,3 +1,7 @@
+import { SignedIn } from "@clerk/nextjs";
+import { Heart, Plus, ThumbsUp, Upload } from "lucide-react";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -6,8 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Heart, Plus, ThumbsUp, Upload } from "lucide-react";
-import Link from "next/link";
 
 export default function CancellationMethodSubmissionPanel() {
   return (
@@ -53,12 +55,14 @@ export default function CancellationMethodSubmissionPanel() {
             </div>
           </div>
           <div className="mt-4 flex justify-center">
-            <Link href="/app/cancellation-method/submission">
-              <Button className="rounded-xl">
-                <Plus className="mr-2 h-4 w-4" />
-                解約方法を投稿する
-              </Button>
-            </Link>
+            <SignedIn>
+              <Link href="/app/cancellation-method/submission">
+                <Button className="rounded-xl">
+                  <Plus className="mr-2 h-4 w-4" />
+                  解約方法を投稿する
+                </Button>
+              </Link>
+            </SignedIn>
           </div>
         </div>
       </CardContent>

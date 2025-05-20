@@ -146,28 +146,30 @@ export default function CancellationMethodCard({
               text="この方法で解約できました"
             />
           </div>
-          <div className="flex items-center">
-            <CancellationMethodLinkIcon
-              cancellationMethodId={cancellationMethod.id}
-            />
-            <Link
-              href={`/app/cancellation-method/edit/${cancellationMethod.id}`}
-            >
-              <Button variant="ghost" size="icon">
-                <EditIcon className="h-4 w-4" />
-              </Button>
-            </Link>
-            <form action={action as never}>
-              <input
-                type="hidden"
-                name="cancellationMethodId"
-                value={cancellationMethod.id}
+          {cancellationMethod.mine && (
+            <div className="flex items-center">
+              <CancellationMethodLinkIcon
+                cancellationMethodId={cancellationMethod.id}
               />
-              <Button type="submit" variant="ghost" size="icon">
-                <Trash2Icon className="h-4 w-4" />
-              </Button>
-            </form>
-          </div>
+              <Link
+                href={`/app/cancellation-method/edit/${cancellationMethod.id}`}
+              >
+                <Button variant="ghost" size="icon">
+                  <EditIcon className="h-4 w-4" />
+                </Button>
+              </Link>
+              <form action={action as never}>
+                <input
+                  type="hidden"
+                  name="cancellationMethodId"
+                  value={cancellationMethod.id}
+                />
+                <Button type="submit" variant="ghost" size="icon">
+                  <Trash2Icon className="h-4 w-4" />
+                </Button>
+              </form>
+            </div>
+          )}
         </div>
       </CardFooter>
     </Card>

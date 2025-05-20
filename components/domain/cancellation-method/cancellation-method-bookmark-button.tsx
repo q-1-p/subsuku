@@ -1,3 +1,4 @@
+import { useUser } from "@clerk/nextjs";
 import { BookmarkCheckIcon, BookmarkPlusIcon } from "lucide-react";
 import { useActionState, useState } from "react";
 
@@ -22,6 +23,7 @@ export default function CancellationMethodBookmarkButton({
   evaluated: boolean;
   count: number;
 }) {
+  const { isSignedIn } = useUser();
   const [bookmarked, setBookmarked] = useState(evaluated);
   const [_, action] = useActionState(
     bookmarked
@@ -41,7 +43,7 @@ export default function CancellationMethodBookmarkButton({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              type="submit"
+              type={isSignedIn ? "submit" : "button"}
               className="h-8 px-2"
               variant="ghost"
               size="sm"

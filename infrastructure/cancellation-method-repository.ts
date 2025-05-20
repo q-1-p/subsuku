@@ -1,4 +1,4 @@
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, like, sql } from "drizzle-orm";
 
 import { db, dbSocket } from "@/db";
 import {
@@ -15,6 +15,12 @@ import type { ICancellationMethodRepository } from "@/domain/cancellation-method
 import type { CancellationMethodUpdated } from "@/domain/cancellation-method/cancellation-method-updated";
 import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
+
+const searchNameQuery = db
+  .select()
+  .from(cancellationMethodsTable)
+  .where(like(cancellationMethodsTable.name, sql.placeholder("name")))
+  .prepare("searchName");
 
 const bookmarksQuery = db
   .select({
@@ -100,6 +106,65 @@ export class CancellationMethodRepository
         return { type: err as typeof err, error: undefined };
       });
   };
+
+  public searchForName = async (
+    searchQuery: string,
+  ): Promise<Result<ICancellationMethod[], undefined>> => {
+    return searchNameQuery
+      .execute({ name: `%${searchQuery}%` })
+      .then(async (data) => {
+        const cancellationMethods = await Promise.all(
+          data.map(async (datum) => {
+            const cancellationMethodIdResult = CancellationMethodId.factory(
+              datum.id,
+            );
+            if (cancellationMethodIdResult.type === err) {
+              throw new Error("Not found");
+            }
+
+            const bookmarkCountResult = await this.countBookmarks(
+              cancellationMethodIdResult.value,
+            );
+            const goodCountResult = await this.countGoods(
+              cancellationMethodIdResult.value,
+            );
+
+            if (
+              bookmarkCountResult.type === err ||
+              goodCountResult.type === err
+            ) {
+              throw new Error("Count failed");
+            }
+
+            return {
+              id: datum.id,
+              subscriptionName: datum.name,
+              private: datum.private,
+              steps: [],
+              precautions: datum.precautions,
+              freeText: datum.freeText,
+              isBookmarked: false,
+              evaluatedGood: false,
+              bookmarkCount: bookmarkCountResult.value,
+              goodCount: goodCountResult.value,
+              serviceUrl: datum.serviceUrl,
+              mine: false,
+              updatedAt: new Date(datum.updatedAt),
+            } as ICancellationMethod;
+          }),
+        );
+
+        return {
+          type: ok as typeof ok,
+          value: cancellationMethods,
+        };
+      })
+      .catch((error) => {
+        console.error(error);
+        return { type: err as typeof err, error: undefined };
+      });
+  };
+
   public search = async (
     userId: UserId,
     searchQuery: string,

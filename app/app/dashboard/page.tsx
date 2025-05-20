@@ -27,7 +27,7 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <h1 className="font-bold text-2xl">ダッシュボード</h1>
             <div className="flex gap-2">
-              <Link href="/app/cancellation-guide">
+              <Link href="/cancellation-guide">
                 <Button variant="outline">
                   <FileText className="mr-2 h-4 w-4" />
                   解約ガイド

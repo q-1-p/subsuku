@@ -15,10 +15,7 @@ export default async function Page({
 
   return (
     <>
-      <SiteHeader
-        backLink="/app/cancellation-guide"
-        backText="解約ガイドに戻る"
-      />
+      <SiteHeader backLink="/cancellation-guide" backText="解約ガイドに戻る" />
       <main className="container flex-1 py-6">
         <div className="mx-auto max-w-3xl">
           <div className="flex flex-col gap-6 px-4">

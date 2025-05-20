@@ -35,16 +35,13 @@ export async function searchCancellationMethods(
   onlyBookmarked: boolean,
 ): Promise<ICancellationMethod[]> {
   const { userId } = await auth();
-  if (!userId) {
-    throw new Error("Unauthorized");
-  }
 
   return fetch(
     `${process.env.SITE_URL}api/cancellation-methods?searchQuery=${searchQuery}&onlyMine=${onlyMine}&onlyBookmarked=${onlyBookmarked}`,
     {
       cache: "no-store",
       headers: {
-        Authorization: userId,
+        Authorization: userId ?? "",
       },
       method: "GET",
     },

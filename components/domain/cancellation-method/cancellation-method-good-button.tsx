@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import { ThumbsUp } from "lucide-react";
 import { useActionState, useState } from "react";
 
@@ -26,6 +27,7 @@ export default function CancellationMethodGoodButton({
   count: number;
   text?: string;
 }) {
+  const { isSignedIn } = useUser();
   const [evaluatedGood, setEvaluated] = useState(evaluated);
   const [_, action] = useActionState(
     evaluatedGood
@@ -48,7 +50,7 @@ export default function CancellationMethodGoodButton({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              type="submit"
+              type={isSignedIn ? "submit" : "button"}
               className="h-8 px-2"
               variant="ghost"
               size="sm"

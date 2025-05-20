@@ -1,3 +1,4 @@
+import { SignedIn } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -21,12 +22,14 @@ export default function Page() {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <h1 className="font-bold text-2xl">サブスクリプション解約ガイド</h1>
-            <Link href="/app/cancellation-method/submission">
-              <Button className="rounded-xl">
-                <Plus className="mr-2 h-4 w-4" />
-                解約方法を投稿
-              </Button>
-            </Link>
+            <SignedIn>
+              <Link href="/app/cancellation-method/submission">
+                <Button className="rounded-xl">
+                  <Plus className="mr-2 h-4 w-4" />
+                  解約方法を投稿
+                </Button>
+              </Link>
+            </SignedIn>
           </div>
 
           <CancellationMethodsPanel />

@@ -10,6 +10,9 @@ export type ICancellationMethodRepository = {
     userId: UserId,
     cancellationMethodId: CancellationMethodId,
   ) => Promise<Result<ICancellationMethod, undefined>>;
+  searchForName: (
+    searchQuery: string,
+  ) => Promise<Result<ICancellationMethod[], undefined>>;
   search: (
     userId: UserId,
     searchQuery: string,

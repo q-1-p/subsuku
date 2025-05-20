@@ -300,7 +300,7 @@ export function CancellationMethodFormPresentation({
               {([canSubmit, isSubmitting]) => (
                 <>
                   <Button type="button" variant="outline" asChild>
-                    <Link href="/app/cancellation-guide">キャンセル</Link>
+                    <Link href="/cancellation-guide">キャンセル</Link>
                   </Button>
                   <Button type="submit" disabled={!canSubmit}>
                     {isSubmitting ? "保存中..." : "保存"}

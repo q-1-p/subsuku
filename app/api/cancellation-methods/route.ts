@@ -11,18 +11,30 @@ const cancellationMethodRepository: ICancellationMethodRepository =
   new CancellationMethodRepository();
 
 export async function GET(req: NextRequest) {
-  const userIdResult = await userRepository.findId(
-    req.headers.get("Authorization") as string,
-  );
-  if (userIdResult.type === err) {
-    return NextResponse.json({}, { status: 401 });
+  if (req.headers.get("Authorization")) {
+    const userIdResult = await userRepository.findId(
+      req.headers.get("Authorization") as string,
+    );
+    if (userIdResult.type === err) {
+      return NextResponse.json({}, { status: 401 });
+    }
+    const cancellationMethodsResult = await cancellationMethodRepository.search(
+      userIdResult.value,
+      req.nextUrl.searchParams.get("searchQuery") as string,
+      req.nextUrl.searchParams.get("onlyMine") === "true",
+      req.nextUrl.searchParams.get("onlyBookmarked") === "true",
+    );
+    if (cancellationMethodsResult.type === err) {
+      return NextResponse.json({}, { status: 400 });
+    }
+
+    return NextResponse.json(cancellationMethodsResult.value, { status: 200 });
   }
-  const cancellationMethodsResult = await cancellationMethodRepository.search(
-    userIdResult.value,
-    req.nextUrl.searchParams.get("searchQuery") as string,
-    req.nextUrl.searchParams.get("onlyMine") === "true",
-    req.nextUrl.searchParams.get("onlyBookmarked") === "true",
-  );
+
+  const cancellationMethodsResult =
+    await cancellationMethodRepository.searchForName(
+      req.nextUrl.searchParams.get("searchQuery") as string,
+    );
   if (cancellationMethodsResult.type === err) {
     return NextResponse.json({}, { status: 400 });
   }
