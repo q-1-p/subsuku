@@ -93,7 +93,7 @@ export function SubscriptionEditFormPresentation({
       amount: subscription?.amount ?? "100",
       currencyId: subscription?.currencyId ?? currencyId.jpy,
       intervalCycle: subscription?.intervalCycle ?? 1,
-      intervalId: subscription?.intervalId ?? intervalId.monthly,
+      intervalId: subscription?.intervalId ?? intervalId.yearly,
       nextUpdate: subscription?.nextUpdate.toString() ?? "",
     },
     transform: useTransform((baseForm) => baseForm, [action]),
@@ -243,7 +243,7 @@ export function SubscriptionEditFormPresentation({
                           <>
                             <Select
                               name="currencyId"
-                              defaultValue={`${currencyId.jpy}`}
+                              defaultValue={`${field.state.value}`}
                               onValueChange={(e) =>
                                 field.handleChange(+e as CurrencyId)
                               }
@@ -301,7 +301,7 @@ export function SubscriptionEditFormPresentation({
                   {(field) => (
                     <Select
                       name="intervalId"
-                      defaultValue={`${intervalId.monthly}`}
+                      defaultValue={`${field.state.value}`}
                       onValueChange={(e) =>
                         field.handleChange(+e as IntervalId)
                       }
