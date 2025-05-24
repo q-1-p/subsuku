@@ -1,0 +1,5 @@
+{
+    "ignorePaths": [
+        "public/data/data.json"
+    ]
+}

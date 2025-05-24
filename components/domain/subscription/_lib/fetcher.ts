@@ -23,6 +23,27 @@ export async function fetchSubscription(id: string): Promise<ISubscription> {
     return res.json();
   });
 }
+export async function fetchSubscriptionSuggestions(): Promise<string[]> {
+  // 入力候補の追加のためだけにコミットログを増やす事態を避けたいので、Github Gistから取得する
+  // https://gist.github.com/q-1-p/f57f88695749f919aa60250010b68976 から取得
+  return fetch(
+    "https://gist.githubusercontent.com/q-1-p/f57f88695749f919aa60250010b68976/raw/substrack.json",
+    {
+      cache: "no-store",
+      method: "GET",
+    },
+  )
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(
+          `${res.status} Failed to fetch subscription suggestions`,
+        );
+      }
+
+      return res.json();
+    })
+    .then((data) => data.subscriptionNameSuggestions);
+}
 
 export async function countSubscriptions(): Promise<number> {
   const { userId } = await auth();

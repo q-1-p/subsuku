@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 
 import { SiteHeader } from "@/components/domain/site/site-header";
-import { fetchSubscription } from "@/components/domain/subscription/_lib/fetcher";
-import SubscriptionForm from "@/components/domain/subscription/subscription-form";
+import { SubscriptionEditForm } from "@/components/domain/subscription/subscription-edit-form.container";
 
 export const metadata: Metadata = {
   title: "サブスクリプション編集 | さぶ空く",
@@ -13,8 +12,6 @@ export const metadata: Metadata = {
 export default async function Page({
   params,
 }: { params: Promise<{ id: string }> }) {
-  const subscription = await fetchSubscription((await params).id);
-
   return (
     <>
       <SiteHeader backLink="/app/dashboard" backText="ダッシュボードに戻る" />
@@ -27,7 +24,7 @@ export default async function Page({
                 サブスクリプションの詳細を修正してください
               </p>
             </div>
-            <SubscriptionForm subscription={subscription} />
+            <SubscriptionEditForm subscriptionId={(await params).id} />
           </div>
         </div>
       </main>

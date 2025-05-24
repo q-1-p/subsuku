@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { SiteHeader } from "@/components/domain/site/site-header";
-import SubscriptionForm from "@/components/domain/subscription/subscription-form";
+import { SubscriptionEditForm } from "@/components/domain/subscription/subscription-edit-form.container";
 
 export const metadata: Metadata = {
   title: "サブスクリプション追加 | さぶ空く",
@@ -22,7 +22,7 @@ export default function Page() {
                 新しいサブスクリプションの詳細を入力してください
               </p>
             </div>
-            <SubscriptionForm />
+            <SubscriptionEditForm />
           </div>
         </div>
       </main>

@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 
 import CurrencyIcon from "@/components/common/currency-icon";
 import { Button } from "@/components/ui/button";
@@ -60,9 +60,13 @@ function validateInputFloat(value: string): string {
   return float.length < 1 || Number.isNaN(+float) ? "0" : float;
 }
 
-export default function SubscriptionForm({
+export function SubscriptionEditFormPresentation({
   subscription,
-}: { subscription?: ISubscription }) {
+  subscriptionNameSuggestions,
+}: {
+  subscription?: ISubscription;
+  subscriptionNameSuggestions: Promise<string[]>;
+}) {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
     if (
       subscription
@@ -97,6 +101,11 @@ export default function SubscriptionForm({
     },
   });
 
+  // 入力値に基づいた候補を管理するstate
+  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [inputValue, setInputValue] = useState(subscription?.name ?? "");
+
   return (
     <Card className="overflow-hidden rounded-2xl border shadow-sm">
       <CardHeader>
@@ -108,23 +117,77 @@ export default function SubscriptionForm({
           <input type="hidden" name="id" value={subscription?.id} />
           <div className="grid grid-cols-1 gap-4">
             <form.Field name="name">
-              {(field) => (
-                <>
-                  <h4>サブスクリプション名</h4>
-                  <div>
-                    <Input
-                      name="name"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                    {0 < field.state.meta.errors.length && (
-                      <p className="pt-2 text-red-500">
-                        31文字以下の名前を入力してください
-                      </p>
-                    )}
-                  </div>
-                </>
-              )}
+              {(field) => {
+                // 入力値に基づいて候補をフィルタリングする関数
+                const handleInputChange = async (
+                  e: React.ChangeEvent<HTMLInputElement>,
+                ) => {
+                  const value = e.target.value;
+                  field.handleChange(value);
+                  setInputValue(value);
+
+                  if (value.length > 0) {
+                    const filtered = (await subscriptionNameSuggestions).filter(
+                      (suggestion) =>
+                        suggestion.toLowerCase().includes(value.toLowerCase()),
+                    );
+                    setFilteredSuggestions(filtered);
+                    setShowSuggestions(filtered.length > 0);
+                  } else {
+                    setShowSuggestions(false);
+                  }
+                };
+
+                // 候補をクリックした時の処理
+                const handleSuggestionClick = (suggestion: string) => {
+                  field.handleChange(suggestion);
+                  setInputValue(suggestion);
+                  setShowSuggestions(false);
+                };
+
+                return (
+                  <>
+                    <h4>サブスクリプション名</h4>
+                    <div className="relative">
+                      <Input
+                        name="name"
+                        value={field.state.value}
+                        onChange={handleInputChange}
+                        onFocus={() => {
+                          if (inputValue && filteredSuggestions.length > 0) {
+                            setShowSuggestions(true);
+                          }
+                        }}
+                        onBlur={() => {
+                          // 少し遅延させて候補をクリックできるようにする
+                          setTimeout(() => setShowSuggestions(false), 200);
+                        }}
+                      />
+                      {showSuggestions && (
+                        <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg">
+                          {filteredSuggestions.map((suggestion) => (
+                            <div
+                              key={suggestion}
+                              className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                              onMouseDown={(e) => {
+                                e.preventDefault(); // onBlurが先に発火するのを防ぐ
+                                handleSuggestionClick(suggestion);
+                              }}
+                            >
+                              {suggestion}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {0 < field.state.meta.errors.length && (
+                        <p className="pt-2 text-red-500">
+                          31文字以下の名前を入力してください
+                        </p>
+                      )}
+                    </div>
+                  </>
+                );
+              }}
             </form.Field>
           </div>
 
