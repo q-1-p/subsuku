@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
 import type { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
 import type { CurrencyId } from "@/domain/currency/currency-id";
+import { intervalId } from "@/domain/interval/interval-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import type { SubscriptionId } from "@/domain/subscription/subscription-id";
 import type { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";
@@ -279,6 +280,32 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       });
   };
 
+  public updateNextUpdate = async () => {
+    const today = format(addDays(new Date(), -1), "yyyy-MM-dd");
+    const updateSubscriptions = await db
+      .select({
+        id: subscriptionsTable.id,
+        nextUpdate: subscriptionsTable.nextUpdate,
+        intervalCycle: subscriptionsTable.intervalCycle,
+        intervalId: subscriptionsTable.intervalId,
+      })
+      .from(subscriptionsTable)
+      .where(lt(subscriptionsTable.nextUpdate, today));
+
+    for (const subscription of updateSubscriptions) {
+      const nextUpdate =
+        subscription.intervalId === intervalId.monthly
+          ? addMonths(subscription.nextUpdate, subscription.intervalCycle)
+          : addYears(subscription.nextUpdate, subscription.intervalCycle);
+
+      await db
+        .update(subscriptionsTable)
+        .set({
+          nextUpdate: format(nextUpdate, "yyyy-MM-dd"),
+        })
+        .where(eq(subscriptionsTable.id, subscription.id));
+    }
+  };
   public update = (
     userId: UserId,
     subscriptionUpdated: SubscriptionUpdated,
