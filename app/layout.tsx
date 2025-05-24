@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   description:
     "サブスクリプションの一覧を円換算で管理し、更新日前にメール通知などを行うサービスです",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
+  robots: "noindex",
 };
 
 export default function RootLayout({
