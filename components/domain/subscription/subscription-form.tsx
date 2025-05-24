@@ -44,7 +44,8 @@ import type { ISubscription } from "@/domain/subscription/subscription";
 import { registerSubscription, updateSubscription } from "./_lib/actions";
 
 const subscriptionFormScheme = type({
-  name: "string > 0",
+  name: "0 < string < 32",
+  amount: type("0 < string < 20").narrow((value) => 100000000 > +value),
   currencyId: "number.integer",
   intervalCycle: "number.integer > 0",
   intervalId: "number.integer",
@@ -118,7 +119,7 @@ export default function SubscriptionForm({
                     />
                     {0 < field.state.meta.errors.length && (
                       <p className="pt-2 text-red-500">
-                        名前を入力してください
+                        31文字以下の名前を入力してください
                       </p>
                     )}
                   </div>
@@ -160,7 +161,7 @@ export default function SubscriptionForm({
                                 />
                                 {0 < field.state.meta.errors.length && (
                                   <p className="px-2 text-red-500">
-                                    0以上の数を入力してください
+                                    8桁以内の数値を入力してください
                                   </p>
                                 )}
                               </div>

@@ -16,7 +16,7 @@ export const cancellationMethodsTable = pgTable(
   "cancellation_methods",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    name: varchar("subscription_name", { length: 255 }).notNull(),
+    name: varchar("subscription_name", { length: 63 }).notNull(),
     private: boolean("private").notNull().default(false),
     precautions: text("precautions").notNull(),
     freeText: text("free_text").notNull(),
@@ -83,12 +83,12 @@ export const subscriptionsTable = pgTable(
   "subscriptions",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    name: varchar("name", { length: 255 }).notNull(),
+    name: varchar("name", { length: 63 }).notNull(),
     active: boolean("active").notNull().default(true),
     userId: uuid("user_id")
       .notNull()
       .references(() => usersTable.id),
-    amount: numeric("amount", { precision: 20, scale: 10 }).notNull(),
+    amount: numeric("amount", { precision: 16, scale: 8 }).notNull(),
     currencyId: smallint("currency_id")
       .notNull()
       .references(() => currenciesTable.id),
