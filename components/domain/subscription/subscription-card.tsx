@@ -1,7 +1,7 @@
 "use client";
 
 import { useSetAtom } from "jotai";
-import { Settings, Trash2 } from "lucide-react";
+import { EditIcon, Settings, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useActionState } from "react";
 
@@ -64,7 +64,7 @@ export default function SubscriptionCard({
           <DropdownMenuContent align="end">
             <Link href={`/app/subscription/edit/${subscription.id}`}>
               <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
+                <EditIcon className="mr-2 h-4 w-4" />
                 <span>編集</span>
               </DropdownMenuItem>
             </Link>
