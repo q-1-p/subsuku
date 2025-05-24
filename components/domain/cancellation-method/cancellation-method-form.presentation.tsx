@@ -64,7 +64,7 @@ export function CancellationMethodFormPresentation({
       alert("解約方法を投稿しました");
       window.location.href = form.state.values.linkSubscriptionId
         ? `/app/subscription/${form.state.values.linkSubscriptionId}`
-        : "/app/cancellation-guide";
+        : "/cancellation-guide";
     } else {
       alert("解約方法の投稿に失敗しました");
     }
