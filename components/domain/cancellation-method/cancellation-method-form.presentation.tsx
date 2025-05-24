@@ -52,6 +52,10 @@ export function CancellationMethodFormPresentation({
   subscriptions: ISubscription[];
 }) {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
+    // server actionsを実行している場合、tanstack formが検知できないので、手動で変更する
+    form.state.canSubmit = false;
+    form.state.isSubmitting = true;
+
     if (
       cancellationMethod
         ? await updateCancellationMethod(_, formData)
@@ -64,6 +68,9 @@ export function CancellationMethodFormPresentation({
     } else {
       alert("解約方法の投稿に失敗しました");
     }
+
+    form.state.isSubmitting = false;
+    form.state.canSubmit = true;
   }, {});
   const [linkToSubscription, setLinkToSubscription] = useState(false);
 

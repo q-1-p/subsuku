@@ -23,12 +23,19 @@ const validator = type({
 
 export function UserSettingBoard() {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
+    // server actionsを実行している場合、tanstack formが検知できないので、手動で変更する
+    form.state.canSubmit = false;
+    form.state.isSubmitting = true;
+
     const result = await updateEmail(undefined, formData);
     if (result === true) {
       toast("メールアドレスを更新しました");
     } else if (result === false) {
       toast("メールアドレスの更新に失敗しました");
     }
+
+    form.state.isSubmitting = false;
+    form.state.canSubmit = true;
   }, {});
 
   const form = useForm({

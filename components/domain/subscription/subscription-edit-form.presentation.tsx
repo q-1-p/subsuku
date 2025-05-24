@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm, useTransform } from "@tanstack/react-form";
-import { formOptions } from "@tanstack/react-form";
 import { type } from "arktype";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
@@ -68,6 +67,10 @@ export function SubscriptionEditFormPresentation({
   subscriptionNameSuggestions: Promise<string[]>;
 }) {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
+    // server actionsを実行している場合、tanstack formが検知できないので、手動で変更する
+    form.state.canSubmit = false;
+    form.state.isSubmitting = true;
+
     if (
       subscription
         ? await updateSubscription(_, formData)
@@ -78,9 +81,12 @@ export function SubscriptionEditFormPresentation({
     } else {
       alert("サブスクリプションの登録に失敗しました");
     }
+
+    form.state.isSubmitting = false;
+    form.state.canSubmit = true;
   }, {});
 
-  const subscriptionFormOptions = formOptions({
+  const form = useForm({
     defaultValues: {
       id: subscription?.id ?? "",
       name: subscription?.name ?? "",
@@ -90,9 +96,6 @@ export function SubscriptionEditFormPresentation({
       intervalId: subscription?.intervalId ?? intervalId.monthly,
       nextUpdate: subscription?.nextUpdate.toString() ?? "",
     },
-  });
-  const form = useForm({
-    ...subscriptionFormOptions,
     transform: useTransform((baseForm) => baseForm, [action]),
     validators: {
       onMount: subscriptionFormScheme,

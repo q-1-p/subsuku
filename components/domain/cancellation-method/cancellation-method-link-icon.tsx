@@ -33,9 +33,16 @@ export function CancellationMethodLinkIcon({
     FormData
   >(fetchSubscriptions, []);
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
+    // server actionsを実行している場合、tanstack formが検知できないので、手動で変更する
+    form.state.canSubmit = false;
+    form.state.isSubmitting = true;
+
     if (await linkCancellationMethod(_, formData)) {
       window.location.href = `/app/subscription/${form.state.values.subscriptionId}`;
     }
+
+    form.state.isSubmitting = false;
+    form.state.canSubmit = true;
   }, {});
 
   const form = useForm({
