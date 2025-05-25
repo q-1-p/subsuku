@@ -90,7 +90,7 @@ export function SubscriptionEditFormPresentation({
     defaultValues: {
       id: subscription?.id ?? "",
       name: subscription?.name ?? "",
-      amount: subscription?.amount ?? "100",
+      amount: subscription?.amount.toString() ?? "100",
       currencyId: subscription?.currencyId ?? currencyId.jpy,
       intervalCycle: subscription?.intervalCycle ?? 1,
       intervalId: subscription?.intervalId ?? intervalId.yearly,
@@ -225,12 +225,11 @@ export function SubscriptionEditFormPresentation({
                                     );
                                   }}
                                 />
-                                {0 < field.state.meta.errors.length &&
-                                  field.state.meta.isDirty && (
-                                    <p className="px-2 text-red-500">
-                                      8桁以内の数値を入力してください
-                                    </p>
-                                  )}
+                                {0 < field.state.meta.errors.length && (
+                                  <p className="px-2 text-red-500">
+                                    8桁以内の数値を入力してください
+                                  </p>
+                                )}
                               </div>
                             </>
                           )}
