@@ -7,9 +7,9 @@ export default function SubscriptionsMonthlyFeeCardPresentation({
 }: { fee: number }) {
   return (
     <AggregationCard
-      title="月額合計"
+      title="月間コスト"
       totalResult={`¥${Math.round(fee).toLocaleString()}`}
-      description="月額サブスクのみ"
+      description="今後1ヶ月間の支払い金額"
     >
       <CreditCard className="h-4 w-4 text-muted-foreground" />
     </AggregationCard>

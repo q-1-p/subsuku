@@ -28,6 +28,8 @@ const searchSubscriptionsForNextUpdateQuery = db
   .select({
     amount: subscriptionsTable.amount,
     currency: subscriptionsTable.currencyId,
+    intervalId: subscriptionsTable.intervalId,
+    intervalCycle: subscriptionsTable.intervalCycle,
   })
   .from(subscriptionsTable)
   .where(
@@ -39,7 +41,7 @@ const searchSubscriptionsForNextUpdateQuery = db
     ),
   )
   .prepare("searchForNextUpdate");
-const findAllSubscriptionsQuery = db
+const searchSubscriptionsQuery = db
   .select()
   .from(subscriptionsTable)
   .where(
@@ -122,7 +124,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     return (
       upcoming
         ? searchSubscriptionsForNextUpdateQuery
-        : findAllSubscriptionsQuery
+        : searchSubscriptionsQuery
     )
       .execute({
         userId: userId.value,
@@ -246,7 +248,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
           .map(
             (x) =>
               +x.amount *
-              Number(currenciesResult.value.get(x.currency as CurrencyId)),
+              Number(currenciesResult.value.get(x.currency as CurrencyId)) *
+              (x.intervalId === intervalId.monthly ? 12 / x.intervalCycle : 1),
           )
           .reduce((a, b) => a + b);
 
