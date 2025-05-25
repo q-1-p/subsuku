@@ -23,12 +23,12 @@ export default function UserIcon() {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>マイアカウント</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Link href="/app/setting" className="flex items-center gap-2">
+        <Link href="/app/setting">
+          <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             <span>設定</span>
-          </Link>
-        </DropdownMenuItem>
+          </DropdownMenuItem>
+        </Link>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <LogOut className="mr-2 h-4 w-4" />
