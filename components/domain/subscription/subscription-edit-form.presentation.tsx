@@ -225,11 +225,12 @@ export function SubscriptionEditFormPresentation({
                                     );
                                   }}
                                 />
-                                {0 < field.state.meta.errors.length && (
-                                  <p className="px-2 text-red-500">
-                                    8桁以内の数値を入力してください
-                                  </p>
-                                )}
+                                {0 < field.state.meta.errors.length &&
+                                  field.state.meta.isDirty && (
+                                    <p className="px-2 text-red-500">
+                                      8桁以内の数値を入力してください
+                                    </p>
+                                  )}
                               </div>
                             </>
                           )}
