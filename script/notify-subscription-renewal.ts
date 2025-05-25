@@ -56,7 +56,7 @@ export const sendMail = async () => {
     await transporter.sendMail(mailOptions);
   }
 
-  console.log("メールが正常に送信されました");
+  console.log(`${subscriptions.size}件のメールを送信しました`);
 };
 
 // スクリプトが直接実行された場合にシード関数を実行
