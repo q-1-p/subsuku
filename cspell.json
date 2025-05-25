@@ -1,5 +1,3 @@
 {
-    "ignorePaths": [
-        "public/data/data.json"
-    ]
+  "ignorePaths": ["public/data/data.json"]
 }

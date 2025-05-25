@@ -1,4 +1,10 @@
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -32,6 +38,30 @@ export default function CancellationMethodInformationCardPresentation({
             </li>
           ))}
         </ol>
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="notes" className="border-none">
+            <AccordionTrigger className="py-2 hover:no-underline">
+              <span className="font-medium text-sm">注意事項</span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <p className="p-2 text-muted-foreground text-sm">
+                {cancellationMethod.precautions}
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="notes" className="border-none">
+            <AccordionTrigger className="py-2 hover:no-underline">
+              <span className="font-medium text-sm">その他</span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <p className="p-2 text-muted-foreground text-sm">
+                {cancellationMethod.freeText}
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </CardContent>
       <CardFooter className="flex flex-col gap-2">
         <p className="text-center text-muted-foreground text-xs">
