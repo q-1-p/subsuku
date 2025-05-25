@@ -1,5 +1,5 @@
 import { addDays, addMonths, addYears, format } from "date-fns";
-import { and, eq, gte, lt, sql } from "drizzle-orm";
+import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
@@ -22,6 +22,7 @@ const findSubscriptionQuery = db.query.subscriptionsTable
         eq(subscription.userId, sql.placeholder("userId")),
         eq(subscription.id, sql.placeholder("subscriptionId")),
       ),
+    orderBy: (subscription) => [asc(subscription.nextUpdate)],
   })
   .prepare("find");
 const searchSubscriptionsForNextUpdateQuery = db
@@ -40,6 +41,7 @@ const searchSubscriptionsForNextUpdateQuery = db
       lt(subscriptionsTable.nextUpdate, sql.placeholder("nextUpdate")),
     ),
   )
+  .orderBy(asc(subscriptionsTable.nextUpdate))
   .prepare("searchForNextUpdate");
 const searchSubscriptionsQuery = db
   .select()
@@ -50,6 +52,7 @@ const searchSubscriptionsQuery = db
       eq(subscriptionsTable.active, sql.placeholder("active")),
     ),
   )
+  .orderBy(asc(subscriptionsTable.nextUpdate))
   .prepare("findAll");
 
 const countSubscriptionsQuery = db
