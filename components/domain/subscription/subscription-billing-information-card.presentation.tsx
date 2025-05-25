@@ -46,7 +46,7 @@ export default function SubscriptionBillingInformationCardPresentation({
                 請求サイクル
               </h3>
               <p className="text-base">
-                {intervalNames[subscription.intervalId]}
+                {`${intervalNames[subscription.intervalId]}毎`}
               </p>
             </div>
           </div>

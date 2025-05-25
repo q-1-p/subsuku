@@ -313,7 +313,7 @@ export function SubscriptionEditFormPresentation({
                       <SelectContent>
                         {Object.entries(intervalId).map(([key, value]) => (
                           <SelectItem key={key} value={value.toString()}>
-                            {intervalNames[value]}
+                            {`${intervalNames[value]}毎`}
                           </SelectItem>
                         ))}
                       </SelectContent>
