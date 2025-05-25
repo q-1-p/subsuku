@@ -46,11 +46,14 @@ export const sendMail = async () => {
       to: mailAddress,
       subject: "サブスクリプション更新通知メール",
       html: `
-        <p>明日、以下のサブスクリプションが更新されます</p>
-        <ul>
-          ${subscriptionNames.map((name) => `<li>${name}</li>`).join("")}
-        </ul>
-      `,
+      <html>
+        <body>
+          <p>明日、以下のサブスクリプションが更新されます</p>
+          <ul>
+            ${subscriptionNames.map((name) => `<li>${name}</li>`).join("")}
+          </ul>
+        </body>
+      </html>`,
     };
 
     await transporter.sendMail(mailOptions);
