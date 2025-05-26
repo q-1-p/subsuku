@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import { formatDate } from "date-fns";
 
 export default function CancellationMethodInformationCardPresentation({
   cancellationMethod,
@@ -22,9 +23,25 @@ export default function CancellationMethodInformationCardPresentation({
   return (
     <Card className="overflow-hidden rounded-2xl border shadow-sm">
       <CardHeader>
-        <CardTitle>解約方法</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>解約方法</CardTitle>
+          <a
+            href={cancellationMethod.serviceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            解約先URL
+          </a>
+        </div>
         <CardDescription>
-          {cancellationMethod.subscriptionName}を解約する手順
+          <div className="flex justify-between">
+            <p>{cancellationMethod.subscriptionName}を解約する手順</p>
+            <p>
+              更新日：
+              {formatDate(cancellationMethod.updatedAt, "yyyy/MM/dd HH:mm:ss")}
+            </p>
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent>

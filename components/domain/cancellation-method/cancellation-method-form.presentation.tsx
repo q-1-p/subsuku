@@ -194,7 +194,7 @@ export function CancellationMethodFormPresentation({
             <form.Field name="serviceUrl">
               {(field) => (
                 <>
-                  <Label htmlFor="serviceUrl">公式サイトURL</Label>
+                  <Label htmlFor="serviceUrl">解約先URL</Label>
                   <Input
                     className="rounded-xl"
                     name="serviceUrl"

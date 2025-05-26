@@ -116,7 +116,7 @@ export default function CancellationMethodCard({
               "注意事項:",
               cancellationMethod.precautions,
               "",
-              `公式サイト: ${cancellationMethod.serviceUrl}`,
+              `解約先: ${cancellationMethod.serviceUrl}`,
             ].join("\n")}
           />
           {cancellationMethod.serviceUrl && (
@@ -127,7 +127,7 @@ export default function CancellationMethodCard({
                 rel="noopener noreferrer"
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
-                公式サイト
+                解約先
               </a>
             </Button>
           )}
