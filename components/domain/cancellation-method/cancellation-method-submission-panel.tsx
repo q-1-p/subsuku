@@ -1,5 +1,5 @@
 import { SignedIn } from "@clerk/nextjs";
-import { Heart, Plus, ThumbsUp, Upload } from "lucide-react";
+import { LinkIcon, Plus, ThumbsUp, Upload } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -46,11 +46,13 @@ export default function CancellationMethodSubmissionPanel() {
             </div>
             <div className="flex flex-col items-center gap-2 rounded-xl bg-secondary/30 p-4">
               <div className="rounded-full bg-primary/20 p-3 text-primary">
-                <Heart className="h-6 w-6" />
+                <LinkIcon className="h-6 w-6" />
               </div>
-              <h3 className="font-medium text-lg">役立つ情報を評価</h3>
+              <h3 className="font-medium text-lg">
+                サブスクと解約方法を結びつける
+              </h3>
               <p className="text-center text-muted-foreground text-sm">
-                役立つ解約方法には「いいね」を押して、他のユーザーにも伝わるようにしましょう。
+                登録したサブスクと解約方法を結びつけることで、サブスクの管理がさらに容易になります。
               </p>
             </div>
           </div>
