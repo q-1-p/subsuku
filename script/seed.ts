@@ -12,7 +12,7 @@ import {
   usersTable,
 } from "@/db/schema";
 import { currencyId } from "@/domain/currency/currency-id";
-import { intervalId } from "@/domain/interval/interval-id";
+import { timeUnit } from "@/domain/interval/interval-id";
 
 async function seed() {
   try {
@@ -127,7 +127,7 @@ async function seedSubscriptions(
         currencyId: currencyId.jpy,
         nextUpdate: formatDate(new Date(), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalId: intervalId.monthly,
+        intervalId: timeUnit.month,
         cancellationMethodId: insertedMethodId, // 実際の ID を使用
       },
       {
@@ -139,7 +139,7 @@ async function seedSubscriptions(
         currencyId: currencyId.usd,
         nextUpdate: formatDate(addDays(new Date(), 6), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalId: intervalId.monthly,
+        intervalId: timeUnit.month,
         cancellationMethodId: insertedMethodId, // 実際の ID を使用
       },
       {
@@ -151,7 +151,7 @@ async function seedSubscriptions(
         currencyId: currencyId.eur,
         nextUpdate: formatDate(addDays(new Date(), 20), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalId: intervalId.monthly,
+        intervalId: timeUnit.month,
         cancellationMethodId: insertedMethodId, // 実際の ID を使用
       },
       {
@@ -163,7 +163,7 @@ async function seedSubscriptions(
         currencyId: currencyId.gbp,
         nextUpdate: formatDate(addDays(new Date(), -4), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalId: intervalId.monthly,
+        intervalId: timeUnit.month,
         cancellationMethodId: insertedMethodId, // 実際の ID を使用
       },
       {
@@ -175,7 +175,7 @@ async function seedSubscriptions(
         currencyId: currencyId.cny,
         nextUpdate: formatDate(addDays(new Date(), 5), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalId: intervalId.yearly,
+        intervalId: timeUnit.year,
         cancellationMethodId: insertedMethodId, // 実際の ID を使用
       },
       {
@@ -187,7 +187,7 @@ async function seedSubscriptions(
         currencyId: currencyId.btc,
         nextUpdate: formatDate(addDays(new Date(), 30), "yyyy-MM-dd"),
         intervalCycle: 1,
-        intervalId: intervalId.yearly,
+        intervalId: timeUnit.year,
         cancellationMethodId: insertedMethodId, // 実際の ID を使用
       },
       {
@@ -199,7 +199,7 @@ async function seedSubscriptions(
         currencyId: currencyId.usd,
         nextUpdate: formatDate(addDays(new Date(), 3), "yyyy-MM-dd"),
         intervalCycle: 2,
-        intervalId: intervalId.monthly,
+        intervalId: timeUnit.month,
         cancellationMethodId: insertedMethodId, // 実際の ID を使用
       },
     ]);

@@ -4,7 +4,7 @@ import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
 import type { CurrencyId } from "@/domain/currency/currency-id";
-import { intervalId } from "@/domain/interval/interval-id";
+import { timeUnit } from "@/domain/interval/interval-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 import type {
@@ -253,7 +253,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
             (x) =>
               +x.amount *
               Number(currenciesResult.value.get(x.currency as CurrencyId)) *
-              (x.intervalId === intervalId.monthly ? 12 / x.intervalCycle : 1),
+              (x.intervalId === timeUnit.month ? 12 / x.intervalCycle : 1),
           )
           .reduce((a, b) => a + b);
 
@@ -271,8 +271,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .values({
         name: subscription.name,
         userId: userId.value,
-        amount: subscription.fee.amount.toString(),
-        currencyId: subscription.fee.currency,
+        amount: subscription.amount.toString(),
+        currencyId: subscription.currency,
         nextUpdate: format(subscription.nextUpdate, "yyyy-MM-dd"),
         intervalCycle: subscription.updateCycle.number,
         intervalId: subscription.updateCycle.unit,
@@ -298,7 +298,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
     for (const subscription of updateSubscriptions) {
       const nextUpdate =
-        subscription.intervalId === intervalId.monthly
+        subscription.intervalId === timeUnit.month
           ? addMonths(subscription.nextUpdate, subscription.intervalCycle)
           : addYears(subscription.nextUpdate, subscription.intervalCycle);
 
@@ -316,8 +316,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .set({
         name: subscription.name,
         userId: userId.value,
-        amount: subscription.fee.amount.toString(),
-        currencyId: subscription.fee.currency,
+        amount: subscription.amount.toString(),
+        currencyId: subscription.currency,
         nextUpdate: format(subscription.nextUpdate, "yyyy-MM-dd"),
         intervalCycle: subscription.updateCycle.number,
         intervalId: subscription.updateCycle.unit,

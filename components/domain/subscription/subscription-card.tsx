@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { intervalId } from "@/domain/interval/interval-id";
+import { timeUnit } from "@/domain/interval/interval-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import { deleteSubscription } from "./_lib/actions";
 import { subscriptionsAtom } from "./_lib/jotai";
@@ -47,7 +47,7 @@ export default function SubscriptionCard({
           </Link>
         </p>
         <p className="text-muted-foreground text-sm">
-          {subscription.intervalId === intervalId.yearly ? "年額" : "月額"} ¥
+          {subscription.intervalId === timeUnit.year ? "年額" : "月額"} ¥
           {Math.round(subscription.fee).toLocaleString()}
         </p>
       </div>

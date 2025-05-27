@@ -37,7 +37,7 @@ import {
   currencyId,
   currencyNames,
 } from "@/domain/currency/currency-id";
-import { type IntervalId, intervalId } from "@/domain/interval/interval-id";
+import { type TimeUnit, timeUnit } from "@/domain/interval/interval-id";
 import { intervalNames } from "@/domain/interval/interval-names";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import { registerSubscription, updateSubscription } from "./_lib/actions";
@@ -93,7 +93,7 @@ export function SubscriptionEditFormPresentation({
       amount: subscription?.amount.toString() ?? "100",
       currencyId: subscription?.currencyId ?? currencyId.jpy,
       intervalCycle: subscription?.intervalCycle ?? 1,
-      intervalId: subscription?.intervalId ?? intervalId.yearly,
+      intervalId: subscription?.intervalId ?? timeUnit.year,
       nextUpdate: subscription?.nextUpdate.toString() ?? "",
     },
     transform: useTransform((baseForm) => baseForm, [action]),
@@ -302,15 +302,13 @@ export function SubscriptionEditFormPresentation({
                     <Select
                       name="intervalId"
                       defaultValue={`${field.state.value}`}
-                      onValueChange={(e) =>
-                        field.handleChange(+e as IntervalId)
-                      }
+                      onValueChange={(e) => field.handleChange(+e as TimeUnit)}
                     >
                       <SelectTrigger className="flex-1">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {Object.entries(intervalId).map(([key, value]) => (
+                        {Object.entries(timeUnit).map(([key, value]) => (
                           <SelectItem key={key} value={value.toString()}>
                             {`${intervalNames[value]}毎`}
                           </SelectItem>

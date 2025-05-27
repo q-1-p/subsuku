@@ -8,7 +8,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { currencyCodes } from "@/domain/currency/currency-code";
 import { currencyIcons } from "@/domain/currency/currency-icons";
-import { intervalId } from "@/domain/interval/interval-id";
+import { timeUnit } from "@/domain/interval/interval-id";
 import { intervalNames } from "@/domain/interval/interval-names";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import { formatDate } from "date-fns";
@@ -58,7 +58,7 @@ export default function SubscriptionBillingInformationCardPresentation({
               </h3>
               <p className="font-bold text-xl">
                 ¥
-                {(subscription.intervalId === intervalId.monthly
+                {(subscription.intervalId === timeUnit.month
                   ? subscription.amount
                   : subscription.amount / 12
                 ).toLocaleString()}
@@ -70,7 +70,7 @@ export default function SubscriptionBillingInformationCardPresentation({
               </h3>
               <p className="font-bold text-xl">
                 ¥
-                {(subscription.intervalId === intervalId.monthly
+                {(subscription.intervalId === timeUnit.month
                   ? subscription.amount * 12
                   : subscription.amount
                 ).toLocaleString()}

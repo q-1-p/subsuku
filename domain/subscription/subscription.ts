@@ -1,5 +1,5 @@
 import type { CurrencyId } from "@/domain/currency/currency-id";
-import type { IntervalId } from "@/domain/interval/interval-id";
+import type { TimeUnit } from "@/domain/interval/interval-id";
 
 export interface ISubscription {
   readonly id: string;
@@ -10,6 +10,6 @@ export interface ISubscription {
   readonly currencyId: CurrencyId;
   readonly nextUpdate: Date;
   readonly intervalCycle: number;
-  readonly intervalId: IntervalId;
+  readonly intervalId: TimeUnit;
   readonly cancellationMethodId: string;
 }

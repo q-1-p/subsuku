@@ -1,6 +1,6 @@
-export type IntervalId = (typeof intervalId)[keyof typeof intervalId];
-
-export const intervalId = {
-  monthly: 0,
-  yearly: 1,
+export const timeUnit = {
+  month: 0,
+  year: 1,
 } as const;
+
+export type TimeUnit = (typeof timeUnit)[keyof typeof timeUnit];
