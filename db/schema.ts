@@ -8,6 +8,7 @@ import {
   real,
   smallint,
   text,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -16,15 +17,15 @@ export const cancellationMethodsTable = pgTable(
   "cancellation_methods",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    name: varchar("subscription_name", { length: 63 }).notNull(),
-    private: boolean("private").notNull().default(false),
+    subscriptionName: varchar("subscription_name", { length: 63 }).notNull(),
+    isPrivate: boolean("is_private").notNull().default(false),
     precautions: text("precautions").notNull(),
     freeText: text("free_text").notNull(),
-    urlToCancel: varchar("service_url", { length: 2083 }).notNull(),
+    urlToCancel: varchar("url_to_cancel", { length: 2083 }).notNull(),
     createdUserId: uuid("created_user_id")
       .notNull()
       .references(() => usersTable.id),
-    updatedAt: date("updated_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
   (table) => [index("idx_cancellation_method_id").on(table.id)],
 );
@@ -93,11 +94,11 @@ export const subscriptionsTable = pgTable(
       .notNull()
       .references(() => currenciesTable.id),
     nextUpdate: date("next_update").notNull(),
-    intervalCycle: smallint("interval_cycle").notNull(),
-    intervalId: smallint("interval_unit_id").notNull(),
-    cancellationMethodId: uuid("cancellation_method_id").references(
-      () => cancellationMethodsTable.id,
-    ),
+    updateCycleNumber: smallint("update_cycle_number").notNull(),
+    updateCycleUnit: smallint("update_cycle_unit").notNull(),
+    linkedCancellationMethodId: uuid(
+      "linked_cancellation_method_id",
+    ).references(() => cancellationMethodsTable.id),
   },
   (table) => [index("idx_subscription_id").on(table.id)],
 );

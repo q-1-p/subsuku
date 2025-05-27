@@ -27,12 +27,7 @@ const findSubscriptionQuery = db.query.subscriptionsTable
   })
   .prepare("find");
 const searchSubscriptionsForNextUpdateQuery = db
-  .select({
-    amount: subscriptionsTable.amount,
-    currency: subscriptionsTable.currencyId,
-    intervalId: subscriptionsTable.intervalId,
-    intervalCycle: subscriptionsTable.intervalCycle,
-  })
+  .select()
   .from(subscriptionsTable)
   .where(
     and(
@@ -102,10 +97,10 @@ export class SubscriptionRepository implements ISubscriptionRepository {
             currencyId: data.currencyId,
             nextUpdate: new Date(data.nextUpdate),
             updateCycle: {
-              number: data.intervalCycle,
-              unit: data.intervalId,
+              number: data.updateCycleNumber,
+              unit: data.updateCycleUnit,
             },
-            linkCancellationMethodId: data.cancellationMethodId,
+            linkCancellationMethodId: data.linkedCancellationMethodId,
           } as SubscriptionDetail,
         };
       })
@@ -154,8 +149,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
               currencyId: data.currencyId,
               nextUpdate: new Date(data.nextUpdate),
               updateCycle: {
-                number: data.intervalCycle,
-                unit: data.intervalId,
+                number: data.updateCycleNumber,
+                unit: data.updateCycleUnit,
               },
             }) as SubscriptionDetail,
         );
@@ -212,7 +207,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
           .map(
             (x) =>
               +x.amount *
-              Number(currenciesResult.value.get(x.currency as CurrencyId)),
+              Number(currenciesResult.value.get(x.currencyId as CurrencyId)),
           )
           .reduce((a, b) => a + b);
         return {
@@ -256,8 +251,10 @@ export class SubscriptionRepository implements ISubscriptionRepository {
           .map(
             (x) =>
               +x.amount *
-              Number(currenciesResult.value.get(x.currency as CurrencyId)) *
-              (x.intervalId === timeUnit.month ? 12 / x.intervalCycle : 1),
+              Number(currenciesResult.value.get(x.currencyId as CurrencyId)) *
+              (x.updateCycleUnit === timeUnit.month
+                ? 12 / x.updateCycleNumber
+                : 1),
           )
           .reduce((a, b) => a + b);
 
@@ -278,8 +275,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         amount: subscription.amount.toString(),
         currencyId: subscription.currencyId,
         nextUpdate: format(subscription.nextUpdate, "yyyy-MM-dd"),
-        intervalCycle: subscription.updateCycle.number,
-        intervalId: subscription.updateCycle.unit,
+        updateCycleNumber: subscription.updateCycle.number,
+        updateCycleUnit: subscription.updateCycle.unit,
       })
       .then(() => true)
       .catch((error) => {
@@ -294,8 +291,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .select({
         id: subscriptionsTable.id,
         nextUpdate: subscriptionsTable.nextUpdate,
-        intervalCycle: subscriptionsTable.intervalCycle,
-        intervalId: subscriptionsTable.intervalId,
+        intervalCycle: subscriptionsTable.updateCycleNumber,
+        intervalId: subscriptionsTable.updateCycleUnit,
       })
       .from(subscriptionsTable)
       .where(lt(subscriptionsTable.nextUpdate, today));
@@ -323,8 +320,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         amount: subscription.amount.toString(),
         currencyId: subscription.currencyId,
         nextUpdate: format(subscription.nextUpdate, "yyyy-MM-dd"),
-        intervalCycle: subscription.updateCycle.number,
-        intervalId: subscription.updateCycle.unit,
+        updateCycleNumber: subscription.updateCycle.number,
+        updateCycleUnit: subscription.updateCycle.unit,
       })
       .where(
         and(
@@ -347,7 +344,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     return db
       .update(subscriptionsTable)
       .set({
-        cancellationMethodId: cancellationMethodId,
+        linkedCancellationMethodId: cancellationMethodId,
       })
       .where(
         and(

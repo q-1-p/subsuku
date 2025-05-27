@@ -20,7 +20,9 @@ import { type Result, err, ok } from "@/lib/result";
 const searchNameQuery = db
   .select()
   .from(cancellationMethodsTable)
-  .where(like(cancellationMethodsTable.name, sql.placeholder("name")))
+  .where(
+    like(cancellationMethodsTable.subscriptionName, sql.placeholder("name")),
+  )
   .prepare("searchName");
 
 const bookmarksQuery = db
@@ -77,8 +79,8 @@ export class CancellationMethodRepository
           type: ok as typeof ok,
           value: {
             id: datum.id,
-            subscriptionName: datum.name,
-            isPrivate: datum.private,
+            subscriptionName: datum.subscriptionName,
+            isPrivate: datum.isPrivate,
             steps: cancellationStepsResult.value,
             precautions: datum.precautions,
             freeText: datum.freeText,
@@ -122,8 +124,8 @@ export class CancellationMethodRepository
 
             return {
               id: datum.id,
-              subscriptionName: datum.name,
-              isPrivate: datum.private,
+              subscriptionName: datum.subscriptionName,
+              isPrivate: datum.isPrivate,
               steps: [],
               precautions: datum.precautions,
               freeText: datum.freeText,
@@ -163,7 +165,7 @@ export class CancellationMethodRepository
       .findMany({
         where: (cancellationMethodsTable, { and, eq, like }) =>
           and(
-            like(cancellationMethodsTable.name, `%${searchQuery}%`),
+            like(cancellationMethodsTable.subscriptionName, `%${searchQuery}%`),
             onlyMine
               ? eq(cancellationMethodsTable.createdUserId, userId)
               : undefined,
@@ -210,8 +212,8 @@ export class CancellationMethodRepository
 
             return {
               id: datum.id,
-              subscriptionName: datum.name,
-              isPrivate: datum.private,
+              subscriptionName: datum.subscriptionName,
+              isPrivate: datum.isPrivate,
               steps: cancellationStepsResult.value,
               precautions: datum.precautions,
               freeText: datum.freeText,
@@ -326,9 +328,9 @@ export class CancellationMethodRepository
             .insert(cancellationMethodsTable)
             .values({
               id: cancellationMethod.id,
-              name: cancellationMethod.name,
+              subscriptionName: cancellationMethod.name,
               urlToCancel: cancellationMethod.urlToCancel ?? "",
-              private: cancellationMethod.isPrivate,
+              isPrivate: cancellationMethod.isPrivate,
               precautions: cancellationMethod.precautions,
               freeText: cancellationMethod.freeText,
               createdUserId: userId,
@@ -356,7 +358,7 @@ export class CancellationMethodRepository
             ? tx
                 .update(subscriptionsTable)
                 .set({
-                  cancellationMethodId: cancellationMethod.id,
+                  linkedCancellationMethodId: cancellationMethod.id,
                 })
                 .where(
                   and(
@@ -437,12 +439,12 @@ export class CancellationMethodRepository
           tx
             .update(cancellationMethodsTable)
             .set({
-              name: cancellationMethod.name,
+              subscriptionName: cancellationMethod.name,
               urlToCancel: cancellationMethod.urlToCancel ?? "",
-              private: cancellationMethod.isPrivate,
+              isPrivate: cancellationMethod.isPrivate,
               precautions: cancellationMethod.precautions,
               freeText: cancellationMethod.freeText,
-              updatedAt: cancellationMethod.updatedAt.toString(),
+              updatedAt: cancellationMethod.updatedAt,
             })
             .where(
               and(
@@ -490,10 +492,13 @@ export class CancellationMethodRepository
         await tx
           .update(subscriptionsTable)
           .set({
-            cancellationMethodId: null,
+            linkedCancellationMethodId: null,
           })
           .where(
-            eq(subscriptionsTable.cancellationMethodId, cancellationMethodId),
+            eq(
+              subscriptionsTable.linkedCancellationMethodId,
+              cancellationMethodId,
+            ),
           );
         await tx
           .delete(cancellationMethodsTable)
