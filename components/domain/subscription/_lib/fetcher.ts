@@ -1,9 +1,12 @@
 import "server-only";
+
 import { auth } from "@clerk/nextjs/server";
 
-import type { ISubscription } from "@/domain/subscription/subscription";
+import type { SubscriptionDetail } from "@/domain/type";
 
-export async function fetchSubscription(id: string): Promise<ISubscription> {
+export async function fetchSubscription(
+  id: string,
+): Promise<SubscriptionDetail> {
   const { userId } = await auth();
   if (!userId) {
     throw new Error("Unauthorized");
@@ -110,7 +113,7 @@ export async function fetchYearlyFee(): Promise<number> {
 
 export const fetchSubscriptions = async (
   upcoming = false,
-): Promise<ISubscription[]> => {
+): Promise<SubscriptionDetail[]> => {
   const { userId } = await auth();
   if (!userId) {
     throw new Error("Unauthorized");

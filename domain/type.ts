@@ -66,6 +66,12 @@ export const timeUnit = {
 } as const;
 
 export type CurrencyId = (typeof currencyId)[keyof typeof currencyId];
+export type CurrencyCode = keyof typeof currencyId;
+export type Currency = {
+  id: CurrencyId;
+  code: CurrencyCode;
+  rate: number;
+};
 export type TimeUnit = (typeof timeUnit)[keyof typeof timeUnit];
 
 export type SubscriptionOverview = {
@@ -85,6 +91,7 @@ export type SubscriptionDetail = {
   currencyId: CurrencyId;
   nextUpdate: Date;
   updateCycle: UpdateCycle;
+  linkCancellationMethodId: CancellationMethodId;
 };
 
 export type CancellationMethodDetail = {

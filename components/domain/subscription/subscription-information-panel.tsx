@@ -65,7 +65,7 @@ export default async function SubscriptionInformationPanel({
               </TabsContent>
               <TabsContent value="cancel">
                 <CancellationMethodInformationCardContainer
-                  cancellationMethodId={subscription.cancellationMethodId}
+                  cancellationMethodId={subscription.linkCancellationMethodId}
                 />
               </TabsContent>
             </Tabs>

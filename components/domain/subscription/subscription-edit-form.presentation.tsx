@@ -32,9 +32,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import type { ISubscription } from "@/domain/subscription/subscription";
 import {
   type CurrencyId,
+  type SubscriptionDetail,
   type TimeUnit,
   currencyId,
   timeUnit,
@@ -71,7 +71,7 @@ export function SubscriptionEditFormPresentation({
   subscription,
   subscriptionNameSuggestions,
 }: {
-  subscription?: ISubscription;
+  subscription?: SubscriptionDetail;
   subscriptionNameSuggestions: Promise<string[]>;
 }) {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
@@ -100,8 +100,8 @@ export function SubscriptionEditFormPresentation({
       name: subscription?.name ?? "",
       amount: subscription?.amount.toString() ?? "100",
       currencyId: subscription?.currencyId ?? currencyId.jpy,
-      intervalCycle: subscription?.intervalCycle ?? 1,
-      intervalId: subscription?.intervalId ?? timeUnit.year,
+      intervalCycle: subscription?.updateCycle.number ?? 1,
+      intervalId: subscription?.updateCycle.unit ?? timeUnit.year,
       nextUpdate: subscription?.nextUpdate.toString() ?? "",
     },
     transform: useTransform((baseForm) => baseForm, [action]),

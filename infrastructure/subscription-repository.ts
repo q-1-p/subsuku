@@ -3,12 +3,12 @@ import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
-import type { ISubscription } from "@/domain/subscription/subscription";
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 import {
   type CancellationMethodId,
   type CurrencyId,
   type Subscription,
+  type SubscriptionDetail,
   type SubscriptionId,
   type UserId,
   timeUnit,
@@ -73,7 +73,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
   public find = async (
     userId: UserId,
     subscriptionId: SubscriptionId,
-  ): Promise<Result<ISubscription, string>> => {
+  ): Promise<Result<SubscriptionDetail, string>> => {
     const currenciesResult = await this.currencyRepository.findAll();
     if (currenciesResult.type === err) {
       return { type: err as typeof err, error: "" };
@@ -101,10 +101,12 @@ export class SubscriptionRepository implements ISubscriptionRepository {
             amount: +data.amount,
             currencyId: data.currencyId,
             nextUpdate: new Date(data.nextUpdate),
-            intervalId: data.intervalId,
-            intervalCycle: data.intervalCycle,
-            cancellationMethodId: data.cancellationMethodId,
-          } as ISubscription,
+            updateCycle: {
+              number: data.intervalCycle,
+              unit: data.intervalId,
+            },
+            linkCancellationMethodId: data.cancellationMethodId,
+          } as SubscriptionDetail,
         };
       })
       .catch((error) => {
@@ -117,7 +119,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     userId: UserId,
     active = true,
     upcoming = false,
-  ): Promise<Result<ISubscription[], undefined>> => {
+  ): Promise<Result<SubscriptionDetail[], undefined>> => {
     const today = format(new Date(), "yyyy-MM-dd");
     const upcomingDate = format(addDays(new Date(), 7), "yyyy-MM-dd");
     const currenciesResult = await this.currencyRepository.findAll();
@@ -151,9 +153,11 @@ export class SubscriptionRepository implements ISubscriptionRepository {
               amount: +data.amount,
               currencyId: data.currencyId,
               nextUpdate: new Date(data.nextUpdate),
-              intervalId: data.intervalId,
-              intervalCycle: data.intervalCycle,
-            }) as ISubscription,
+              updateCycle: {
+                number: data.intervalCycle,
+                unit: data.intervalId,
+              },
+            }) as SubscriptionDetail,
         );
         return { type: ok as typeof ok, value: subscriptions };
       })

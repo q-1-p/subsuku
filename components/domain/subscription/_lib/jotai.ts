@@ -1,5 +1,5 @@
 import { atom } from "jotai";
 
-import type { ISubscription } from "@/domain/subscription/subscription";
+import type { SubscriptionDetail } from "@/domain/type";
 
-export const subscriptionsAtom = atom<ISubscription[]>([]);
+export const subscriptionsAtom = atom<SubscriptionDetail[]>([]);

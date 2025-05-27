@@ -13,14 +13,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { ISubscription } from "@/domain/subscription/subscription";
-import { timeUnit } from "@/domain/type";
+import { type SubscriptionDetail, timeUnit } from "@/domain/type";
 import { deleteSubscription } from "./_lib/actions";
 import { subscriptionsAtom } from "./_lib/jotai";
 
 export default function SubscriptionCard({
   subscription,
-}: { subscription: ISubscription }) {
+}: { subscription: SubscriptionDetail }) {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
     if (await deleteSubscription(_, formData)) {
       setSubscriptions((prev) => prev.filter((s) => s.id !== subscription.id));
@@ -47,7 +46,7 @@ export default function SubscriptionCard({
           </Link>
         </p>
         <p className="text-muted-foreground text-sm">
-          {subscription.intervalId === timeUnit.year ? "年額" : "月額"} ¥
+          {subscription.updateCycle.unit === timeUnit.year ? "年額" : "月額"} ¥
           {Math.round(subscription.fee).toLocaleString()}
         </p>
       </div>

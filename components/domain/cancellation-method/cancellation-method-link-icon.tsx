@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ISubscription } from "@/domain/subscription/subscription";
+import type { SubscriptionDetail } from "@/domain/type";
 import { fetchSubscriptions } from "../subscription/_lib/actions";
 import { linkCancellationMethod } from "./_lib/actions";
 
@@ -29,7 +29,7 @@ export function CancellationMethodLinkIcon({
   cancellationMethodId: string;
 }) {
   const [subscriptions, fetchAction] = useActionState<
-    ISubscription[],
+    SubscriptionDetail[],
     FormData
   >(fetchSubscriptions, []);
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {

@@ -2,21 +2,21 @@ import type { Result } from "../../lib/result";
 import type {
   CancellationMethodId,
   Subscription,
+  SubscriptionDetail,
   SubscriptionId,
   UserId,
 } from "../type";
-import type { ISubscription } from "./subscription";
 
 export interface ISubscriptionRepository {
   find: (
     userId: UserId,
     subscriptionId: SubscriptionId,
-  ) => Promise<Result<ISubscription, string>>;
+  ) => Promise<Result<SubscriptionDetail, string>>;
   findAll: (
     userId: UserId,
     active?: boolean,
     upcoming?: boolean,
-  ) => Promise<Result<ISubscription[], undefined>>;
+  ) => Promise<Result<SubscriptionDetail[], undefined>>;
 
   count: (
     userId: UserId,

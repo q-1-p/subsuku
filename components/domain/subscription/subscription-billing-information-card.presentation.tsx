@@ -8,8 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import type { ISubscription } from "@/domain/subscription/subscription";
-import { currencyId, timeUnit } from "@/domain/type";
+import { type SubscriptionDetail, currencyId, timeUnit } from "@/domain/type";
 
 const currencyCodes = {
   [currencyId.jpy]: "JPY",
@@ -31,7 +30,7 @@ const currencyIcons = {
 
 export default function SubscriptionBillingInformationCardPresentation({
   subscription,
-}: { subscription: ISubscription }) {
+}: { subscription: SubscriptionDetail }) {
   return (
     <>
       <Card className="overflow-hidden rounded-2xl border shadow-sm">
@@ -62,7 +61,9 @@ export default function SubscriptionBillingInformationCardPresentation({
                 請求サイクル
               </h3>
               <p className="text-base">
-                {subscription.intervalId === timeUnit.month ? "月毎" : "年毎"}
+                {subscription.updateCycle.unit === timeUnit.month
+                  ? "月毎"
+                  : "年毎"}
               </p>
             </div>
           </div>
@@ -74,7 +75,7 @@ export default function SubscriptionBillingInformationCardPresentation({
               </h3>
               <p className="font-bold text-xl">
                 ¥
-                {(subscription.intervalId === timeUnit.month
+                {(subscription.updateCycle.unit === timeUnit.month
                   ? subscription.amount
                   : subscription.amount / 12
                 ).toLocaleString()}
@@ -86,7 +87,7 @@ export default function SubscriptionBillingInformationCardPresentation({
               </h3>
               <p className="font-bold text-xl">
                 ¥
-                {(subscription.intervalId === timeUnit.month
+                {(subscription.updateCycle.unit === timeUnit.month
                   ? subscription.amount * 12
                   : subscription.amount
                 ).toLocaleString()}

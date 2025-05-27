@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { ISubscription } from "@/domain/subscription/subscription";
+import type { SubscriptionDetail } from "@/domain/type";
 import { fetchSubscriptions } from "./_lib/fetcher";
 import SubscriptionListPresentation from "./subscription-list.presentation";
 
@@ -11,7 +11,7 @@ export default async function SubscriptionList({
   upcoming: boolean;
   isOverView: boolean;
 }) {
-  const subscriptions: ISubscription[] = await fetchSubscriptions(false);
+  const subscriptions: SubscriptionDetail[] = await fetchSubscriptions(false);
 
   return (
     <SubscriptionListPresentation

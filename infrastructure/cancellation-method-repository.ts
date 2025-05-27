@@ -317,7 +317,7 @@ export class CancellationMethodRepository
 
   public add = (
     userId: UserId,
-    cancellationMethodRegistered: CancellationMethod,
+    cancellationMethod: CancellationMethod,
   ): Promise<boolean> => {
     return dbSocket
       .transaction((tx) => {
@@ -325,12 +325,12 @@ export class CancellationMethodRepository
           tx
             .insert(cancellationMethodsTable)
             .values({
-              id: cancellationMethodRegistered.id,
-              name: cancellationMethodRegistered.name,
-              urlToCancel: cancellationMethodRegistered.urlToCancel ?? "",
-              private: cancellationMethodRegistered.isPrivate,
-              precautions: cancellationMethodRegistered.precautions,
-              freeText: cancellationMethodRegistered.freeText,
+              id: cancellationMethod.id,
+              name: cancellationMethod.name,
+              urlToCancel: cancellationMethod.urlToCancel ?? "",
+              private: cancellationMethod.isPrivate,
+              precautions: cancellationMethod.precautions,
+              freeText: cancellationMethod.freeText,
               createdUserId: userId,
             })
             .then(() => true)
@@ -341,8 +341,8 @@ export class CancellationMethodRepository
           tx
             .insert(cancellationStepsTable)
             .values(
-              cancellationMethodRegistered.steps.map((step, index) => ({
-                cancellationMethodId: cancellationMethodRegistered.id,
+              cancellationMethod.steps.map((step, index) => ({
+                cancellationMethodId: cancellationMethod.id,
                 sequentialOrder: index,
                 procedure: step,
               })),
@@ -352,18 +352,18 @@ export class CancellationMethodRepository
               console.error(error);
               throw error;
             }),
-          cancellationMethodRegistered.linkSubscriptionId
+          cancellationMethod.linkSubscriptionId
             ? tx
                 .update(subscriptionsTable)
                 .set({
-                  cancellationMethodId: cancellationMethodRegistered.id,
+                  cancellationMethodId: cancellationMethod.id,
                 })
                 .where(
                   and(
                     eq(subscriptionsTable.userId, userId),
                     eq(
                       subscriptionsTable.id,
-                      cancellationMethodRegistered.linkSubscriptionId,
+                      cancellationMethod.linkSubscriptionId,
                     ),
                   ),
                 )
@@ -420,7 +420,7 @@ export class CancellationMethodRepository
 
   public update = (
     userId: UserId,
-    cancellationMethodUpdated: CancellationMethod,
+    cancellationMethod: CancellationMethod,
   ): Promise<boolean> => {
     return dbSocket
       .transaction(async (tx) => {
@@ -429,7 +429,7 @@ export class CancellationMethodRepository
           .where(
             eq(
               cancellationStepsTable.cancellationMethodId,
-              cancellationMethodUpdated.id,
+              cancellationMethod.id,
             ),
           );
 
@@ -437,15 +437,16 @@ export class CancellationMethodRepository
           tx
             .update(cancellationMethodsTable)
             .set({
-              name: cancellationMethodUpdated.name,
-              urlToCancel: cancellationMethodUpdated.urlToCancel ?? "",
-              private: cancellationMethodUpdated.isPrivate,
-              precautions: cancellationMethodUpdated.precautions,
-              freeText: cancellationMethodUpdated.freeText,
+              name: cancellationMethod.name,
+              urlToCancel: cancellationMethod.urlToCancel ?? "",
+              private: cancellationMethod.isPrivate,
+              precautions: cancellationMethod.precautions,
+              freeText: cancellationMethod.freeText,
+              updatedAt: cancellationMethod.updatedAt.toString(),
             })
             .where(
               and(
-                eq(cancellationMethodsTable.id, cancellationMethodUpdated.id),
+                eq(cancellationMethodsTable.id, cancellationMethod.id),
                 eq(cancellationMethodsTable.createdUserId, userId),
               ),
             )
@@ -457,8 +458,8 @@ export class CancellationMethodRepository
           tx
             .insert(cancellationStepsTable)
             .values(
-              cancellationMethodUpdated.steps.map((step, index) => ({
-                cancellationMethodId: cancellationMethodUpdated.id,
+              cancellationMethod.steps.map((step, index) => ({
+                cancellationMethodId: cancellationMethod.id,
                 sequentialOrder: index,
                 procedure: step,
               })),

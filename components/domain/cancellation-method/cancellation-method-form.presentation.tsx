@@ -26,8 +26,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import type { ISubscription } from "@/domain/subscription/subscription";
-import type { CancellationMethodDetail } from "@/domain/type";
+import type {
+  CancellationMethodDetail,
+  SubscriptionDetail,
+} from "@/domain/type";
 import {
   registerCancellationMethod,
   updateCancellationMethod,
@@ -49,7 +51,7 @@ export function CancellationMethodFormPresentation({
   subscriptions,
 }: {
   cancellationMethod?: CancellationMethodDetail;
-  subscriptions: ISubscription[];
+  subscriptions: SubscriptionDetail[];
 }) {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
     // server actionsを実行している場合、tanstack formが検知できないので、手動で変更する
