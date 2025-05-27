@@ -20,7 +20,7 @@ export const cancellationMethodsTable = pgTable(
     private: boolean("private").notNull().default(false),
     precautions: text("precautions").notNull(),
     freeText: text("free_text").notNull(),
-    serviceUrl: varchar("service_url", { length: 2083 }).notNull(),
+    urlToCancel: varchar("service_url", { length: 2083 }).notNull(),
     createdUserId: uuid("created_user_id")
       .notNull()
       .references(() => usersTable.id),

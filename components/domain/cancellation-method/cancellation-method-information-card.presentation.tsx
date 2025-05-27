@@ -12,27 +12,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import type { CancellationMethodDetail } from "@/domain/type";
 import { formatDate } from "date-fns";
 
 export default function CancellationMethodInformationCardPresentation({
   cancellationMethod,
 }: {
-  cancellationMethod: ICancellationMethod;
+  cancellationMethod: CancellationMethodDetail;
 }) {
   return (
     <Card className="overflow-hidden rounded-2xl border shadow-sm">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>解約方法</CardTitle>
-          <a
-            href={cancellationMethod.serviceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
-          >
-            解約先URL
-          </a>
+          {cancellationMethod.urlToCancel && (
+            <a
+              href={cancellationMethod.urlToCancel}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              解約先URL
+            </a>
+          )}
         </div>
         <CardDescription>
           <div className="flex justify-between">

@@ -1,11 +1,11 @@
 import "server-only";
 import { auth } from "@clerk/nextjs/server";
 
-import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import type { CancellationMethodDetail } from "@/domain/type";
 
 export async function fetchCancellationMethod(
   id: string,
-): Promise<ICancellationMethod> {
+): Promise<CancellationMethodDetail> {
   const { userId } = await auth();
   if (!userId) {
     throw new Error("Unauthorized");
@@ -33,7 +33,7 @@ export async function searchCancellationMethods(
   searchQuery: string,
   onlyMine: boolean,
   onlyBookmarked: boolean,
-): Promise<ICancellationMethod[]> {
+): Promise<CancellationMethodDetail[]> {
   const { userId } = await auth();
 
   return fetch(

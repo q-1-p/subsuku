@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   const cancellationMethodRegistered = validateCancellationMethod({
     id: v4(),
     name: String(formData.get("name")),
-    urlToCancel: formData.get("serviceUrl") as string,
+    urlToCancel: formData.get("urlToCancel") as string,
     isPrivate: Boolean(formData.get("private")),
     steps: formData.getAll("steps[]") as unknown as string[],
     precautions: String(formData.get("precautions")),
@@ -90,7 +90,7 @@ export async function PUT(req: NextRequest) {
   const cancellationMethodUpdated = validateCancellationMethod({
     id: String(formData.get("id")),
     name: String(formData.get("name")),
-    urlToCancel: formData.get("serviceUrl") as string,
+    urlToCancel: formData.get("urlToCancel") as string,
     isPrivate: Boolean(formData.get("private")),
     steps: formData.getAll("steps[]") as unknown as string[],
     precautions: String(formData.get("precautions")),

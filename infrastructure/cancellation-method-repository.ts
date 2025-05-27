@@ -8,10 +8,10 @@ import {
   cancellationStepsTable,
   subscriptionsTable,
 } from "@/db/schema";
-import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
 import type {
   CancellationMethod,
+  CancellationMethodDetail,
   CancellationMethodId,
   UserId,
 } from "@/domain/type";
@@ -37,7 +37,7 @@ export class CancellationMethodRepository
   public find = async (
     userId: UserId,
     cancellationMethodId: CancellationMethodId,
-  ): Promise<Result<ICancellationMethod, undefined>> => {
+  ): Promise<Result<CancellationMethodDetail, undefined>> => {
     return db.query.cancellationMethodsTable
       .findFirst({
         where: (cancellationMethods, { eq }) =>
@@ -78,7 +78,7 @@ export class CancellationMethodRepository
           value: {
             id: datum.id,
             subscriptionName: datum.name,
-            private: datum.private,
+            isPrivate: datum.private,
             steps: cancellationStepsResult.value,
             precautions: datum.precautions,
             freeText: datum.freeText,
@@ -86,10 +86,10 @@ export class CancellationMethodRepository
             evaluatedGood: evaluatedGoodResult.value,
             bookmarkCount: bookmarkCountResult.value,
             goodCount: goodCountResult.value,
-            serviceUrl: datum.serviceUrl,
+            urlToCancel: datum.urlToCancel,
             mine: datum.createdUserId === userId,
             updatedAt: new Date(datum.updatedAt),
-          } as ICancellationMethod,
+          } as CancellationMethodDetail,
         };
       })
       .catch((error) => {
@@ -100,7 +100,7 @@ export class CancellationMethodRepository
 
   public searchForName = async (
     searchQuery: string,
-  ): Promise<Result<ICancellationMethod[], undefined>> => {
+  ): Promise<Result<CancellationMethodDetail[], undefined>> => {
     return searchNameQuery
       .execute({ name: `%${searchQuery}%` })
       .then(async (data) => {
@@ -123,7 +123,7 @@ export class CancellationMethodRepository
             return {
               id: datum.id,
               subscriptionName: datum.name,
-              private: datum.private,
+              isPrivate: datum.private,
               steps: [],
               precautions: datum.precautions,
               freeText: datum.freeText,
@@ -131,10 +131,10 @@ export class CancellationMethodRepository
               evaluatedGood: false,
               bookmarkCount: bookmarkCountResult.value,
               goodCount: goodCountResult.value,
-              serviceUrl: datum.serviceUrl,
+              urlToCancel: datum.urlToCancel,
               mine: false,
               updatedAt: new Date(datum.updatedAt),
-            } as ICancellationMethod;
+            } as CancellationMethodDetail;
           }),
         );
 
@@ -154,7 +154,7 @@ export class CancellationMethodRepository
     searchQuery: string,
     onlyMine: boolean,
     onlyBookmarked: boolean,
-  ): Promise<Result<ICancellationMethod[], undefined>> => {
+  ): Promise<Result<CancellationMethodDetail[], undefined>> => {
     const bookmarkedIds = await bookmarksQuery
       .execute({ userId: userId })
       .then((res) => res.map((b) => b.cancellationMethodId));
@@ -211,7 +211,7 @@ export class CancellationMethodRepository
             return {
               id: datum.id,
               subscriptionName: datum.name,
-              private: datum.private,
+              isPrivate: datum.private,
               steps: cancellationStepsResult.value,
               precautions: datum.precautions,
               freeText: datum.freeText,
@@ -219,10 +219,10 @@ export class CancellationMethodRepository
               evaluatedGood: evaluatedGoodResult.value,
               bookmarkCount: bookmarkCountResult.value,
               goodCount: goodCountResult.value,
-              serviceUrl: datum.serviceUrl,
+              urlToCancel: datum.urlToCancel,
               mine: datum.createdUserId === userId,
               updatedAt: new Date(datum.updatedAt),
-            } as ICancellationMethod;
+            } as CancellationMethodDetail;
           }),
         );
 
@@ -327,7 +327,7 @@ export class CancellationMethodRepository
             .values({
               id: cancellationMethodRegistered.id,
               name: cancellationMethodRegistered.name,
-              serviceUrl: cancellationMethodRegistered.urlToCancel ?? "",
+              urlToCancel: cancellationMethodRegistered.urlToCancel ?? "",
               private: cancellationMethodRegistered.isPrivate,
               precautions: cancellationMethodRegistered.precautions,
               freeText: cancellationMethodRegistered.freeText,
@@ -438,7 +438,7 @@ export class CancellationMethodRepository
             .update(cancellationMethodsTable)
             .set({
               name: cancellationMethodUpdated.name,
-              serviceUrl: cancellationMethodUpdated.urlToCancel ?? "",
+              urlToCancel: cancellationMethodUpdated.urlToCancel ?? "",
               private: cancellationMethodUpdated.isPrivate,
               precautions: cancellationMethodUpdated.precautions,
               freeText: cancellationMethodUpdated.freeText,

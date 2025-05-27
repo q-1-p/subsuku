@@ -1,21 +1,25 @@
 import type { Result } from "@/lib/result";
-import type { CancellationMethod, CancellationMethodId, UserId } from "../type";
-import type { ICancellationMethod } from "./cancellation-method";
+import type {
+  CancellationMethod,
+  CancellationMethodDetail,
+  CancellationMethodId,
+  UserId,
+} from "../type";
 
 export type ICancellationMethodRepository = {
   find: (
     userId: UserId,
     cancellationMethodId: CancellationMethodId,
-  ) => Promise<Result<ICancellationMethod, undefined>>;
+  ) => Promise<Result<CancellationMethodDetail, undefined>>;
   searchForName: (
     searchQuery: string,
-  ) => Promise<Result<ICancellationMethod[], undefined>>;
+  ) => Promise<Result<CancellationMethodDetail[], undefined>>;
   search: (
     userId: UserId,
     searchQuery: string,
     onlyMine: boolean,
     onlyBookmarked: boolean,
-  ) => Promise<Result<ICancellationMethod[], undefined>>;
+  ) => Promise<Result<CancellationMethodDetail[], undefined>>;
 
   isBookmarked: (
     userId: UserId,

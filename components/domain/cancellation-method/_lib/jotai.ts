@@ -1,5 +1,5 @@
 import { atom } from "jotai";
 
-import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import type { CancellationMethodDetail } from "@/domain/type";
 
-export const cancellationMethodsAtom = atom<ICancellationMethod[]>([]);
+export const cancellationMethodsAtom = atom<CancellationMethodDetail[]>([]);

@@ -26,8 +26,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
 import type { ISubscription } from "@/domain/subscription/subscription";
+import type { CancellationMethodDetail } from "@/domain/type";
 import {
   registerCancellationMethod,
   updateCancellationMethod,
@@ -37,7 +37,7 @@ const cancellationMethodEditFormScheme = type({
   id: "string.uuid | string == 0",
   name: "string > 0",
   private: "boolean",
-  serviceUrl: "string.url | string == 0",
+  urlToCancel: "string.url | string == 0",
   steps: "string[] > 0",
   precautions: "string",
   freeText: "string",
@@ -48,7 +48,7 @@ export function CancellationMethodFormPresentation({
   cancellationMethod,
   subscriptions,
 }: {
-  cancellationMethod?: ICancellationMethod;
+  cancellationMethod?: CancellationMethodDetail;
   subscriptions: ISubscription[];
 }) {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
@@ -78,8 +78,8 @@ export function CancellationMethodFormPresentation({
     defaultValues: {
       id: cancellationMethod?.id ?? "",
       name: cancellationMethod?.subscriptionName ?? "",
-      private: cancellationMethod?.private ?? false,
-      serviceUrl: cancellationMethod?.serviceUrl ?? "",
+      private: cancellationMethod?.isPrivate ?? false,
+      urlToCancel: cancellationMethod?.urlToCancel ?? "",
       steps: cancellationMethod?.steps ?? [""],
       precautions: cancellationMethod?.precautions ?? "",
       freeText: cancellationMethod?.freeText ?? "",
@@ -191,13 +191,13 @@ export function CancellationMethodFormPresentation({
           </div>
 
           <div className="space-y-2">
-            <form.Field name="serviceUrl">
+            <form.Field name="urlToCancel">
               {(field) => (
                 <>
-                  <Label htmlFor="serviceUrl">解約先URL</Label>
+                  <Label htmlFor="urlToCancel">解約先URL</Label>
                   <Input
                     className="rounded-xl"
-                    name="serviceUrl"
+                    name="urlToCancel"
                     placeholder="https://www.example.com"
                     value={field.state.value}
                     onChange={(e) => field.setValue(e.target.value)}

@@ -60,7 +60,7 @@ async function seedCancellationMethods(userId: string): Promise<string[]> {
         private: false,
         precautions: "",
         freeText: "",
-        serviceUrl: "",
+        urlToCancel: "",
         createdUserId: userId,
       },
       {
@@ -68,7 +68,7 @@ async function seedCancellationMethods(userId: string): Promise<string[]> {
         private: false,
         precautions: "",
         freeText: "",
-        serviceUrl: "",
+        urlToCancel: "",
         createdUserId: userId,
       },
       {
@@ -76,7 +76,7 @@ async function seedCancellationMethods(userId: string): Promise<string[]> {
         private: true,
         precautions: "",
         freeText: "",
-        serviceUrl: "",
+        urlToCancel: "",
         createdUserId: userId,
       },
     ])

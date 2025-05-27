@@ -20,7 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import type { CancellationMethodDetail } from "@/domain/type";
 import { deleteCancellationMethod } from "./_lib/actions";
 import { cancellationMethodsAtom } from "./_lib/jotai";
 import { CancellationMethodLinkIcon } from "./cancellation-method-link-icon";
@@ -28,7 +28,7 @@ import { CancellationMethodLinkIcon } from "./cancellation-method-link-icon";
 export default function CancellationMethodCard({
   cancellationMethod,
 }: {
-  cancellationMethod: ICancellationMethod;
+  cancellationMethod: CancellationMethodDetail;
 }) {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
     if (await deleteCancellationMethod(_, formData)) {
@@ -116,13 +116,13 @@ export default function CancellationMethodCard({
               "注意事項:",
               cancellationMethod.precautions,
               "",
-              `解約先: ${cancellationMethod.serviceUrl}`,
+              `解約先: ${cancellationMethod.urlToCancel}`,
             ].join("\n")}
           />
-          {cancellationMethod.serviceUrl && (
+          {cancellationMethod.urlToCancel && (
             <Button variant="outline" size="sm" className="rounded-xl" asChild>
               <a
-                href={cancellationMethod.serviceUrl}
+                href={cancellationMethod.urlToCancel}
                 target="_blank"
                 rel="noopener noreferrer"
               >

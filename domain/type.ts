@@ -68,6 +68,41 @@ export const timeUnit = {
 export type CurrencyId = (typeof currencyId)[keyof typeof currencyId];
 export type TimeUnit = (typeof timeUnit)[keyof typeof timeUnit];
 
+export type SubscriptionOverview = {
+  id: string;
+  name: string;
+  active: boolean;
+  fee: number;
+  nextUpdate: Date;
+  updateUnit: TimeUnit;
+};
+export type SubscriptionDetail = {
+  id: string;
+  name: string;
+  active: boolean;
+  fee: number;
+  amount: number;
+  currencyId: CurrencyId;
+  nextUpdate: Date;
+  updateCycle: UpdateCycle;
+};
+
+export type CancellationMethodDetail = {
+  id: string;
+  subscriptionName: string;
+  mine: boolean;
+  isPrivate: boolean;
+  urlToCancel: string | null | undefined;
+  steps: string[];
+  precautions: string;
+  freeText: string;
+  isBookmarked: boolean;
+  evaluatedGood: boolean;
+  bookmarkCount: number;
+  goodCount: number;
+  updatedAt: Date;
+};
+
 export type UserId = typeof userIdSchema.infer & {
   [userIdBrand]: unknown;
 };

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import type { CancellationMethodDetail } from "@/domain/type";
 import { useAtom } from "jotai";
 import { searchCancellationMethods } from "./_lib/actions";
 import { cancellationMethodsAtom } from "./_lib/jotai";
@@ -37,7 +37,7 @@ const scheme = type({
 
 export default function CancellationMethodsPanelPresentation() {
   const [cancellationMethods, action] = useActionState<
-    ICancellationMethod[],
+    CancellationMethodDetail[],
     FormData
   >(searchCancellationMethods, []);
   const [sortedCancellationMethods, setSortedCancellationMethods] = useAtom(

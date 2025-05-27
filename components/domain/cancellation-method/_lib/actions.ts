@@ -2,13 +2,13 @@
 
 import { auth } from "@clerk/nextjs/server";
 
-import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
+import type { CancellationMethodDetail } from "@/domain/type";
 import { searchCancellationMethods as search } from "./fetcher";
 
 export async function searchCancellationMethods(
   _prev: unknown,
   formData: FormData,
-): Promise<ICancellationMethod[]> {
+): Promise<CancellationMethodDetail[]> {
   return search(
     formData.get("searchQuery") as string,
     formData.get("onlyMine") === "on",
