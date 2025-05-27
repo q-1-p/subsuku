@@ -1,11 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { v4 } from "uuid";
 
-import type { CurrencyId } from "@/domain/currency/currency-id";
-import type { IntervalId } from "@/domain/interval/interval-id";
-import { SubscriptionId } from "@/domain/subscription/subscription-id";
-import { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
-import { SubscriptionUpdated } from "@/domain/subscription/subscription-updated";
+import { validateSubscription, validateSubscriptionId } from "@/domain/type";
 import type { IUserRepository } from "@/domain/user/user-repository";
 import { SubscriptionRepository } from "@/infrastructure/subscription-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
@@ -23,8 +20,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({}, { status: 401 });
   }
 
-  const subscriptionIdResult = SubscriptionId.factory(
-    req.nextUrl.searchParams.get("id") as string,
+  const subscriptionIdResult = validateSubscriptionId(
+    req.nextUrl.searchParams.get("id"),
   );
   if (subscriptionIdResult.type === err) {
     return NextResponse.json({}, { status: 400 });
@@ -50,14 +47,18 @@ export async function POST(req: NextRequest) {
   }
 
   const formData = await req.formData();
-  const subscriptionRegistered = SubscriptionRegistered.factory(
-    formData.get("name") as string,
-    Number(formData.get("amount")),
-    Number(formData.get("currencyId")) as CurrencyId,
-    new Date(formData.get("nextUpdate") as string),
-    Number(formData.get("intervalId")) as IntervalId,
-    Number(formData.get("intervalCycle")),
-  );
+  const subscriptionRegistered = validateSubscription({
+    id: v4(),
+    name: formData.get("name") as string,
+    active: true,
+    amount: Number(formData.get("amount")),
+    currency: Number(formData.get("currencyId")),
+    nextUpdate: new Date(formData.get("nextUpdate") as string),
+    updateCycle: {
+      number: Number(formData.get("intervalCycle")),
+      unit: Number(formData.get("intervalId")),
+    },
+  });
   if (subscriptionRegistered.type === err) {
     return NextResponse.json({}, { status: 400 });
   }
@@ -79,15 +80,18 @@ export async function PUT(req: NextRequest) {
   }
 
   const formData = await req.formData();
-  const subscriptionUpdated = SubscriptionUpdated.factory(
-    formData.get("id") as string,
-    formData.get("name") as string,
-    Number(formData.get("amount")),
-    Number(formData.get("currencyId")) as CurrencyId,
-    new Date(formData.get("nextUpdate") as string),
-    Number(formData.get("intervalId")) as IntervalId,
-    Number(formData.get("intervalCycle")),
-  );
+  const subscriptionUpdated = validateSubscription({
+    id: formData.get("id") as string,
+    name: formData.get("name") as string,
+    active: true,
+    amount: Number(formData.get("amount")),
+    currency: Number(formData.get("currencyId")),
+    nextUpdate: new Date(formData.get("nextUpdate") as string),
+    updateCycle: {
+      number: Number(formData.get("intervalCycle")),
+      unit: Number(formData.get("intervalId")),
+    },
+  });
   if (subscriptionUpdated.type === err) {
     return NextResponse.json({}, { status: 400 });
   }
@@ -109,7 +113,7 @@ export async function DELETE(req: NextRequest) {
   }
 
   const formData = await req.formData();
-  const subscriptionIdResult = SubscriptionId.factory(
+  const subscriptionIdResult = validateSubscriptionId(
     formData.get("subscriptionId") as string,
   );
   if (subscriptionIdResult.type === err) {

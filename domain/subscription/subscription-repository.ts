@@ -1,10 +1,11 @@
 import type { Result } from "../../lib/result";
-import type { CancellationMethodId } from "../cancellation-method/cancellation-method-id";
+import type {
+  CancellationMethodId,
+  Subscription,
+  SubscriptionId,
+} from "../type";
 import type { UserId } from "../user/user-id";
 import type { ISubscription } from "./subscription";
-import type { SubscriptionId } from "./subscription-id";
-import type { SubscriptionRegistered } from "./subscription-registered";
-import type { SubscriptionUpdated } from "./subscription-updated";
 
 export interface ISubscriptionRepository {
   find: (
@@ -32,12 +33,12 @@ export interface ISubscriptionRepository {
 
   insert: (
     userId: UserId,
-    subscriptionRegistered: SubscriptionRegistered,
+    subscriptionRegistered: Subscription,
   ) => Promise<boolean>;
 
   update: (
     userId: UserId,
-    subscriptionRegistered: SubscriptionUpdated,
+    subscriptionUpdated: Subscription,
   ) => Promise<boolean>;
 
   linkCancellationMethod: (

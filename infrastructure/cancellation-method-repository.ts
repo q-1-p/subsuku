@@ -9,10 +9,8 @@ import {
   subscriptionsTable,
 } from "@/db/schema";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
-import { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
-import type { CancellationMethodRegistered } from "@/domain/cancellation-method/cancellation-method-registered";
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
-import type { CancellationMethodUpdated } from "@/domain/cancellation-method/cancellation-method-updated";
+import type { CancellationMethod, CancellationMethodId } from "@/domain/type";
 import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
 
@@ -40,7 +38,7 @@ export class CancellationMethodRepository
     return db.query.cancellationMethodsTable
       .findFirst({
         where: (cancellationMethods, { eq }) =>
-          eq(cancellationMethods.id, cancellationMethodId.value),
+          eq(cancellationMethods.id, cancellationMethodId),
       })
       .then(async (datum) => {
         if (!datum) {
@@ -48,29 +46,19 @@ export class CancellationMethodRepository
         }
 
         const cancellationStepsResult = await this.findManyAllCancellationSteps(
-          datum.id,
+          cancellationMethodId as CancellationMethodId,
         );
-        const cancellationMethodIdResult = CancellationMethodId.factory(
-          datum.id,
-        );
-        if (cancellationMethodIdResult.type === err) {
-          throw new Error("Not found");
-        }
-
         const isBookmarkedResult = await this.isBookmarked(
           userId,
-          cancellationMethodIdResult.value,
+          cancellationMethodId,
         );
         const evaluatedGoodResult = await this.evaluatedGood(
           userId,
-          cancellationMethodIdResult.value,
+          cancellationMethodId,
         );
-        const bookmarkCountResult = await this.countBookmarks(
-          cancellationMethodIdResult.value,
-        );
-        const goodCountResult = await this.countGoods(
-          cancellationMethodIdResult.value,
-        );
+        const bookmarkCountResult =
+          await this.countBookmarks(cancellationMethodId);
+        const goodCountResult = await this.countGoods(cancellationMethodId);
 
         if (
           isBookmarkedResult.type === err ||
@@ -115,18 +103,11 @@ export class CancellationMethodRepository
       .then(async (data) => {
         const cancellationMethods = await Promise.all(
           data.map(async (datum) => {
-            const cancellationMethodIdResult = CancellationMethodId.factory(
-              datum.id,
-            );
-            if (cancellationMethodIdResult.type === err) {
-              throw new Error("Not found");
-            }
-
             const bookmarkCountResult = await this.countBookmarks(
-              cancellationMethodIdResult.value,
+              datum.id as CancellationMethodId,
             );
             const goodCountResult = await this.countGoods(
-              cancellationMethodIdResult.value,
+              datum.id as CancellationMethodId,
             );
 
             if (
@@ -196,27 +177,22 @@ export class CancellationMethodRepository
             }
 
             const cancellationStepsResult =
-              await this.findManyAllCancellationSteps(datum.id);
-            const cancellationMethodIdResult = CancellationMethodId.factory(
-              datum.id,
-            );
-            if (cancellationMethodIdResult.type === err) {
-              throw new Error("Not found");
-            }
-
+              await this.findManyAllCancellationSteps(
+                datum.id as CancellationMethodId,
+              );
             const isBookmarkedResult = await this.isBookmarked(
               userId,
-              cancellationMethodIdResult.value,
+              datum.id as CancellationMethodId,
             );
             const evaluatedGoodResult = await this.evaluatedGood(
               userId,
-              cancellationMethodIdResult.value,
+              datum.id as CancellationMethodId,
             );
             const bookmarkCountResult = await this.countBookmarks(
-              cancellationMethodIdResult.value,
+              datum.id as CancellationMethodId,
             );
             const goodCountResult = await this.countGoods(
-              cancellationMethodIdResult.value,
+              datum.id as CancellationMethodId,
             );
 
             if (
@@ -268,7 +244,7 @@ export class CancellationMethodRepository
           and(
             eq(
               cancellationMethodBookmarks.cancellationMethodId,
-              cancellationMethodId.value,
+              cancellationMethodId,
             ),
             eq(cancellationMethodBookmarks.userId, userId.value),
           ),
@@ -289,7 +265,7 @@ export class CancellationMethodRepository
           and(
             eq(
               cancellationMethodGoods.cancellationMethodId,
-              cancellationMethodId.value,
+              cancellationMethodId,
             ),
             eq(cancellationMethodGoods.userId, userId.value),
           ),
@@ -309,7 +285,7 @@ export class CancellationMethodRepository
         where: (cancellationMethodBookmarks, { eq }) =>
           eq(
             cancellationMethodBookmarks.cancellationMethodId,
-            cancellationMethodId.value,
+            cancellationMethodId,
           ),
       })
       .then((data) => ({ type: ok as typeof ok, value: data.length }))
@@ -326,7 +302,7 @@ export class CancellationMethodRepository
         where: (cancellationMethodGoods, { eq }) =>
           eq(
             cancellationMethodGoods.cancellationMethodId,
-            cancellationMethodId.value,
+            cancellationMethodId,
           ),
       })
       .then((data) => ({ type: ok as typeof ok, value: data.length }))
@@ -337,7 +313,8 @@ export class CancellationMethodRepository
   };
 
   public add = (
-    cancellationMethodRegistered: CancellationMethodRegistered,
+    userId: UserId,
+    cancellationMethodRegistered: CancellationMethod,
   ): Promise<boolean> => {
     return dbSocket
       .transaction((tx) => {
@@ -345,13 +322,13 @@ export class CancellationMethodRepository
           tx
             .insert(cancellationMethodsTable)
             .values({
-              id: cancellationMethodRegistered.id.value,
+              id: cancellationMethodRegistered.id,
               name: cancellationMethodRegistered.name,
-              serviceUrl: cancellationMethodRegistered.serviceUrl,
-              private: cancellationMethodRegistered.private,
+              serviceUrl: cancellationMethodRegistered.urlToCancel ?? "",
+              private: cancellationMethodRegistered.isPrivate,
               precautions: cancellationMethodRegistered.precautions,
               freeText: cancellationMethodRegistered.freeText,
-              createdUserId: cancellationMethodRegistered.createdUserId.value,
+              createdUserId: userId.value,
             })
             .then(() => true)
             .catch((error) => {
@@ -362,7 +339,7 @@ export class CancellationMethodRepository
             .insert(cancellationStepsTable)
             .values(
               cancellationMethodRegistered.steps.map((step, index) => ({
-                cancellationMethodId: cancellationMethodRegistered.id.value,
+                cancellationMethodId: cancellationMethodRegistered.id,
                 sequentialOrder: index,
                 procedure: step,
               })),
@@ -376,17 +353,14 @@ export class CancellationMethodRepository
             ? tx
                 .update(subscriptionsTable)
                 .set({
-                  cancellationMethodId: cancellationMethodRegistered.id.value,
+                  cancellationMethodId: cancellationMethodRegistered.id,
                 })
                 .where(
                   and(
-                    eq(
-                      subscriptionsTable.userId,
-                      cancellationMethodRegistered.createdUserId.value,
-                    ),
+                    eq(subscriptionsTable.userId, userId.value),
                     eq(
                       subscriptionsTable.id,
-                      cancellationMethodRegistered.linkSubscriptionId.value,
+                      cancellationMethodRegistered.linkSubscriptionId,
                     ),
                   ),
                 )
@@ -416,7 +390,7 @@ export class CancellationMethodRepository
       .insert(cancellationMethodBookmarksTable)
       .values({
         userId: userId.value,
-        cancellationMethodId: cancellationMethodId.value,
+        cancellationMethodId: cancellationMethodId,
       })
       .then(() => true)
       .catch((error) => {
@@ -432,7 +406,7 @@ export class CancellationMethodRepository
       .insert(cancellationMethodGoodsTable)
       .values({
         userId: userId.value,
-        cancellationMethodId: cancellationMethodId.value,
+        cancellationMethodId: cancellationMethodId,
       })
       .then(() => true)
       .catch((error) => {
@@ -443,7 +417,7 @@ export class CancellationMethodRepository
 
   public update = (
     userId: UserId,
-    cancellationMethodUpdated: CancellationMethodUpdated,
+    cancellationMethodUpdated: CancellationMethod,
   ): Promise<boolean> => {
     return dbSocket
       .transaction(async (tx) => {
@@ -452,7 +426,7 @@ export class CancellationMethodRepository
           .where(
             eq(
               cancellationStepsTable.cancellationMethodId,
-              cancellationMethodUpdated.id.value,
+              cancellationMethodUpdated.id,
             ),
           );
 
@@ -461,17 +435,14 @@ export class CancellationMethodRepository
             .update(cancellationMethodsTable)
             .set({
               name: cancellationMethodUpdated.name,
-              serviceUrl: cancellationMethodUpdated.serviceUrl,
-              private: cancellationMethodUpdated.private,
+              serviceUrl: cancellationMethodUpdated.urlToCancel ?? "",
+              private: cancellationMethodUpdated.isPrivate,
               precautions: cancellationMethodUpdated.precautions,
               freeText: cancellationMethodUpdated.freeText,
             })
             .where(
               and(
-                eq(
-                  cancellationMethodsTable.id,
-                  cancellationMethodUpdated.id.value,
-                ),
+                eq(cancellationMethodsTable.id, cancellationMethodUpdated.id),
                 eq(cancellationMethodsTable.createdUserId, userId.value),
               ),
             )
@@ -484,7 +455,7 @@ export class CancellationMethodRepository
             .insert(cancellationStepsTable)
             .values(
               cancellationMethodUpdated.steps.map((step, index) => ({
-                cancellationMethodId: cancellationMethodUpdated.id.value,
+                cancellationMethodId: cancellationMethodUpdated.id,
                 sequentialOrder: index,
                 procedure: step,
               })),
@@ -518,16 +489,13 @@ export class CancellationMethodRepository
             cancellationMethodId: null,
           })
           .where(
-            eq(
-              subscriptionsTable.cancellationMethodId,
-              cancellationMethodId.value,
-            ),
+            eq(subscriptionsTable.cancellationMethodId, cancellationMethodId),
           );
         await tx
           .delete(cancellationMethodsTable)
           .where(
             and(
-              eq(cancellationMethodsTable.id, cancellationMethodId.value),
+              eq(cancellationMethodsTable.id, cancellationMethodId),
               eq(cancellationMethodsTable.createdUserId, userId.value),
             ),
           );
@@ -550,7 +518,7 @@ export class CancellationMethodRepository
           eq(cancellationMethodBookmarksTable.userId, userId.value),
           eq(
             cancellationMethodBookmarksTable.cancellationMethodId,
-            cancellationMethodId.value,
+            cancellationMethodId,
           ),
         ),
       )
@@ -571,7 +539,7 @@ export class CancellationMethodRepository
           eq(cancellationMethodGoodsTable.userId, userId.value),
           eq(
             cancellationMethodGoodsTable.cancellationMethodId,
-            cancellationMethodId.value,
+            cancellationMethodId,
           ),
         ),
       )
@@ -582,8 +550,8 @@ export class CancellationMethodRepository
       });
   };
 
-  private findManyAllCancellationSteps = (
-    cancellationMethodId: string,
+  private findManyAllCancellationSteps = async (
+    cancellationMethodId: CancellationMethodId,
   ): Promise<Result<string[], undefined>> => {
     return db.query.cancellationStepsTable
       .findMany({

@@ -1,13 +1,15 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
-import { CancellationMethodRegistered } from "@/domain/cancellation-method/cancellation-method-registered";
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
-import { CancellationMethodUpdated } from "@/domain/cancellation-method/cancellation-method-updated";
+import {
+  validateCancellationMethod,
+  validateCancellationMethodId,
+} from "@/domain/type";
 import type { IUserRepository } from "@/domain/user/user-repository";
 import { CancellationMethodRepository } from "@/infrastructure/cancellation-method-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
 import { err } from "@/lib/result";
+import { v4 } from "uuid";
 
 const userRepository: IUserRepository = new UserRepository();
 const cancellationMethodRepository: ICancellationMethodRepository =
@@ -22,8 +24,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({}, { status: 401 });
   }
 
-  const cancellationMethodIdResult = CancellationMethodId.factory(
-    req.nextUrl.searchParams.get("cancellationMethodId") as string,
+  const cancellationMethodIdResult = validateCancellationMethodId(
+    req.nextUrl.searchParams.get("cancellationMethodId"),
   );
   if (cancellationMethodIdResult.type === err) {
     console.error("キャンセル方法IDエラー:", cancellationMethodIdResult.error);
@@ -52,21 +54,23 @@ export async function POST(req: NextRequest) {
   }
 
   const formData = await req.formData();
-  const cancellationMethodRegistered = CancellationMethodRegistered.factory({
+  const cancellationMethodRegistered = validateCancellationMethod({
+    id: v4(),
     name: String(formData.get("name")),
-    siteUrl: String(formData.get("serviceUrl")),
+    urlToCancel: formData.get("serviceUrl") as string,
     isPrivate: Boolean(formData.get("private")),
     steps: formData.getAll("steps[]") as unknown as string[],
     precautions: String(formData.get("precautions")),
     freeText: String(formData.get("freeText")),
+    updatedAt: new Date(),
     linkSubscriptionId: formData.get("linkSubscriptionId") as string,
-    createdUserId: userIdResult.value,
   });
   if (cancellationMethodRegistered.type === err) {
     return NextResponse.json({}, { status: 400 });
   }
 
   const isRegistered = await cancellationMethodRepository.add(
+    userIdResult.value,
     cancellationMethodRegistered.value,
   );
 
@@ -83,14 +87,16 @@ export async function PUT(req: NextRequest) {
   }
 
   const formData = await req.formData();
-  const cancellationMethodUpdated = CancellationMethodUpdated.factory({
-    id: formData.get("id") as string,
+  const cancellationMethodUpdated = validateCancellationMethod({
+    id: String(formData.get("id")),
     name: String(formData.get("name")),
-    siteUrl: String(formData.get("serviceUrl")),
+    urlToCancel: formData.get("serviceUrl") as string,
     isPrivate: Boolean(formData.get("private")),
     steps: formData.getAll("steps[]") as unknown as string[],
     precautions: String(formData.get("precautions")),
     freeText: String(formData.get("freeText")),
+    updatedAt: new Date(),
+    linkSubscriptionId: formData.get("linkSubscriptionId") as string,
   });
   if (cancellationMethodUpdated.type === err) {
     return NextResponse.json({}, { status: 400 });
@@ -114,7 +120,7 @@ export async function DELETE(req: NextRequest) {
   }
 
   const formData = await req.formData();
-  const cancellationMethodIdResult = CancellationMethodId.factory(
+  const cancellationMethodIdResult = validateCancellationMethodId(
     formData.get("cancellationMethodId") as string,
   );
   if (cancellationMethodIdResult.type === err) {

@@ -3,14 +3,15 @@ import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
-import type { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
 import type { CurrencyId } from "@/domain/currency/currency-id";
 import { intervalId } from "@/domain/interval/interval-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
-import type { SubscriptionId } from "@/domain/subscription/subscription-id";
-import type { SubscriptionRegistered } from "@/domain/subscription/subscription-registered";
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
-import type { SubscriptionUpdated } from "@/domain/subscription/subscription-updated";
+import type {
+  CancellationMethodId,
+  Subscription,
+  SubscriptionId,
+} from "@/domain/type";
 import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
 import { CurrencyRepository } from "./currency-repository";
@@ -81,7 +82,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     return findSubscriptionQuery
       .execute({
         userId: userId.value,
-        subscriptionId: subscriptionId.value,
+        subscriptionId: subscriptionId,
       })
       .then((data) => {
         if (!data) {
@@ -264,20 +265,17 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       });
   };
 
-  public insert = (
-    userId: UserId,
-    subscriptionRegistered: SubscriptionRegistered,
-  ) => {
+  public insert = (userId: UserId, subscription: Subscription) => {
     return db
       .insert(subscriptionsTable)
       .values({
-        name: subscriptionRegistered.name.value,
+        name: subscription.name,
         userId: userId.value,
-        amount: subscriptionRegistered.fee.amount.toString(),
-        currencyId: subscriptionRegistered.fee.currencyId,
-        nextUpdate: format(subscriptionRegistered.nextUpdate, "yyyy-MM-dd"),
-        intervalCycle: subscriptionRegistered.interval.cycle,
-        intervalId: subscriptionRegistered.interval.id,
+        amount: subscription.fee.amount.toString(),
+        currencyId: subscription.fee.currency,
+        nextUpdate: format(subscription.nextUpdate, "yyyy-MM-dd"),
+        intervalCycle: subscription.updateCycle.number,
+        intervalId: subscription.updateCycle.unit,
       })
       .then(() => true)
       .catch((error) => {
@@ -312,25 +310,22 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         .where(eq(subscriptionsTable.id, subscription.id));
     }
   };
-  public update = (
-    userId: UserId,
-    subscriptionUpdated: SubscriptionUpdated,
-  ) => {
+  public update = (userId: UserId, subscription: Subscription) => {
     return db
       .update(subscriptionsTable)
       .set({
-        name: subscriptionUpdated.name.value,
+        name: subscription.name,
         userId: userId.value,
-        amount: subscriptionUpdated.fee.amount.toString(),
-        currencyId: subscriptionUpdated.fee.currencyId,
-        nextUpdate: format(subscriptionUpdated.nextUpdate, "yyyy-MM-dd"),
-        intervalCycle: subscriptionUpdated.interval.cycle,
-        intervalId: subscriptionUpdated.interval.id,
+        amount: subscription.fee.amount.toString(),
+        currencyId: subscription.fee.currency,
+        nextUpdate: format(subscription.nextUpdate, "yyyy-MM-dd"),
+        intervalCycle: subscription.updateCycle.number,
+        intervalId: subscription.updateCycle.unit,
       })
       .where(
         and(
           eq(subscriptionsTable.userId, userId.value),
-          eq(subscriptionsTable.id, subscriptionUpdated.id.value),
+          eq(subscriptionsTable.id, subscription.id),
         ),
       )
       .then(() => true)
@@ -348,12 +343,12 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     return db
       .update(subscriptionsTable)
       .set({
-        cancellationMethodId: cancellationMethodId.value,
+        cancellationMethodId: cancellationMethodId,
       })
       .where(
         and(
           eq(subscriptionsTable.userId, userId.value),
-          eq(subscriptionsTable.id, subscriptionId.value),
+          eq(subscriptionsTable.id, subscriptionId),
         ),
       )
       .then(() => true)
@@ -372,7 +367,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .where(
         and(
           eq(subscriptionsTable.userId, userId.value),
-          eq(subscriptionsTable.id, subscriptionId.value),
+          eq(subscriptionsTable.id, subscriptionId),
         ),
       )
       .then(() => true)
