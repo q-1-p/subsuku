@@ -1,8 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
-import { SubscriptionId } from "@/domain/subscription/subscription-id";
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
+import {
+  validateCancellationMethodId,
+  validateSubscriptionId,
+} from "@/domain/type";
 import type { IUserRepository } from "@/domain/user/user-repository";
 import { SubscriptionRepository } from "@/infrastructure/subscription-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
@@ -21,11 +23,11 @@ export async function PATCH(req: NextRequest) {
   }
 
   const formData = await req.formData();
-  const subscriptionIdResult = SubscriptionId.factory(
-    formData.get("subscriptionId") as string,
+  const subscriptionIdResult = validateSubscriptionId(
+    formData.get("subscriptionId"),
   );
-  const cancellationMethodIdResult = CancellationMethodId.factory(
-    formData.get("cancellationMethodId") as string,
+  const cancellationMethodIdResult = validateCancellationMethodId(
+    formData.get("cancellationMethodId"),
   );
   if (
     subscriptionIdResult.type === err ||

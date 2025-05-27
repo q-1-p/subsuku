@@ -13,8 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { timeUnit } from "@/domain/interval/interval-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
+import { timeUnit } from "@/domain/type";
 import { deleteSubscription } from "./_lib/actions";
 import { subscriptionsAtom } from "./_lib/jotai";
 

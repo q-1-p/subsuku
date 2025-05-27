@@ -10,8 +10,11 @@ import {
 } from "@/db/schema";
 import type { ICancellationMethod } from "@/domain/cancellation-method/cancellation-method";
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
-import type { CancellationMethod, CancellationMethodId } from "@/domain/type";
-import type { UserId } from "@/domain/user/user-id";
+import type {
+  CancellationMethod,
+  CancellationMethodId,
+  UserId,
+} from "@/domain/type";
 import { type Result, err, ok } from "@/lib/result";
 
 const searchNameQuery = db
@@ -84,7 +87,7 @@ export class CancellationMethodRepository
             bookmarkCount: bookmarkCountResult.value,
             goodCount: goodCountResult.value,
             serviceUrl: datum.serviceUrl,
-            mine: datum.createdUserId === userId.value,
+            mine: datum.createdUserId === userId,
             updatedAt: new Date(datum.updatedAt),
           } as ICancellationMethod,
         };
@@ -153,7 +156,7 @@ export class CancellationMethodRepository
     onlyBookmarked: boolean,
   ): Promise<Result<ICancellationMethod[], undefined>> => {
     const bookmarkedIds = await bookmarksQuery
-      .execute({ userId: userId.value })
+      .execute({ userId: userId })
       .then((res) => res.map((b) => b.cancellationMethodId));
 
     return db.query.cancellationMethodsTable
@@ -162,7 +165,7 @@ export class CancellationMethodRepository
           and(
             like(cancellationMethodsTable.name, `%${searchQuery}%`),
             onlyMine
-              ? eq(cancellationMethodsTable.createdUserId, userId.value)
+              ? eq(cancellationMethodsTable.createdUserId, userId)
               : undefined,
             onlyBookmarked
               ? inArray(cancellationMethodsTable.id, bookmarkedIds)
@@ -217,7 +220,7 @@ export class CancellationMethodRepository
               bookmarkCount: bookmarkCountResult.value,
               goodCount: goodCountResult.value,
               serviceUrl: datum.serviceUrl,
-              mine: datum.createdUserId === userId.value,
+              mine: datum.createdUserId === userId,
               updatedAt: new Date(datum.updatedAt),
             } as ICancellationMethod;
           }),
@@ -246,7 +249,7 @@ export class CancellationMethodRepository
               cancellationMethodBookmarks.cancellationMethodId,
               cancellationMethodId,
             ),
-            eq(cancellationMethodBookmarks.userId, userId.value),
+            eq(cancellationMethodBookmarks.userId, userId),
           ),
       })
       .then((datum) => ({ type: ok as typeof ok, value: !!datum }))
@@ -267,7 +270,7 @@ export class CancellationMethodRepository
               cancellationMethodGoods.cancellationMethodId,
               cancellationMethodId,
             ),
-            eq(cancellationMethodGoods.userId, userId.value),
+            eq(cancellationMethodGoods.userId, userId),
           ),
       })
       .then((datum) => ({ type: ok as typeof ok, value: !!datum }))
@@ -328,7 +331,7 @@ export class CancellationMethodRepository
               private: cancellationMethodRegistered.isPrivate,
               precautions: cancellationMethodRegistered.precautions,
               freeText: cancellationMethodRegistered.freeText,
-              createdUserId: userId.value,
+              createdUserId: userId,
             })
             .then(() => true)
             .catch((error) => {
@@ -357,7 +360,7 @@ export class CancellationMethodRepository
                 })
                 .where(
                   and(
-                    eq(subscriptionsTable.userId, userId.value),
+                    eq(subscriptionsTable.userId, userId),
                     eq(
                       subscriptionsTable.id,
                       cancellationMethodRegistered.linkSubscriptionId,
@@ -389,7 +392,7 @@ export class CancellationMethodRepository
     return db
       .insert(cancellationMethodBookmarksTable)
       .values({
-        userId: userId.value,
+        userId: userId,
         cancellationMethodId: cancellationMethodId,
       })
       .then(() => true)
@@ -405,7 +408,7 @@ export class CancellationMethodRepository
     return db
       .insert(cancellationMethodGoodsTable)
       .values({
-        userId: userId.value,
+        userId: userId,
         cancellationMethodId: cancellationMethodId,
       })
       .then(() => true)
@@ -443,7 +446,7 @@ export class CancellationMethodRepository
             .where(
               and(
                 eq(cancellationMethodsTable.id, cancellationMethodUpdated.id),
-                eq(cancellationMethodsTable.createdUserId, userId.value),
+                eq(cancellationMethodsTable.createdUserId, userId),
               ),
             )
             .then(() => true)
@@ -496,7 +499,7 @@ export class CancellationMethodRepository
           .where(
             and(
               eq(cancellationMethodsTable.id, cancellationMethodId),
-              eq(cancellationMethodsTable.createdUserId, userId.value),
+              eq(cancellationMethodsTable.createdUserId, userId),
             ),
           );
       })
@@ -515,7 +518,7 @@ export class CancellationMethodRepository
       .delete(cancellationMethodBookmarksTable)
       .where(
         and(
-          eq(cancellationMethodBookmarksTable.userId, userId.value),
+          eq(cancellationMethodBookmarksTable.userId, userId),
           eq(
             cancellationMethodBookmarksTable.cancellationMethodId,
             cancellationMethodId,
@@ -536,7 +539,7 @@ export class CancellationMethodRepository
       .delete(cancellationMethodGoodsTable)
       .where(
         and(
-          eq(cancellationMethodGoodsTable.userId, userId.value),
+          eq(cancellationMethodGoodsTable.userId, userId),
           eq(
             cancellationMethodGoodsTable.cancellationMethodId,
             cancellationMethodId,

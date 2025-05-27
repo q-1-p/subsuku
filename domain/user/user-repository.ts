@@ -1,5 +1,5 @@
 import type { Result } from "@/lib/result";
-import type { UserId } from "./user-id";
+import type { UserId } from "../type";
 
 export interface IUserRepository {
   findId: (clerkUserId: string) => Promise<Result<UserId, undefined>>;

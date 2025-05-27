@@ -7,10 +7,8 @@ import {
   PoundSterling,
 } from "lucide-react";
 
-import {
-  type CurrencyId,
-  currencyId as id,
-} from "@/domain/currency/currency-id";
+import type { CurrencyId } from "@/domain/type";
+import { currencyId as currencyIdType } from "@/domain/type";
 
 export default function CurrencyIcon({
   className,
@@ -20,12 +18,12 @@ export default function CurrencyIcon({
   currencyId: CurrencyId;
 }) {
   return match({
-    [id.jpy]: () => <JapaneseYen className={className} />,
-    [id.usd]: () => <DollarSign className={className} />,
-    [id.eur]: () => <Euro className={className} />,
-    [id.gbp]: () => <PoundSterling className={className} />,
-    [id.cny]: () => <JapaneseYen className={className} />,
-    [id.btc]: () => <Bitcoin className={className} />,
+    [currencyIdType.jpy]: () => <JapaneseYen className={className} />,
+    [currencyIdType.usd]: () => <DollarSign className={className} />,
+    [currencyIdType.eur]: () => <Euro className={className} />,
+    [currencyIdType.gbp]: () => <PoundSterling className={className} />,
+    [currencyIdType.cny]: () => <JapaneseYen className={className} />,
+    [currencyIdType.btc]: () => <Bitcoin className={className} />,
     default: "never",
   })(currencyId);
 }

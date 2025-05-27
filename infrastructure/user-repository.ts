@@ -3,7 +3,7 @@ import { sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { usersTable } from "@/db/schema";
-import { UserId } from "@/domain/user/user-id";
+import { type UserId, validateUserId } from "@/domain/type";
 import type { IUserRepository } from "@/domain/user/user-repository";
 import { type Result, err, ok } from "@/lib/result";
 
@@ -24,7 +24,7 @@ export class UserRepository implements IUserRepository {
           throw new Error("User not found");
         }
 
-        const userIdResult = UserId.factory(user.id);
+        const userIdResult = validateUserId(user.id);
         if (userIdResult.type === err) {
           throw new Error("Invalid user ID");
         }
@@ -47,7 +47,7 @@ export class UserRepository implements IUserRepository {
     return db
       .update(usersTable)
       .set({ mailAddress })
-      .where(eq(usersTable.id, userId.value))
+      .where(eq(usersTable.id, userId))
       .then(() => true)
       .catch((error) => {
         console.error("Failed to update mail address", error);

@@ -3,8 +3,8 @@ import type {
   CancellationMethodId,
   Subscription,
   SubscriptionId,
+  UserId,
 } from "../type";
-import type { UserId } from "../user/user-id";
 import type { ISubscription } from "./subscription";
 
 export interface ISubscriptionRepository {

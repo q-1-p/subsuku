@@ -1,3 +1,5 @@
+import { formatDate } from "date-fns";
+
 import {
   Card,
   CardContent,
@@ -6,12 +8,26 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { currencyCodes } from "@/domain/currency/currency-code";
-import { currencyIcons } from "@/domain/currency/currency-icons";
-import { timeUnit } from "@/domain/interval/interval-id";
-import { intervalNames } from "@/domain/interval/interval-names";
 import type { ISubscription } from "@/domain/subscription/subscription";
-import { formatDate } from "date-fns";
+import { currencyId, timeUnit } from "@/domain/type";
+
+const currencyCodes = {
+  [currencyId.jpy]: "JPY",
+  [currencyId.cny]: "CNY",
+  [currencyId.gbp]: "GBP",
+  [currencyId.usd]: "USD",
+  [currencyId.eur]: "EUR",
+  [currencyId.btc]: "BTC",
+} as const;
+
+const currencyIcons = {
+  [currencyId.jpy]: "¥",
+  [currencyId.cny]: "¥",
+  [currencyId.gbp]: "£",
+  [currencyId.usd]: "$",
+  [currencyId.eur]: "€",
+  [currencyId.btc]: "₿",
+} as const;
 
 export default function SubscriptionBillingInformationCardPresentation({
   subscription,
@@ -46,7 +62,7 @@ export default function SubscriptionBillingInformationCardPresentation({
                 請求サイクル
               </h3>
               <p className="text-base">
-                {`${intervalNames[subscription.intervalId]}毎`}
+                {subscription.intervalId === timeUnit.month ? "月毎" : "年毎"}
               </p>
             </div>
           </div>

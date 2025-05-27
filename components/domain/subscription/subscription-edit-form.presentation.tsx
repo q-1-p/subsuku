@@ -32,15 +32,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import type { ISubscription } from "@/domain/subscription/subscription";
 import {
   type CurrencyId,
+  type TimeUnit,
   currencyId,
-  currencyNames,
-} from "@/domain/currency/currency-id";
-import { type TimeUnit, timeUnit } from "@/domain/interval/interval-id";
-import { intervalNames } from "@/domain/interval/interval-names";
-import type { ISubscription } from "@/domain/subscription/subscription";
+  timeUnit,
+} from "@/domain/type";
 import { registerSubscription, updateSubscription } from "./_lib/actions";
+
+const currencyNames = {
+  [currencyId.jpy]: "日本円 (JPY)",
+  [currencyId.cny]: "人民元 (CNY)",
+  [currencyId.gbp]: "英ポンド (GBP)",
+  [currencyId.usd]: "米ドル (USD)",
+  [currencyId.eur]: "ユーロ (EUR)",
+  [currencyId.btc]: "ビットコイン (BTC)",
+} as const;
 
 const subscriptionFormScheme = type({
   name: "0 < string < 32",
@@ -199,7 +207,7 @@ export function SubscriptionEditFormPresentation({
           <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
             <div className="col-span-2 flex gap-2">
               <form.Subscribe selector={(state) => [state.values.currencyId]}>
-                {([currentCurrencyId]) => (
+                {([currentCurrency]) => (
                   <>
                     <div className="grid">
                       <h4 className="pb-3">金額</h4>
@@ -210,7 +218,7 @@ export function SubscriptionEditFormPresentation({
                               <div className="relative">
                                 <CurrencyIcon
                                   className="absolute top-2.5 left-2 h-4 w-4 text-muted-foreground"
-                                  currencyId={currentCurrencyId as CurrencyId}
+                                  currencyId={currentCurrency as CurrencyId}
                                 />
                                 <Input
                                   className="w-full pl-8"
@@ -310,7 +318,7 @@ export function SubscriptionEditFormPresentation({
                       <SelectContent>
                         {Object.entries(timeUnit).map(([key, value]) => (
                           <SelectItem key={key} value={value.toString()}>
-                            {`${intervalNames[value]}毎`}
+                            {`${value === timeUnit.month ? "月" : "年"}毎`}
                           </SelectItem>
                         ))}
                       </SelectContent>

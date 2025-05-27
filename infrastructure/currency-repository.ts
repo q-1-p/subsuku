@@ -2,8 +2,8 @@ import { eq, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { currenciesTable } from "@/db/schema";
-import { type CurrencyId, currencyId } from "@/domain/currency/currency-id";
 import type { ICurrencyRepository } from "@/domain/currency/currency-repository";
+import { type CurrencyId, currencyId } from "@/domain/type";
 import { type Result, err, ok } from "@/lib/result";
 
 const findQuery = db

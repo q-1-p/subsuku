@@ -1,8 +1,8 @@
 import { type } from "arktype";
 
 import { type Result, err, ok } from "@/lib/result";
-import type { TimeUnit } from "./time-unit";
 
+//#region Brand
 const userIdBrand = Symbol();
 const mailAddressBrand = Symbol();
 const subscriptionIdBrand = Symbol();
@@ -15,9 +15,11 @@ const cancellationMethodFreeTextBrand = Symbol();
 
 const subscriptionBrand = Symbol();
 const cancellationMethodBrand = Symbol();
+//#endregion
 
 export const userIdSchema = type("string.uuid");
 export const mailAddressSchema = type("string.email");
+
 export const subscriptionIdSchema = type("string.uuid");
 export const subscriptionNameSchema = type("0 < string < 32");
 export const updateCycleSchema = type({
@@ -29,7 +31,7 @@ export const cancellationMethodUrlSchema = type("string.url");
 export const cancellationMethodPrecautionsSchema = type("string");
 export const cancellationMethodFreeTextSchema = type("string");
 
-export const validatedCancellationMethodSchema = type({
+export const cancellationMethodSchema = type({
   id: cancellationMethodIdSchema,
   name: subscriptionNameSchema,
   isPrivate: "boolean",
@@ -40,15 +42,31 @@ export const validatedCancellationMethodSchema = type({
   updatedAt: "Date",
   linkSubscriptionId: "string.uuid | null | undefined",
 });
-export const validatedSubscriptionSchema = type({
+export const subscriptionSchema = type({
   id: subscriptionIdSchema,
   name: subscriptionNameSchema,
   active: "boolean",
   amount: "number",
-  currency: "156 | 392 | 826 | 840 | 978 | 1000", // バリデーション時に再起エラーになるので直接定義
+  currencyId: "156 | 392 | 826 | 840 | 978 | 1000", // バリデーション時に再起エラーになるので直接定義
   nextUpdate: "Date",
   updateCycle: updateCycleSchema,
 });
+
+export const currencyId = {
+  jpy: 392,
+  cny: 156,
+  gbp: 826,
+  usd: 840,
+  eur: 978,
+  btc: 1000,
+} as const;
+export const timeUnit = {
+  month: 0,
+  year: 1,
+} as const;
+
+export type CurrencyId = (typeof currencyId)[keyof typeof currencyId];
+export type TimeUnit = (typeof timeUnit)[keyof typeof timeUnit];
 
 export type UserId = typeof userIdSchema.infer & {
   [userIdBrand]: unknown;
@@ -56,6 +74,7 @@ export type UserId = typeof userIdSchema.infer & {
 export type MailAddress = typeof mailAddressSchema.infer & {
   [mailAddressBrand]: unknown;
 };
+
 export type SubscriptionId = typeof subscriptionIdSchema.infer & {
   [subscriptionIdBrand]: unknown;
 };
@@ -81,13 +100,12 @@ export type CancellationMethodFreeText =
     [cancellationMethodFreeTextBrand]: unknown;
   };
 
-export type Subscription = typeof validatedSubscriptionSchema.infer & {
+export type Subscription = typeof subscriptionSchema.infer & {
   [subscriptionBrand]: unknown;
 };
-export type CancellationMethod =
-  typeof validatedCancellationMethodSchema.infer & {
-    [cancellationMethodBrand]: unknown;
-  };
+export type CancellationMethod = typeof cancellationMethodSchema.infer & {
+  [cancellationMethodBrand]: unknown;
+};
 
 export function validateUserId(value: unknown): Result<UserId, string> {
   const validated = userIdSchema(value);
@@ -97,6 +115,7 @@ export function validateUserId(value: unknown): Result<UserId, string> {
   }
   return { type: ok, value: validated as UserId };
 }
+
 export function validateSubscriptionId(
   value: unknown,
 ): Result<SubscriptionId, string> {
@@ -133,14 +152,14 @@ export function validateSubscription(d: {
   name: string;
   active: boolean;
   amount: number;
-  currency: number;
+  currencyId: number;
   nextUpdate: Date;
   updateCycle: {
     number: number;
     unit: number;
   };
 }): Result<Subscription, string> {
-  const validated = validatedSubscriptionSchema(d);
+  const validated = subscriptionSchema(d);
   if (validated instanceof type.errors) {
     console.error(validated.summary);
     return { type: err, error: validated.summary };
@@ -148,9 +167,9 @@ export function validateSubscription(d: {
   return { type: ok, value: validated as Subscription };
 }
 export function validateCancellationMethod(
-  d: typeof validatedCancellationMethodSchema.infer,
+  d: typeof cancellationMethodSchema.infer,
 ): Result<CancellationMethod, string> {
-  const validated = validatedCancellationMethodSchema(d);
+  const validated = cancellationMethodSchema(d);
   if (validated instanceof type.errors) {
     console.error(validated.summary);
     return { type: err, error: validated.summary };

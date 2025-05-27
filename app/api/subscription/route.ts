@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     name: formData.get("name") as string,
     active: true,
     amount: Number(formData.get("amount")),
-    currency: Number(formData.get("currencyId")),
+    currencyId: Number(formData.get("currencyId")),
     nextUpdate: new Date(formData.get("nextUpdate") as string),
     updateCycle: {
       number: Number(formData.get("intervalCycle")),
@@ -85,7 +85,7 @@ export async function PUT(req: NextRequest) {
     name: formData.get("name") as string,
     active: true,
     amount: Number(formData.get("amount")),
-    currency: Number(formData.get("currencyId")),
+    currencyId: Number(formData.get("currencyId")),
     nextUpdate: new Date(formData.get("nextUpdate") as string),
     updateCycle: {
       number: Number(formData.get("intervalCycle")),

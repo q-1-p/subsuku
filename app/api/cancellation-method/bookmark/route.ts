@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { CancellationMethodId } from "@/domain/cancellation-method/cancellation-method-id";
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
+import { validateCancellationMethodId } from "@/domain/type";
 import type { IUserRepository } from "@/domain/user/user-repository";
 import { CancellationMethodRepository } from "@/infrastructure/cancellation-method-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
   }
 
   const formData = await req.formData();
-  const cancellationMethodIdResult = CancellationMethodId.factory(
-    formData.get("cancellationMethodId") as string,
+  const cancellationMethodIdResult = validateCancellationMethodId(
+    formData.get("cancellationMethodId"),
   );
   if (cancellationMethodIdResult.type === err) {
     return NextResponse.json({}, { status: 400 });
@@ -44,8 +44,8 @@ export async function DELETE(req: NextRequest) {
   }
 
   const formData = await req.formData();
-  const cancellationMethodIdResult = CancellationMethodId.factory(
-    formData.get("cancellationMethodId") as string,
+  const cancellationMethodIdResult = validateCancellationMethodId(
+    formData.get("cancellationMethodId"),
   );
   if (cancellationMethodIdResult.type === err) {
     return NextResponse.json({}, { status: 400 });

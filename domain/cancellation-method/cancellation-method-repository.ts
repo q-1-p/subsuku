@@ -1,6 +1,5 @@
 import type { Result } from "@/lib/result";
-import type { CancellationMethod, CancellationMethodId } from "../type";
-import type { UserId } from "../user/user-id";
+import type { CancellationMethod, CancellationMethodId, UserId } from "../type";
 import type { ICancellationMethod } from "./cancellation-method";
 
 export type ICancellationMethodRepository = {

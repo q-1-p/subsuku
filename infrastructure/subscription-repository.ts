@@ -3,16 +3,16 @@ import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
-import type { CurrencyId } from "@/domain/currency/currency-id";
-import { timeUnit } from "@/domain/interval/interval-id";
 import type { ISubscription } from "@/domain/subscription/subscription";
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
-import type {
-  CancellationMethodId,
-  Subscription,
-  SubscriptionId,
+import {
+  type CancellationMethodId,
+  type CurrencyId,
+  type Subscription,
+  type SubscriptionId,
+  type UserId,
+  timeUnit,
 } from "@/domain/type";
-import type { UserId } from "@/domain/user/user-id";
 import { type Result, err, ok } from "@/lib/result";
 import { CurrencyRepository } from "./currency-repository";
 
@@ -81,7 +81,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
     return findSubscriptionQuery
       .execute({
-        userId: userId.value,
+        userId: userId,
         subscriptionId: subscriptionId,
       })
       .then((data) => {
@@ -131,7 +131,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         : searchSubscriptionsQuery
     )
       .execute({
-        userId: userId.value,
+        userId: userId,
         active,
         today,
         upcomingDate,
@@ -168,7 +168,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     active = true,
   ): Promise<Result<number, undefined>> => {
     return countSubscriptionsQuery
-      .execute({ userId: userId.value, active })
+      .execute({ userId: userId, active })
       .then((res) => {
         return { type: ok as typeof ok, value: +res[0].count };
       })
@@ -191,7 +191,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
     return await searchSubscriptionsForNextUpdateQuery
       .execute({
-        userId: userId.value,
+        userId: userId,
         active,
         today,
         nextUpdate: nextMonthDate,
@@ -235,7 +235,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
     return await searchSubscriptionsForNextUpdateQuery
       .execute({
-        userId: userId.value,
+        userId: userId,
         active,
         today,
         nextUpdate: nextYearDate,
@@ -270,9 +270,9 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .insert(subscriptionsTable)
       .values({
         name: subscription.name,
-        userId: userId.value,
+        userId: userId,
         amount: subscription.amount.toString(),
-        currencyId: subscription.currency,
+        currencyId: subscription.currencyId,
         nextUpdate: format(subscription.nextUpdate, "yyyy-MM-dd"),
         intervalCycle: subscription.updateCycle.number,
         intervalId: subscription.updateCycle.unit,
@@ -315,16 +315,16 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .update(subscriptionsTable)
       .set({
         name: subscription.name,
-        userId: userId.value,
+        userId: userId,
         amount: subscription.amount.toString(),
-        currencyId: subscription.currency,
+        currencyId: subscription.currencyId,
         nextUpdate: format(subscription.nextUpdate, "yyyy-MM-dd"),
         intervalCycle: subscription.updateCycle.number,
         intervalId: subscription.updateCycle.unit,
       })
       .where(
         and(
-          eq(subscriptionsTable.userId, userId.value),
+          eq(subscriptionsTable.userId, userId),
           eq(subscriptionsTable.id, subscription.id),
         ),
       )
@@ -347,7 +347,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       })
       .where(
         and(
-          eq(subscriptionsTable.userId, userId.value),
+          eq(subscriptionsTable.userId, userId),
           eq(subscriptionsTable.id, subscriptionId),
         ),
       )
@@ -366,7 +366,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .delete(subscriptionsTable)
       .where(
         and(
-          eq(subscriptionsTable.userId, userId.value),
+          eq(subscriptionsTable.userId, userId),
           eq(subscriptionsTable.id, subscriptionId),
         ),
       )
