@@ -17,7 +17,7 @@ import { type SubscriptionDetail, timeUnit } from "@/domain/type";
 import { deleteSubscription } from "./_lib/actions";
 import { subscriptionsAtom } from "./_lib/jotai";
 
-export default function SubscriptionCard({
+export default function SubscriptionSummaryCard({
   subscription,
 }: { subscription: SubscriptionDetail }) {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {

@@ -46,7 +46,7 @@ const cancellationMethodEditFormScheme = type({
   linkSubscriptionId: "string.uuid | string == 0",
 });
 
-export function CancellationMethodFormPresentation({
+export function CancellationMethodEditFormPresentation({
   cancellationMethod,
   subscriptions,
   subscriptionNameSuggestions,

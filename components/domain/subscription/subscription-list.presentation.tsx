@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 
 import type { SubscriptionDetail } from "@/domain/type";
 import { subscriptionsAtom } from "./_lib/jotai";
-import SubscriptionCard from "./subscription-card";
+import SubscriptionSummaryCard from "./subscription-summary-card";
 
 export default function SubscriptionListPresentation({
   subscriptions,
@@ -37,7 +37,10 @@ export default function SubscriptionListPresentation({
         )
         .slice(0, folding ? 3 : subscriptionsCache.length)
         .map((subscription: SubscriptionDetail) => (
-          <SubscriptionCard key={subscription.id} subscription={subscription} />
+          <SubscriptionSummaryCard
+            key={subscription.id}
+            subscription={subscription}
+          />
         ))}
       {isOverView && (
         <Button

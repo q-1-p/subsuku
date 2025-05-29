@@ -19,7 +19,7 @@ import type { CancellationMethodDetail } from "@/domain/type";
 import { useAtom } from "jotai";
 import { searchCancellationMethods } from "./_lib/actions";
 import { cancellationMethodsAtom } from "./_lib/jotai";
-import CancellationMethodCard from "./cancellation-method-card";
+import { CancellationMethodSummaryCard } from "./cancellation-method-summary-card";
 
 const sortItem = {
   none: "none",
@@ -35,7 +35,7 @@ const scheme = type({
   onlyBookmarked: "boolean",
 });
 
-export function CancellationMethodsPanelPresentation() {
+export function CancellationMethodListPanelPresentation() {
   const [cancellationMethods, action] = useActionState<
     CancellationMethodDetail[],
     FormData
@@ -229,7 +229,7 @@ export function CancellationMethodsPanelPresentation() {
                   if (0 < sortedCancellationMethods.length) {
                     return sortedCancellationMethods.map(
                       (cancellationMethod) => (
-                        <CancellationMethodCard
+                        <CancellationMethodSummaryCard
                           key={cancellationMethod.id}
                           cancellationMethod={cancellationMethod}
                         />

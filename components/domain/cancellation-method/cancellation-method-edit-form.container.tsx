@@ -5,9 +5,9 @@ import {
   fetchSubscriptions,
 } from "../subscription/_lib/fetcher";
 import { fetchCancellationMethod } from "./_lib/fetcher";
-import { CancellationMethodFormPresentation } from "./cancellation-method-form.presentation";
+import { CancellationMethodEditFormPresentation } from "./cancellation-method-edit-form.presentation";
 
-export async function CancellationMethodForm({
+export async function CancellationMethodEditForm({
   cancellationMethodId,
 }: { cancellationMethodId?: string }) {
   const cancellationMethod = cancellationMethodId
@@ -16,7 +16,7 @@ export async function CancellationMethodForm({
   const subscriptions = await fetchSubscriptions();
 
   return (
-    <CancellationMethodFormPresentation
+    <CancellationMethodEditFormPresentation
       cancellationMethod={cancellationMethod}
       subscriptions={subscriptions}
       subscriptionNameSuggestions={fetchSubscriptionSuggestions()}

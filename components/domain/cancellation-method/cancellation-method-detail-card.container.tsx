@@ -1,9 +1,9 @@
 import "server-only";
 
 import { fetchCancellationMethod } from "./_lib/fetcher";
-import CancellationMethodInformationCardPresentation from "./cancellation-method-information-card.presentation";
+import { CancellationMethodDetailCardPresentation } from "./cancellation-method-detail-card.presentation";
 
-export default async function CancellationMethodInformationCardContainer({
+export async function CancellationMethodDetailCardContainer({
   cancellationMethodId,
 }: {
   cancellationMethodId: string;
@@ -14,7 +14,7 @@ export default async function CancellationMethodInformationCardContainer({
   return (
     <>
       {cancellationMethod ? (
-        <CancellationMethodInformationCardPresentation
+        <CancellationMethodDetailCardPresentation
           cancellationMethod={cancellationMethod}
         />
       ) : (

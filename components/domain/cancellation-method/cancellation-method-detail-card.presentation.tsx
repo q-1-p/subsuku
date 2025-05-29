@@ -15,7 +15,7 @@ import {
 import type { CancellationMethodDetail } from "@/domain/type";
 import { formatDate } from "date-fns";
 
-export default function CancellationMethodInformationCardPresentation({
+export function CancellationMethodDetailCardPresentation({
   cancellationMethod,
 }: {
   cancellationMethod: CancellationMethodDetail;

@@ -25,7 +25,7 @@ import { deleteCancellationMethod } from "./_lib/actions";
 import { cancellationMethodsAtom } from "./_lib/jotai";
 import { CancellationMethodLinkIcon } from "./cancellation-method-link-icon";
 
-export default function CancellationMethodCard({
+export function CancellationMethodSummaryCard({
   cancellationMethod,
 }: {
   cancellationMethod: CancellationMethodDetail;

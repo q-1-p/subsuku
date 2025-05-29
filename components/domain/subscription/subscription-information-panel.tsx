@@ -4,7 +4,7 @@ import Link from "next/link";
 import SubscriptionBillingInformationCardPresentation from "@/components/domain/subscription/subscription-billing-information-card.presentation";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CancellationMethodInformationCardContainer from "../cancellation-method/cancellation-method-information-card.container";
+import { CancellationMethodDetailCardContainer } from "../cancellation-method/cancellation-method-detail-card.container";
 import { fetchSubscription } from "./_lib/fetcher";
 import SubscriptionDeleteIcon from "./subscription-delete-icon";
 
@@ -64,7 +64,7 @@ export default async function SubscriptionInformationPanel({
                 />
               </TabsContent>
               <TabsContent value="cancel">
-                <CancellationMethodInformationCardContainer
+                <CancellationMethodDetailCardContainer
                   cancellationMethodId={subscription.linkCancellationMethodId}
                 />
               </TabsContent>

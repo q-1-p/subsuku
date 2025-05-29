@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { CancellationMethodForm } from "@/components/domain/cancellation-method/cancellation-method-form.container";
+import { CancellationMethodEditForm } from "@/components/domain/cancellation-method/cancellation-method-edit-form.container";
 import { SiteHeader } from "@/components/domain/site/site-header";
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function Page() {
             <div className="flex items-center justify-between">
               <h1 className="font-bold text-2xl">解約方法を投稿</h1>
             </div>
-            <CancellationMethodForm />
+            <CancellationMethodEditForm />
           </div>
         </div>
       </main>
