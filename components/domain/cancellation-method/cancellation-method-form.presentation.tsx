@@ -49,10 +49,13 @@ const cancellationMethodEditFormScheme = type({
 export function CancellationMethodFormPresentation({
   cancellationMethod,
   subscriptions,
+  subscriptionNameSuggestions,
 }: {
   cancellationMethod?: CancellationMethodDetail;
   subscriptions: SubscriptionDetail[];
+  subscriptionNameSuggestions: Promise<string[]>;
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
     // server actionsを実行している場合、tanstack formが検知できないので、手動で変更する
     form.state.canSubmit = false;
@@ -75,6 +78,10 @@ export function CancellationMethodFormPresentation({
     form.state.canSubmit = true;
   }, {});
   const [linkToSubscription, setLinkToSubscription] = useState(false);
+
+  // 入力候補関連のstate
+  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -173,21 +180,86 @@ export function CancellationMethodFormPresentation({
           <div className="grid grid-cols-1 gap-4">
             <div className="space-y-2">
               <form.Field name="name">
-                {(field) => (
-                  <>
-                    <Label htmlFor="name">
-                      サービス名 <span className="text-red-500">*</span>
-                    </Label>
-                    <Input
-                      className="rounded-xl"
-                      name="name"
-                      placeholder="Example"
-                      value={field.state.value}
-                      onChange={(e) => field.setValue(e.target.value)}
-                      required
-                    />
-                  </>
-                )}
+                {(field) => {
+                  // 入力値に基づいて候補をフィルタリングする関数
+                  const handleInputChange = async (
+                    e: React.ChangeEvent<HTMLInputElement>,
+                  ) => {
+                    const value = e.target.value;
+                    field.handleChange(value);
+
+                    if (value.length > 0) {
+                      const filtered = (
+                        await subscriptionNameSuggestions
+                      ).filter((suggestion) =>
+                        suggestion.toLowerCase().includes(value.toLowerCase()),
+                      );
+                      setFilteredSuggestions(filtered);
+                      setShowSuggestions(filtered.length > 0);
+                    } else {
+                      setShowSuggestions(false);
+                    }
+                  };
+
+                  // 候補をクリックした時の処理
+                  const handleSuggestionClick = (suggestion: string) => {
+                    field.handleChange(suggestion);
+                    setShowSuggestions(false);
+                  };
+
+                  return (
+                    <>
+                      <Label htmlFor="name">
+                        サブスクリプション名{" "}
+                        <span className="text-red-500">*</span>
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          name="name"
+                          placeholder="例）Netflix"
+                          value={field.state.value}
+                          onChange={handleInputChange}
+                          onFocus={() => {
+                            if (
+                              field.state.value &&
+                              filteredSuggestions.length > 0
+                            ) {
+                              setShowSuggestions(true);
+                            }
+                          }}
+                          onBlur={() => {
+                            // 少し遅延させて候補をクリックできるようにする
+                            setTimeout(() => setShowSuggestions(false), 200);
+                          }}
+                          required
+                        />
+                        {showSuggestions && filteredSuggestions.length > 0 && (
+                          <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-300 bg-white shadow-lg">
+                            <ul className="max-h-60 overflow-auto py-1 text-base">
+                              {filteredSuggestions.map((suggestion) => (
+                                <button
+                                  key={`suggestion-${suggestion}`}
+                                  className="w-full cursor-pointer px-4 py-2 text-left hover:bg-gray-100"
+                                  onClick={() =>
+                                    handleSuggestionClick(suggestion)
+                                  }
+                                  type="button"
+                                >
+                                  {suggestion}
+                                </button>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                      {0 < field.state.meta.errors.length && (
+                        <p className="pt-2 text-red-500">
+                          サービス名を入力してください
+                        </p>
+                      )}
+                    </>
+                  );
+                }}
               </form.Field>
             </div>
           </div>

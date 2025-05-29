@@ -1,6 +1,9 @@
 import "server-only";
 
-import { fetchSubscriptions } from "../subscription/_lib/fetcher";
+import {
+  fetchSubscriptionSuggestions,
+  fetchSubscriptions,
+} from "../subscription/_lib/fetcher";
 import { fetchCancellationMethod } from "./_lib/fetcher";
 import { CancellationMethodFormPresentation } from "./cancellation-method-form.presentation";
 
@@ -16,6 +19,7 @@ export async function CancellationMethodForm({
     <CancellationMethodFormPresentation
       cancellationMethod={cancellationMethod}
       subscriptions={subscriptions}
+      subscriptionNameSuggestions={fetchSubscriptionSuggestions()}
     />
   );
 }

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import CancellationMethodSubmissionPanel from "@/components/domain/cancellation-method/cancellation-method-submission-panel";
-import CancellationMethodsPanel from "@/components/domain/cancellation-method/cancellation-methods-panel.container";
+import { CancellationMethodsPanel } from "@/components/domain/cancellation-method/cancellation-methods-list-panel.container";
 import { SiteHeader } from "@/components/domain/site/site-header";
 import { Button } from "@/components/ui/button";
 

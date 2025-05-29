@@ -35,7 +35,7 @@ const scheme = type({
   onlyBookmarked: "boolean",
 });
 
-export default function CancellationMethodsPanelPresentation() {
+export function CancellationMethodsPanelPresentation() {
   const [cancellationMethods, action] = useActionState<
     CancellationMethodDetail[],
     FormData
