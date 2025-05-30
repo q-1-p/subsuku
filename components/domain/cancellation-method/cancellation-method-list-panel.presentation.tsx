@@ -39,7 +39,18 @@ export function CancellationMethodListPanelPresentation() {
   const [cancellationMethods, action] = useActionState<
     CancellationMethodDetail[],
     FormData
-  >(searchCancellationMethods, []);
+  >((_, formData) => {
+    form.state.canSubmit = false;
+    form.state.isSubmitting = true;
+
+    return searchCancellationMethods([], formData).then(
+      (cancellationMethods) => {
+        form.state.isSubmitting = false;
+        form.state.canSubmit = true;
+        return cancellationMethods;
+      },
+    );
+  }, []);
   const [sortedCancellationMethods, setSortedCancellationMethods] = useAtom(
     cancellationMethodsAtom,
   );
@@ -60,24 +71,30 @@ export function CancellationMethodListPanelPresentation() {
   const [sort, setSort] = useState<SortItem>(sortItem.none);
 
   useEffect(() => {
-    let temp = cancellationMethods ?? [];
-
     switch (sort) {
       case sortItem.name:
-        temp = temp.sort((a, b) =>
-          a.subscriptionName.localeCompare(b.subscriptionName),
+        setSortedCancellationMethods(
+          [...sortedCancellationMethods].sort((a, b) =>
+            a.subscriptionName.localeCompare(b.subscriptionName),
+          ),
         );
         break;
       case sortItem.bookmark:
-        temp = temp.sort((a, b) => b.bookmarkCount - a.bookmarkCount);
+        setSortedCancellationMethods(
+          [...sortedCancellationMethods].sort(
+            (a, b) => b.bookmarkCount - a.bookmarkCount,
+          ),
+        );
         break;
       case sortItem.good:
-        temp = temp.sort((a, b) => b.goodCount - a.goodCount);
+        setSortedCancellationMethods(
+          [...sortedCancellationMethods].sort(
+            (a, b) => b.goodCount - a.goodCount,
+          ),
+        );
         break;
     }
-
-    setSortedCancellationMethods(temp);
-  }, [cancellationMethods, sort, setSortedCancellationMethods]);
+  }, [sort, setSortedCancellationMethods, sortedCancellationMethods]);
 
   return (
     <div>
@@ -154,6 +171,7 @@ export function CancellationMethodListPanelPresentation() {
               <div className="flex gap-2 sm:flex-row sm:items-center">
                 <div className="flex items-center space-x-2">
                   <Button
+                    type="button"
                     variant={sort === sortItem.name ? "secondary" : "outline"}
                     className="rounded-xl"
                     onClick={() =>
@@ -167,6 +185,7 @@ export function CancellationMethodListPanelPresentation() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Button
+                    type="button"
                     variant={
                       sort === sortItem.bookmark ? "secondary" : "outline"
                     }
@@ -184,6 +203,7 @@ export function CancellationMethodListPanelPresentation() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Button
+                    type="button"
                     variant={sort === sortItem.good ? "secondary" : "outline"}
                     className="rounded-xl"
                     onClick={() =>
@@ -197,14 +217,16 @@ export function CancellationMethodListPanelPresentation() {
                 </div>
               </div>
               <div>
-                <form.Subscribe selector={(state) => [state.isSubmitting]}>
-                  {([isSubmitting]) => (
+                <form.Subscribe
+                  selector={(state) => [state.canSubmit, state.isSubmitting]}
+                >
+                  {([canSubmit, isSubmitting]) => (
                     <>
                       <Button
                         type="submit"
                         variant="default"
                         className="rounded-xl"
-                        disabled={isSubmitting}
+                        disabled={!canSubmit}
                       >
                         {isSubmitting ? "検索中..." : "検索する"}
                       </Button>
