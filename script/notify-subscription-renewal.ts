@@ -56,8 +56,7 @@ export const sendMail = async () => {
           <p>さぶ空く - サブスクリプション管理サービス</p>
           <p>サービスURL: https://substrack.jp</p>
           <p>問い合わせ先: https://substrack.jp/contact</p>
-          <p>配信停止: http://substrack.jp/app/dashboard ※登録しているサブスクを全て削除してください</p>
-          <p>© 2025 さぶ空く. All rights reserved.</p>
+          <p>配信停止: http://substrack.jp/app/dashboard から、登録しているサブスクを全て削除してください</p>
           <p>---------------------</p>
         </body>
       </html>`,

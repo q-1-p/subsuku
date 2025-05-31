@@ -43,7 +43,7 @@ async function seedUser(): Promise<string> {
       .insert(usersTable)
       .values({
         id: uuidv4(),
-        mailAddress: "test@example.com",
+        mailAddress: "substrack.dev.dominion742@aleeas.com",
         clerkId: process.env.TEST_CLERK_USER_ID as string,
       })
       .returning();
