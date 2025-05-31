@@ -22,3 +22,15 @@ export async function PATCH(req: NextRequest) {
 
   return NextResponse.json({}, { status: result ? 200 : 400 });
 }
+
+export async function DELETE(req: NextRequest) {
+  const clerkUserId = req.headers.get("Authorization") as string;
+  const userIdResult = await userRepository.findId(clerkUserId);
+  if (userIdResult.type === err) {
+    return NextResponse.json({}, { status: 401 });
+  }
+
+  const result = await userRepository.delete(userIdResult.value, clerkUserId);
+
+  return NextResponse.json({}, { status: result ? 200 : 400 });
+}

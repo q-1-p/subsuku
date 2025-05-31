@@ -20,3 +20,18 @@ export async function updateEmail(
     body: formData,
   }).then((res) => res.ok);
 }
+
+export async function deleteAccount(): Promise<boolean> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  return fetch(`${process.env.SITE_URL}api/user`, {
+    method: "DELETE",
+    headers: {
+      Authorization: userId,
+    },
+  }).then((res) => res.ok);
+}

@@ -1,11 +1,12 @@
 "use client";
 
+import { Label } from "@radix-ui/react-label";
 import { useForm, useTransform } from "@tanstack/react-form";
 import { type } from "arktype";
 import { useActionState } from "react";
 import { toast } from "sonner";
 
-import { Label } from "@radix-ui/react-label";
+import { mailAddressSchema } from "@/domain/type";
 import { Button } from "../../ui/button";
 import {
   Card,
@@ -15,34 +16,56 @@ import {
   CardTitle,
 } from "../../ui/card";
 import { Input } from "../../ui/input";
-import { updateEmail } from "./_lib/actions";
+import { deleteAccount, updateEmail } from "./_lib/actions";
 
 const validator = type({
-  mailAddress: "string.email",
+  mailAddress: mailAddressSchema,
 });
 
 export function UserSettingBoard() {
-  const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
-    // server actionsを実行している場合、tanstack formが検知できないので、手動で変更する
-    form.state.canSubmit = false;
-    form.state.isSubmitting = true;
+  const [, saveSettings] = useActionState(
+    async (_: unknown, formData: FormData) => {
+      // server actionsを実行している場合、tanstack formが検知できないので、手動で変更する
+      form.state.canSubmit = false;
+      form.state.isSubmitting = true;
 
-    const result = await updateEmail(undefined, formData);
-    if (result === true) {
-      toast("メールアドレスを更新しました");
-    } else if (result === false) {
-      toast("メールアドレスの更新に失敗しました");
-    }
+      if (await updateEmail(undefined, formData)) {
+        toast("メールアドレスを更新しました");
+      } else {
+        toast("メールアドレスの更新に失敗しました");
+      }
 
-    form.state.isSubmitting = false;
-    form.state.canSubmit = true;
-  }, {});
+      form.state.isSubmitting = false;
+      form.state.canSubmit = true;
+    },
+    {},
+  );
+
+  const [, deleteAccountAction] = useActionState(
+    async (_: unknown, _formData: FormData) => {
+      form.state.canSubmit = false;
+      form.state.isSubmitting = true;
+
+      if (confirm("アカウントを削除します。よろしいですか？")) {
+        if (await deleteAccount()) {
+          alert("アカウントを削除しました");
+          window.location.href = "/";
+        } else {
+          alert("アカウントの削除に失敗しました");
+        }
+      }
+
+      form.state.isSubmitting = false;
+      form.state.canSubmit = true;
+    },
+    {},
+  );
 
   const form = useForm({
     defaultValues: {
       mailAddress: "",
     },
-    transform: useTransform((baseForm) => baseForm, [action]),
+    transform: useTransform((baseForm) => baseForm, [saveSettings]),
     validators: {
       onMount: validator,
       onChangeAsync: validator,
@@ -57,7 +80,7 @@ export function UserSettingBoard() {
         <CardDescription>設定を変更してください</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={action as never} className="gap-2 space-y-6 p-4">
+        <form className="gap-2 space-y-6 p-4">
           <form.Field name="mailAddress">
             {(field) => (
               <div className="flex flex-col gap-2">
@@ -77,12 +100,26 @@ export function UserSettingBoard() {
             )}
           </form.Field>
 
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <div className="mr-2">
+              <Button
+                variant="destructive"
+                className="text-white"
+                formAction={deleteAccountAction as never}
+                disabled={form.state.isSubmitting}
+              >
+                アカウント削除
+              </Button>
+            </div>
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
             >
               {([canSubmit, isSubmitting]) => (
-                <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                <Button
+                  type="submit"
+                  disabled={!canSubmit || isSubmitting}
+                  formAction={saveSettings as never}
+                >
                   {isSubmitting ? "保存中..." : "保存"}
                 </Button>
               )}

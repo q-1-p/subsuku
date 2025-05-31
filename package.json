@@ -12,6 +12,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^5.1.6",
     "@clerk/nextjs": "^6.20.1",
     "@neondatabase/serverless": "^1.0.0",
     "@next/bundle-analyzer": "^15.3.2",
