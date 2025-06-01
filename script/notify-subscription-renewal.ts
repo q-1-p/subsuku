@@ -52,7 +52,7 @@ ${subscriptionNames.map((name) => `・${name}`).join("\n")}
 ---------------------
 配信元:       さぶ空く - サブスクリプション管理サービス
 サービスURL:  https://substrack.jp
-問い合わせ先: https://substrack.jp/contact
+問い合わせ先: https://tricky-chokeberry-957.notion.site/2051ac83cb968081bd9eecb412a31e92?pvs=105
 配信停止:     http://substrack.jp/app/dashboard から、登録しているサブスクを全て削除してください
 ---------------------`,
     };

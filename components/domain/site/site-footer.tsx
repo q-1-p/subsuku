@@ -21,7 +21,7 @@ export default function SiteFooter() {
             プライバシーポリシー
           </Link>
           <Link
-            href="/contact"
+            href="https://tricky-chokeberry-957.notion.site/2051ac83cb968081bd9eecb412a31e92?pvs=105"
             className="text-gray-500 text-sm hover:underline dark:text-gray-400"
           >
             お問い合わせ
