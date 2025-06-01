@@ -45,21 +45,16 @@ export const sendMail = async () => {
       from: `さぶ空く <${process.env.MAIL_ADDRESS_FOR_NOTIFICATION}>`,
       to: mailAddress,
       subject: "サブスクリプション更新通知メール",
-      html: `
-      <html>
-        <body>
-          <p>明日、以下のサブスクリプションが更新されます</p>
-          <ul>
-            ${subscriptionNames.map((name) => `<li>${name}</li>`).join("")}
-          </ul>
-          <p>---------------------</p>
-          <p>さぶ空く - サブスクリプション管理サービス</p>
-          <p>サービスURL: https://substrack.jp</p>
-          <p>問い合わせ先: https://substrack.jp/contact</p>
-          <p>配信停止: http://substrack.jp/app/dashboard から、登録しているサブスクを全て削除してください</p>
-          <p>---------------------</p>
-        </body>
-      </html>`,
+      text: `明日、以下のサブスクリプションが更新されます
+
+${subscriptionNames.map((name) => `・${name}`).join("\n")}
+
+---------------------
+配信元:       さぶ空く - サブスクリプション管理サービス
+サービスURL:  https://substrack.jp
+問い合わせ先: https://substrack.jp/contact
+配信停止:     http://substrack.jp/app/dashboard から、登録しているサブスクを全て削除してください
+---------------------`,
     };
 
     await transporter.sendMail(mailOptions);
