@@ -115,6 +115,8 @@ export function CancellationMethodSummaryCard({
               "",
               "注意事項:",
               cancellationMethod.precautions,
+              "その他:",
+              cancellationMethod.freeText,
               "",
               `解約先: ${cancellationMethod.urlToCancel}`,
             ].join("\n")}
