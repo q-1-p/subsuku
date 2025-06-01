@@ -37,7 +37,7 @@ export default function Home() {
               </div>
               <div className="flex items-center justify-center">
                 <Image
-                  src="/img/dashboard.webp"
+                  src="/img/preview.webp"
                   className="w-full rounded-lg border border-gray-400 object-cover"
                   width={550}
                   height={350}
