@@ -163,9 +163,12 @@ export class CancellationMethodRepository
 
     return db.query.cancellationMethodsTable
       .findMany({
-        where: (cancellationMethodsTable, { and, eq, like }) =>
+        where: (cancellationMethodsTable, { and, eq, ilike }) =>
           and(
-            like(cancellationMethodsTable.subscriptionName, `%${searchQuery}%`),
+            ilike(
+              cancellationMethodsTable.subscriptionName,
+              `%${searchQuery}%`,
+            ),
             onlyMine
               ? eq(cancellationMethodsTable.createdUserId, userId)
               : undefined,

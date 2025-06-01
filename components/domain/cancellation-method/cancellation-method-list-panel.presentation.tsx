@@ -2,6 +2,7 @@
 
 import { useForm, useTransform } from "@tanstack/react-form";
 import { type } from "arktype";
+import { useAtom } from "jotai";
 import { Search } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
 
@@ -15,8 +16,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import type { CancellationMethodDetail } from "@/domain/type";
-import { useAtom } from "jotai";
 import { searchCancellationMethods } from "./_lib/actions";
 import { cancellationMethodsAtom } from "./_lib/jotai";
 import { CancellationMethodSummaryCard } from "./cancellation-method-summary-card";
@@ -36,31 +35,26 @@ const scheme = type({
 });
 
 export function CancellationMethodListPanelPresentation() {
-  const [cancellationMethods, action] = useActionState<
-    CancellationMethodDetail[],
-    FormData
-  >((_, formData) => {
+  const [, action] = useActionState(async (_: unknown, formData: FormData) => {
     form.state.canSubmit = false;
     form.state.isSubmitting = true;
 
-    return searchCancellationMethods([], formData).then(
-      (cancellationMethods) => {
-        form.state.isSubmitting = false;
-        form.state.canSubmit = true;
-        return cancellationMethods;
-      },
-    );
+    setSortedCancellationMethods(await searchCancellationMethods([], formData));
+
+    form.state.isSubmitting = false;
+    form.state.canSubmit = true;
   }, []);
   const [sortedCancellationMethods, setSortedCancellationMethods] = useAtom(
     cancellationMethodsAtom,
   );
+
   const form = useForm({
     defaultValues: {
       searchQuery: "",
       onlyMine: false,
       onlyBookmarked: false,
     },
-    transform: useTransform((baseForm) => baseForm, [cancellationMethods]),
+    transform: useTransform((baseForm) => baseForm, [action]),
     validators: {
       onMount: scheme,
       onChangeAsync: scheme,
@@ -71,30 +65,25 @@ export function CancellationMethodListPanelPresentation() {
   const [sort, setSort] = useState<SortItem>(sortItem.none);
 
   useEffect(() => {
-    switch (sort) {
-      case sortItem.name:
-        setSortedCancellationMethods(
-          [...sortedCancellationMethods].sort((a, b) =>
+    if (sort === sortItem.none) return;
+
+    setSortedCancellationMethods((currentMethods) => {
+      switch (sort) {
+        case sortItem.name:
+          return [...currentMethods].sort((a, b) =>
             a.subscriptionName.localeCompare(b.subscriptionName),
-          ),
-        );
-        break;
-      case sortItem.bookmark:
-        setSortedCancellationMethods(
-          [...sortedCancellationMethods].sort(
+          );
+        case sortItem.bookmark:
+          return [...currentMethods].sort(
             (a, b) => b.bookmarkCount - a.bookmarkCount,
-          ),
-        );
-        break;
-      case sortItem.good:
-        setSortedCancellationMethods(
-          [...sortedCancellationMethods].sort(
-            (a, b) => b.goodCount - a.goodCount,
-          ),
-        );
-        break;
-    }
-  }, [sort, setSortedCancellationMethods, sortedCancellationMethods]);
+          );
+        case sortItem.good:
+          return [...currentMethods].sort((a, b) => b.goodCount - a.goodCount);
+        default:
+          return currentMethods;
+      }
+    });
+  }, [sort, setSortedCancellationMethods]);
 
   return (
     <div>
@@ -239,35 +228,20 @@ export function CancellationMethodListPanelPresentation() {
             <Separator />
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              <form.Subscribe selector={(state) => [state.isSubmitting]}>
-                {([isSubmitting]) => {
-                  if (isSubmitting) {
-                    return (
-                      <div className="col-span-full flex h-24 items-center justify-center">
-                        <p className="text-muted-foreground">検索中...</p>
-                      </div>
-                    );
-                  }
-                  if (0 < sortedCancellationMethods.length) {
-                    return sortedCancellationMethods.map(
-                      (cancellationMethod) => (
-                        <CancellationMethodSummaryCard
-                          key={cancellationMethod.id}
-                          cancellationMethod={cancellationMethod}
-                        />
-                      ),
-                    );
-                  }
-
-                  return (
-                    <div className="col-span-full flex h-24 items-center justify-center">
-                      <p className="text-muted-foreground">
-                        該当するサービスはありません
-                      </p>
-                    </div>
-                  );
-                }}
-              </form.Subscribe>
+              {0 < sortedCancellationMethods.length ? (
+                sortedCancellationMethods.map((cancellationMethod) => (
+                  <CancellationMethodSummaryCard
+                    key={cancellationMethod.id}
+                    cancellationMethod={cancellationMethod}
+                  />
+                ))
+              ) : (
+                <div className="col-span-full flex h-24 items-center justify-center">
+                  <p className="text-muted-foreground">
+                    該当するサービスはありません
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>

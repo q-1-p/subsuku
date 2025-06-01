@@ -95,7 +95,15 @@ export function CancellationMethodLinkIcon({
             </form.Field>
           </div>
           <DialogFooter className="">
-            <Button type="submit">結びつける</Button>
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+            >
+              {([canSubmit, isSubmitting]) => (
+                <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                  {isSubmitting ? "結びつけ中..." : "結びつける"}
+                </Button>
+              )}
+            </form.Subscribe>
           </DialogFooter>
         </form>
       </DialogContent>
