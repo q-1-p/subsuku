@@ -1,10 +1,10 @@
 "use client";
 
-import { useForm, useTransform } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { type } from "arktype";
 import { useAtom } from "jotai";
 import { Search } from "lucide-react";
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -35,15 +35,6 @@ const scheme = type({
 });
 
 export function CancellationMethodListPanelPresentation() {
-  const [, action] = useActionState(async (_: unknown, formData: FormData) => {
-    form.state.canSubmit = false;
-    form.state.isSubmitting = true;
-
-    setSortedCancellationMethods(await searchCancellationMethods([], formData));
-
-    form.state.isSubmitting = false;
-    form.state.canSubmit = true;
-  }, []);
   const [sortedCancellationMethods, setSortedCancellationMethods] = useAtom(
     cancellationMethodsAtom,
   );
@@ -54,7 +45,6 @@ export function CancellationMethodListPanelPresentation() {
       onlyMine: false,
       onlyBookmarked: false,
     },
-    transform: useTransform((baseForm) => baseForm, [action]),
     validators: {
       onMount: scheme,
       onChangeAsync: scheme,
@@ -63,6 +53,26 @@ export function CancellationMethodListPanelPresentation() {
   });
 
   const [sort, setSort] = useState<SortItem>(sortItem.none);
+  const [canSubmit, setCanSubmit] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submit = async () => {
+    setCanSubmit(false);
+    setIsSubmitting(true);
+
+    const formData = new FormData();
+    formData.append("searchQuery", form.state.values.searchQuery);
+    formData.append("onlyMine", form.state.values.onlyMine ? "on" : "");
+    formData.append(
+      "onlyBookmarked",
+      form.state.values.onlyBookmarked ? "on" : "",
+    );
+
+    setSortedCancellationMethods(await searchCancellationMethods([], formData));
+
+    setIsSubmitting(false);
+    setCanSubmit(true);
+  };
 
   useEffect(() => {
     if (sort === sortItem.none) return;
@@ -94,10 +104,7 @@ export function CancellationMethodListPanelPresentation() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <form
-              action={action as never}
-              className="grid flex-1 grid-cols-1 gap-4 md:flex md:items-center md:justify-between"
-            >
+            <form className="grid flex-1 grid-cols-1 gap-4 md:flex md:items-center md:justify-between">
               <div
                 id="search-form"
                 className="grid flex-1 grid-cols-1 items-center gap-2 space-x-2 md:flex"
@@ -206,22 +213,15 @@ export function CancellationMethodListPanelPresentation() {
                 </div>
               </div>
               <div>
-                <form.Subscribe
-                  selector={(state) => [state.canSubmit, state.isSubmitting]}
+                <Button
+                  type="button"
+                  variant="default"
+                  className="rounded-xl"
+                  disabled={!canSubmit}
+                  onClick={submit}
                 >
-                  {([canSubmit, isSubmitting]) => (
-                    <>
-                      <Button
-                        type="submit"
-                        variant="default"
-                        className="rounded-xl"
-                        disabled={!canSubmit}
-                      >
-                        {isSubmitting ? "検索中..." : "検索する"}
-                      </Button>
-                    </>
-                  )}
-                </form.Subscribe>
+                  {isSubmitting ? "検索中..." : "検索する"}
+                </Button>
               </div>
             </form>
 
