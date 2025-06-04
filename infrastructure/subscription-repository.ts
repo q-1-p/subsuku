@@ -291,17 +291,17 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .select({
         id: subscriptionsTable.id,
         nextUpdate: subscriptionsTable.nextUpdate,
-        intervalCycle: subscriptionsTable.updateCycleNumber,
-        intervalId: subscriptionsTable.updateCycleUnit,
+        updateCycleNumber: subscriptionsTable.updateCycleNumber,
+        updateCycleUnit: subscriptionsTable.updateCycleUnit,
       })
       .from(subscriptionsTable)
       .where(lt(subscriptionsTable.nextUpdate, today));
 
     for (const subscription of updateSubscriptions) {
       const nextUpdate =
-        subscription.intervalId === timeUnit.month
-          ? addMonths(subscription.nextUpdate, subscription.intervalCycle)
-          : addYears(subscription.nextUpdate, subscription.intervalCycle);
+        subscription.updateCycleUnit === timeUnit.month
+          ? addMonths(subscription.nextUpdate, subscription.updateCycleNumber)
+          : addYears(subscription.nextUpdate, subscription.updateCycleNumber);
 
       await db
         .update(subscriptionsTable)
