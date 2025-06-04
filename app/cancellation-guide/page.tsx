@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   title: "サブスクリプション解約ガイド | さぶ空く",
   description:
     "サブスクリプション解約ガイドページです。解約方法を検索したり、サブスクリプションに解約方法を結びつけたりできます。",
+  robots: {
+    index: true,
+    follow: false,
+  },
 };
 
 export default function Page() {

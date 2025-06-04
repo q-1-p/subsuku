@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: "運営者情報 | さぶ空く",
   description:
     "運営者情報ページです。代表者名、プロフィール、メールアドレスなどをご確認いただけます。",
+  robots: {
+    index: true,
+    follow: false,
+  },
 };
 
 export default function CompanyPage() {

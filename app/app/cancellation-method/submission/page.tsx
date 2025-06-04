@@ -6,6 +6,10 @@ import { SiteHeader } from "@/components/domain/site/site-header";
 export const metadata: Metadata = {
   title: "解約方法投稿 | さぶ空く",
   description: "解約方法投稿ページです。解約方法を投稿できます。",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function Page() {

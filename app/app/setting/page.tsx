@@ -1,5 +1,16 @@
+import type { Metadata } from "next";
+
 import { SiteHeader } from "@/components/domain/site/site-header";
 import { UserSettingBoard } from "@/components/domain/user/user-setting-board";
+
+export const metadata: Metadata = {
+  title: "設定 | さぶ空く",
+  description: "設定ページです。設定を変更できます。",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function SettingPage() {
   return (

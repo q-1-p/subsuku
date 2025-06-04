@@ -7,6 +7,10 @@ export const metadata: Metadata = {
   title: "サブスクリプション編集 | さぶ空く",
   description:
     "サブスクリプション編集ページです。サブスクリプションの詳細を修正できます。",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function Page({

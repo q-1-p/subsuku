@@ -9,6 +9,10 @@ import { SiteHeader } from "@/components/domain/site/site-header";
 export const metadata: Metadata = {
   title: "利用規約 | さぶ空く",
   description: "利用規約ページです。利用規約を確認できます。",
+  robots: {
+    index: true,
+    follow: false,
+  },
 };
 
 export default function LegalPage() {

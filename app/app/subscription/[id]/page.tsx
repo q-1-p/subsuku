@@ -7,6 +7,10 @@ export const metadata: Metadata = {
   title: "サブスクリプション詳細 | さぶ空く",
   description:
     "サブスクリプション詳細ページです。サブスクリプションの詳細を確認できます。",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function SubscriptionDetailPage({

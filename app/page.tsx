@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
-import Image from "next/image"; // Add this line
+import type { Metadata } from "next";
+import Image from "next/image";
 
 import LoginDialog from "@/components/case/login-dialog";
 import BellIcon from "@/components/common/bell-icon";
@@ -8,6 +9,15 @@ import ClockIcon from "@/components/common/clock-icon";
 import FunctionCard from "@/components/common/function-card";
 import { SiteHeader } from "@/components/domain/site/site-header";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "さぶ空く",
+  description: "サブスクの管理サービスです。",
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function Home() {
   return (
