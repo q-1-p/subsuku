@@ -2,7 +2,7 @@ name: Notify subscription renewal
 
 on:
   schedule:
-    - cron: '0 15 * * *'
+    - cron: '5 15 * * *'
   workflow_dispatch:
 
 jobs:
