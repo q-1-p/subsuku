@@ -20,14 +20,17 @@ const cancellationMethodBrand = Symbol();
 export const userIdSchema = type("string.uuid");
 export const mailAddressSchema = type("string.email");
 
+export const currencyIdSchema = type("156 | 392 | 826 | 840 | 978 | 1000"); // バリデーション時に再起エラーになるので直接定義
+
 export const subscriptionIdSchema = type("string.uuid");
 export const subscriptionNameSchema = type("0 < string < 32");
 export const updateCycleSchema = type({
-  number: "number",
+  number: "number > 0",
   unit: "0 | 1", // バリデーション時に再起エラーになるので直接定義
 });
 export const cancellationMethodIdSchema = type("string.uuid");
 export const cancellationMethodUrlSchema = type("string.url");
+export const cancellationMethodStepsSchema = type("string[] > 0");
 export const cancellationMethodPrecautionsSchema = type("string");
 export const cancellationMethodFreeTextSchema = type("string");
 
@@ -47,7 +50,7 @@ export const subscriptionSchema = type({
   name: subscriptionNameSchema,
   active: "boolean",
   amount: "number",
-  currencyId: "156 | 392 | 826 | 840 | 978 | 1000", // バリデーション時に再起エラーになるので直接定義
+  currencyId: currencyIdSchema,
   nextUpdate: "Date",
   updateCycle: updateCycleSchema,
 });

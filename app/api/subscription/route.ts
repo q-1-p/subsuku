@@ -55,8 +55,8 @@ export async function POST(req: NextRequest) {
     currencyId: Number(formData.get("currencyId")),
     nextUpdate: new Date(formData.get("nextUpdate") as string),
     updateCycle: {
-      number: Number(formData.get("intervalCycle")),
-      unit: Number(formData.get("intervalId")),
+      number: Number(formData.get("updateCycle.number")),
+      unit: Number(formData.get("updateCycle.unit")),
     },
   });
   if (subscriptionRegistered.type === err) {
@@ -88,8 +88,8 @@ export async function PUT(req: NextRequest) {
     currencyId: Number(formData.get("currencyId")),
     nextUpdate: new Date(formData.get("nextUpdate") as string),
     updateCycle: {
-      number: Number(formData.get("intervalCycle")),
-      unit: Number(formData.get("intervalId")),
+      number: Number(formData.get("updateCycle.number")),
+      unit: Number(formData.get("updateCycle.unit")),
     },
   });
   if (subscriptionUpdated.type === err) {

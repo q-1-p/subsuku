@@ -37,7 +37,10 @@ import {
   type SubscriptionDetail,
   type TimeUnit,
   currencyId,
+  currencyIdSchema,
+  subscriptionNameSchema,
   timeUnit,
+  updateCycleSchema,
 } from "@/domain/type";
 import { registerSubscription, updateSubscription } from "./_lib/actions";
 
@@ -51,11 +54,10 @@ const currencyNames = {
 } as const;
 
 const subscriptionFormScheme = type({
-  name: "0 < string < 32",
+  name: subscriptionNameSchema,
   amount: type("0 < string < 20").narrow((value) => 100000000 > +value),
-  currencyId: "number.integer",
-  intervalCycle: "number.integer > 0",
-  intervalId: "number.integer",
+  currencyId: currencyIdSchema,
+  updateCycle: updateCycleSchema,
   nextUpdate: "string > 8",
 });
 
@@ -100,8 +102,10 @@ export function SubscriptionEditFormPresentation({
       name: subscription?.name ?? "",
       amount: subscription?.amount.toString() ?? "100",
       currencyId: subscription?.currencyId ?? currencyId.jpy,
-      intervalCycle: subscription?.updateCycle.number ?? 1,
-      intervalId: subscription?.updateCycle.unit ?? timeUnit.year,
+      updateCycle: subscription?.updateCycle ?? {
+        number: 1,
+        unit: timeUnit.year,
+      },
       nextUpdate: subscription?.nextUpdate.toString() ?? "",
     },
     transform: useTransform((baseForm) => baseForm, [action]),
@@ -283,11 +287,11 @@ export function SubscriptionEditFormPresentation({
             <div className="col-span-1">
               <h4 className="pb-3">請求サイクル</h4>
               <div className="flex gap-2">
-                <form.Field name="intervalCycle">
+                <form.Field name="updateCycle.number">
                   {(field) => (
                     <div className="relative">
                       <Input
-                        name="intervalCycle"
+                        name="updateCycle.number"
                         min={1}
                         max={99}
                         value={field.state.value}
@@ -305,10 +309,10 @@ export function SubscriptionEditFormPresentation({
                     </div>
                   )}
                 </form.Field>
-                <form.Field name="intervalId">
+                <form.Field name="updateCycle.unit">
                   {(field) => (
                     <Select
-                      name="intervalId"
+                      name="updateCycle.unit"
                       defaultValue={`${field.state.value}`}
                       onValueChange={(e) => field.handleChange(+e as TimeUnit)}
                     >

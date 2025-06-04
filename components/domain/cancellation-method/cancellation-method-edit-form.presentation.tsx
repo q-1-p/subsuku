@@ -26,9 +26,13 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import type {
-  CancellationMethodDetail,
-  SubscriptionDetail,
+import {
+  type CancellationMethodDetail,
+  type SubscriptionDetail,
+  cancellationMethodFreeTextSchema,
+  cancellationMethodPrecautionsSchema,
+  cancellationMethodStepsSchema,
+  subscriptionNameSchema,
 } from "@/domain/type";
 import {
   registerCancellationMethod,
@@ -37,12 +41,12 @@ import {
 
 const cancellationMethodEditFormScheme = type({
   id: "string.uuid | string == 0",
-  name: "string > 0",
+  name: subscriptionNameSchema,
   private: "boolean",
   urlToCancel: "string.url | string == 0",
-  steps: "string[] > 0",
-  precautions: "string",
-  freeText: "string",
+  steps: cancellationMethodStepsSchema,
+  precautions: cancellationMethodPrecautionsSchema,
+  freeText: cancellationMethodFreeTextSchema,
   linkSubscriptionId: "string.uuid | string == 0",
 });
 
@@ -254,7 +258,7 @@ export function CancellationMethodEditFormPresentation({
                       </div>
                       {0 < field.state.meta.errors.length && (
                         <p className="pt-2 text-red-500">
-                          サービス名を入力してください
+                          31文字以下の名前を入力してください
                         </p>
                       )}
                     </>
