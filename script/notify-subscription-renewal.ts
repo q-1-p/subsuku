@@ -16,7 +16,10 @@ export const sendMail = async () => {
     },
   });
 
-  const nextDate = formatDate(addDays(new Date(), 1), "yyyy-MM-dd");
+  const nextDate = formatDate(
+    addDays(new Date().toLocaleString("en-US", { timeZone: "Asia/Tokyo" }), 1),
+    "yyyy-MM-dd",
+  );
   const subscriptions: Map<string, string[]> = await db
     .select({
       mailAddress: usersTable.mailAddress,

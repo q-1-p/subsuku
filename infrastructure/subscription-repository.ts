@@ -285,32 +285,6 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       });
   };
 
-  public updateNextUpdate = async () => {
-    const today = format(addDays(new Date(), -1), "yyyy-MM-dd");
-    const updateSubscriptions = await db
-      .select({
-        id: subscriptionsTable.id,
-        nextUpdate: subscriptionsTable.nextUpdate,
-        updateCycleNumber: subscriptionsTable.updateCycleNumber,
-        updateCycleUnit: subscriptionsTable.updateCycleUnit,
-      })
-      .from(subscriptionsTable)
-      .where(lt(subscriptionsTable.nextUpdate, today));
-
-    for (const subscription of updateSubscriptions) {
-      const nextUpdate =
-        subscription.updateCycleUnit === timeUnit.month
-          ? addMonths(subscription.nextUpdate, subscription.updateCycleNumber)
-          : addYears(subscription.nextUpdate, subscription.updateCycleNumber);
-
-      await db
-        .update(subscriptionsTable)
-        .set({
-          nextUpdate: format(nextUpdate, "yyyy-MM-dd"),
-        })
-        .where(eq(subscriptionsTable.id, subscription.id));
-    }
-  };
   public update = (userId: UserId, subscription: Subscription) => {
     return db
       .update(subscriptionsTable)
