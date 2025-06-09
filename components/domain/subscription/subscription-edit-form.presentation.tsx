@@ -370,7 +370,9 @@ export function SubscriptionEditFormPresentation({
                           }
                           onSelect={(date) =>
                             date
-                              ? field.setValue(date.toISOString())
+                              ? field.setValue(
+                                  format(date, "yyyy-MM-dd", { locale: ja }),
+                                )
                               : field.setValue("")
                           }
                           initialFocus

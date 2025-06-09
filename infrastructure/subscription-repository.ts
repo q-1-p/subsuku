@@ -286,7 +286,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
   };
 
   public updateNextUpdate = async () => {
-    const today = format(addDays(new Date(), -1), "yyyy-MM-dd");
+    const today = format(new Date(), "yyyy-MM-dd");
     const updateSubscriptions = await db
       .select({
         id: subscriptionsTable.id,
