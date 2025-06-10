@@ -61,9 +61,10 @@ export default function SubscriptionBillingInformationCardPresentation({
                 請求サイクル
               </h3>
               <p className="text-base">
+                {subscription.updateCycle.number}
                 {subscription.updateCycle.unit === timeUnit.month
-                  ? "月毎"
-                  : "年毎"}
+                  ? "ヶ月"
+                  : "年"}
               </p>
             </div>
           </div>
