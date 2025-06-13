@@ -23,9 +23,7 @@ export async function SiteHeader({
             className="mr-6 flex items-center space-x-2"
           >
             {backLink && <ArrowLeft className="h-4 w-4" />}
-            <span className="font-bold">
-              {backText ?? "さぶ空く（開発中）"}
-            </span>
+            <span className="font-bold">{backText ?? "さぶ空く"}</span>
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
@@ -37,7 +35,7 @@ export async function SiteHeader({
       <SignedOut>
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold">さぶ空く（開発中）</span>
+            <span className="font-bold">さぶ空く</span>
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
