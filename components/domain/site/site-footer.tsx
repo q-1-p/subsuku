@@ -9,6 +9,12 @@ export default function SiteFooter() {
         </p>
         <div className="flex flex-col items-center gap-2 md:flex-row md:gap-4">
           <Link
+            href="/release-note"
+            className="text-gray-500 text-sm hover:underline dark:text-gray-400"
+          >
+            リリースノート
+          </Link>
+          <Link
             href="/legal"
             className="text-gray-500 text-sm hover:underline dark:text-gray-400"
           >
