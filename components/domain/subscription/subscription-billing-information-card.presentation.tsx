@@ -77,8 +77,8 @@ export default function SubscriptionBillingInformationCardPresentation({
               <p className="font-bold text-xl">
                 ¥
                 {(subscription.updateCycle.unit === timeUnit.month
-                  ? subscription.amount
-                  : subscription.amount / 12
+                  ? subscription.amount / subscription.updateCycle.number
+                  : subscription.amount / subscription.updateCycle.number / 12
                 ).toLocaleString()}
               </p>
             </div>
@@ -89,8 +89,8 @@ export default function SubscriptionBillingInformationCardPresentation({
               <p className="font-bold text-xl">
                 ¥
                 {(subscription.updateCycle.unit === timeUnit.month
-                  ? subscription.amount * 12
-                  : subscription.amount
+                  ? (subscription.amount / subscription.updateCycle.number) * 12
+                  : subscription.amount / subscription.updateCycle.number
                 ).toLocaleString()}
               </p>
             </div>
