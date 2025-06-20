@@ -221,3 +221,24 @@ export function validateCancellationMethod(
   }
   return { type: ok, value: validated as CancellationMethod };
 }
+
+export function monthlyCost(subscription: SubscriptionDetail): number {
+  switch (subscription.updateCycle.unit) {
+    case timeUnit.month:
+      return subscription.fee / subscription.updateCycle.number;
+    case timeUnit.year:
+      return subscription.fee / subscription.updateCycle.number / 12;
+    default:
+      return subscription.fee;
+  }
+}
+export function yearlyCost(subscription: SubscriptionDetail): number {
+  switch (subscription.updateCycle.unit) {
+    case timeUnit.month:
+      return (subscription.fee / subscription.updateCycle.number) * 12;
+    case timeUnit.year:
+      return subscription.fee / subscription.updateCycle.number;
+    default:
+      return subscription.fee;
+  }
+}
