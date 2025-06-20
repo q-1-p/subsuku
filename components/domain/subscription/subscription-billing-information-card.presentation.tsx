@@ -8,7 +8,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { type SubscriptionDetail, currencyId, timeUnit } from "@/domain/type";
+import {
+  type SubscriptionDetail,
+  currencyId,
+  monthlyCost,
+  timeUnit,
+  yearlyCost,
+} from "@/domain/type";
 
 const currencyCodes = {
   [currencyId.jpy]: "JPY",
@@ -75,11 +81,7 @@ export default function SubscriptionBillingInformationCardPresentation({
                 月額コスト
               </h3>
               <p className="font-bold text-xl">
-                ¥
-                {(subscription.updateCycle.unit === timeUnit.month
-                  ? subscription.amount / subscription.updateCycle.number
-                  : subscription.amount / subscription.updateCycle.number / 12
-                ).toLocaleString()}
+                ¥{monthlyCost(subscription).toLocaleString()}
               </p>
             </div>
             <div>
@@ -87,11 +89,7 @@ export default function SubscriptionBillingInformationCardPresentation({
                 年間コスト
               </h3>
               <p className="font-bold text-xl">
-                ¥
-                {(subscription.updateCycle.unit === timeUnit.month
-                  ? (subscription.amount / subscription.updateCycle.number) * 12
-                  : subscription.amount / subscription.updateCycle.number
-                ).toLocaleString()}
+                ¥{yearlyCost(subscription).toLocaleString()}
               </p>
             </div>
             <div>
