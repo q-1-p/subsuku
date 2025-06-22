@@ -1,6 +1,7 @@
 import { type } from "arktype";
 
 import { type Result, err, ok } from "@/lib/result";
+import { getDaysInMonth, getDaysInYear } from "date-fns";
 
 //#region Brand
 const userIdBrand = Symbol();
@@ -26,7 +27,7 @@ export const subscriptionIdSchema = type("string.uuid");
 export const subscriptionNameSchema = type("0 < string < 32");
 export const updateCycleSchema = type({
   number: "number > 0",
-  unit: "0 | 1", // バリデーション時に再起エラーになるので直接定義
+  unit: "2 | 0 | 1", // バリデーション時に再起エラーになるので直接定義
 });
 export const cancellationMethodIdSchema = type("string.uuid");
 export const cancellationMethodUrlSchema = type("string.url");
@@ -64,6 +65,7 @@ export const currencyId = {
   btc: 1000,
 } as const;
 export const timeUnit = {
+  day: 2,
   month: 0,
   year: 1,
 } as const;
@@ -222,8 +224,25 @@ export function validateCancellationMethod(
   return { type: ok, value: validated as CancellationMethod };
 }
 
+export function timeUnitName(value: TimeUnit): "日" | "月" | "年" {
+  switch (value) {
+    case timeUnit.day:
+      return "日";
+    case timeUnit.month:
+      return "月";
+    case timeUnit.year:
+      return "年";
+  }
+}
+
 export function monthlyCost(subscription: SubscriptionDetail): number {
   switch (subscription.updateCycle.unit) {
+    case timeUnit.day: {
+      return (
+        (subscription.fee / subscription.updateCycle.number) *
+        getDaysInMonth(new Date())
+      );
+    }
     case timeUnit.month:
       return subscription.fee / subscription.updateCycle.number;
     case timeUnit.year:
@@ -234,6 +253,12 @@ export function monthlyCost(subscription: SubscriptionDetail): number {
 }
 export function yearlyCost(subscription: SubscriptionDetail): number {
   switch (subscription.updateCycle.unit) {
+    case timeUnit.day: {
+      return (
+        (subscription.fee / subscription.updateCycle.number) *
+        getDaysInYear(new Date())
+      );
+    }
     case timeUnit.month:
       return (subscription.fee / subscription.updateCycle.number) * 12;
     case timeUnit.year:

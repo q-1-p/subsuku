@@ -68,9 +68,16 @@ export default function SubscriptionBillingInformationCardPresentation({
               </h3>
               <p className="text-base">
                 {subscription.updateCycle.number}
-                {subscription.updateCycle.unit === timeUnit.month
-                  ? "ヶ月"
-                  : "年"}
+                {(() => {
+                  switch (subscription.updateCycle.unit) {
+                    case timeUnit.day:
+                      return "日";
+                    case timeUnit.month:
+                      return "ヶ月";
+                    case timeUnit.year:
+                      return "年";
+                  }
+                })()}
               </p>
             </div>
           </div>
