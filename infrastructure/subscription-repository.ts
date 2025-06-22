@@ -2,9 +2,9 @@ import {
   addDays,
   addMonths,
   addYears,
+  differenceInDays,
+  differenceInMonths,
   format,
-  getDaysInMonth,
-  getDaysInYear,
 } from "date-fns";
 import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
 
@@ -188,8 +188,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     userId: UserId,
     active = true,
   ): Promise<Result<number, undefined>> => {
-    const today = format(new Date(), "yyyy-MM-dd");
-    const nextMonthDate = format(addMonths(new Date(), 1), "yyyy-MM-dd");
+    const today = new Date();
+    const nextMonthDate = addMonths(today, 1);
 
     const currenciesResult = await new CurrencyRepository().findAll();
     if (currenciesResult.type === err) {
@@ -200,8 +200,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .execute({
         userId: userId,
         active,
-        today,
-        nextUpdate: nextMonthDate,
+        today: format(today, "yyyy-MM-dd"),
+        nextUpdate: format(nextMonthDate, "yyyy-MM-dd"),
       })
       .then((datum) => {
         if (datum.length === 0) {
@@ -213,25 +213,23 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
         const fee = datum
           .map(
-            (subscription) =>
-              +subscription.amount *
+            (data) =>
+              +data.amount *
               Number(
-                currenciesResult.value.get(
-                  subscription.currencyId as CurrencyId,
-                ),
+                currenciesResult.value.get(data.currencyId as CurrencyId),
               ) *
               ((unit: TimeUnit) => {
                 switch (unit) {
                   case timeUnit.day: {
-                    return (
-                      getDaysInMonth(new Date()) /
-                      subscription.updateCycleNumber
+                    return Math.ceil(
+                      differenceInDays(nextMonthDate, data.nextUpdate) /
+                        data.updateCycleNumber,
                     );
                   }
                   default:
                     return 1;
                 }
-              })(subscription.updateCycleUnit as TimeUnit),
+              })(data.updateCycleUnit as TimeUnit),
           )
           .reduce((a, b) => a + b);
         return {
@@ -248,8 +246,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
     userId: UserId,
     active = true,
   ): Promise<Result<number, undefined>> => {
-    const today = format(new Date(), "yyyy-MM-dd");
-    const nextYearDate = format(addYears(new Date(), 1), "yyyy-MM-dd");
+    const today = new Date();
+    const nextYearDate = addYears(today, 1);
 
     const currenciesResult = await new CurrencyRepository().findAll();
     if (currenciesResult.type === err) {
@@ -260,8 +258,8 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .execute({
         userId: userId,
         active,
-        today,
-        nextUpdate: nextYearDate,
+        today: format(today, "yyyy-MM-dd"),
+        nextUpdate: format(nextYearDate, "yyyy-MM-dd"),
       })
       .then((datum) => {
         if (datum.length === 0) {
@@ -273,26 +271,28 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
         const fee = datum
           .map(
-            (subscription) =>
-              +subscription.amount *
+            (data) =>
+              +data.amount *
               Number(
-                currenciesResult.value.get(
-                  subscription.currencyId as CurrencyId,
-                ),
+                currenciesResult.value.get(data.currencyId as CurrencyId),
               ) *
               ((unit: TimeUnit) => {
                 switch (unit) {
                   case timeUnit.day: {
-                    return (
-                      getDaysInYear(new Date()) / subscription.updateCycleNumber
+                    return Math.ceil(
+                      differenceInDays(nextYearDate, data.nextUpdate) /
+                        data.updateCycleNumber,
                     );
                   }
                   case timeUnit.month:
-                    return 12 / subscription.updateCycleNumber;
+                    return Math.ceil(
+                      (differenceInMonths(nextYearDate, data.nextUpdate) + 1) /
+                        data.updateCycleNumber,
+                    );
                   default:
                     return 1;
                 }
-              })(subscription.updateCycleUnit as TimeUnit),
+              })(data.updateCycleUnit as TimeUnit),
           )
           .reduce((a, b) => a + b);
 
