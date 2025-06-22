@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { type SubscriptionDetail, timeUnit } from "@/domain/type";
+import { type SubscriptionDetail, timeUnitName } from "@/domain/type";
 import { deleteSubscription } from "./_lib/actions";
 import { subscriptionsAtom } from "./_lib/jotai";
 
@@ -46,7 +46,7 @@ export default function SubscriptionSummaryCard({
           </Link>
         </p>
         <p className="text-muted-foreground text-sm">
-          {subscription.updateCycle.unit === timeUnit.year ? "年額" : "月額"} ¥
+          {timeUnitName(subscription.updateCycle.unit)}額 ¥
           {Math.round(subscription.fee).toLocaleString()}
         </p>
       </div>

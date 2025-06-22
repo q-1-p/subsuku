@@ -40,6 +40,7 @@ import {
   currencyIdSchema,
   subscriptionNameSchema,
   timeUnit,
+  timeUnitName,
   updateCycleSchema,
 } from "@/domain/type";
 import { registerSubscription, updateSubscription } from "./_lib/actions";
@@ -322,7 +323,7 @@ export function SubscriptionEditFormPresentation({
                       <SelectContent>
                         {Object.entries(timeUnit).map(([key, value]) => (
                           <SelectItem key={key} value={value.toString()}>
-                            {`${value === timeUnit.month ? "月" : "年"}毎`}
+                            {`${timeUnitName(value)}毎`}
                           </SelectItem>
                         ))}
                       </SelectContent>

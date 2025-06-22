@@ -1,4 +1,11 @@
-import { addDays, addMonths, addYears, format } from "date-fns";
+import {
+  addDays,
+  addMonths,
+  addYears,
+  format,
+  getDaysInMonth,
+  getDaysInYear,
+} from "date-fns";
 import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db";
@@ -10,6 +17,7 @@ import {
   type Subscription,
   type SubscriptionDetail,
   type SubscriptionId,
+  type TimeUnit,
   type UserId,
   timeUnit,
 } from "@/domain/type";
@@ -205,9 +213,25 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
         const fee = datum
           .map(
-            (x) =>
-              +x.amount *
-              Number(currenciesResult.value.get(x.currencyId as CurrencyId)),
+            (subscription) =>
+              +subscription.amount *
+              Number(
+                currenciesResult.value.get(
+                  subscription.currencyId as CurrencyId,
+                ),
+              ) *
+              ((unit: TimeUnit) => {
+                switch (unit) {
+                  case timeUnit.day: {
+                    return (
+                      getDaysInMonth(new Date()) /
+                      subscription.updateCycleNumber
+                    );
+                  }
+                  default:
+                    return 1;
+                }
+              })(subscription.updateCycleUnit as TimeUnit),
           )
           .reduce((a, b) => a + b);
         return {
@@ -249,12 +273,26 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
         const fee = datum
           .map(
-            (x) =>
-              +x.amount *
-              Number(currenciesResult.value.get(x.currencyId as CurrencyId)) *
-              (x.updateCycleUnit === timeUnit.month
-                ? 12 / x.updateCycleNumber
-                : 1),
+            (subscription) =>
+              +subscription.amount *
+              Number(
+                currenciesResult.value.get(
+                  subscription.currencyId as CurrencyId,
+                ),
+              ) *
+              ((unit: TimeUnit) => {
+                switch (unit) {
+                  case timeUnit.day: {
+                    return (
+                      getDaysInYear(new Date()) / subscription.updateCycleNumber
+                    );
+                  }
+                  case timeUnit.month:
+                    return 12 / subscription.updateCycleNumber;
+                  default:
+                    return 1;
+                }
+              })(subscription.updateCycleUnit as TimeUnit),
           )
           .reduce((a, b) => a + b);
 
