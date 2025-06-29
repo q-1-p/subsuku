@@ -18,6 +18,8 @@ jobs:
 
       - name: Merge to production
         run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout production
           git merge --no-ff origin/${{ github.event.pull_request.base.ref }}
           git push origin production
