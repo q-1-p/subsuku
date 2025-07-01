@@ -1,4 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
 
@@ -22,6 +23,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="ja" suppressHydrationWarning>
         <body className="flex min-h-screen flex-col">
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID as string} />
           {children}
           <SiteFooter />
           <Toaster />
