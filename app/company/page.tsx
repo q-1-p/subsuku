@@ -18,7 +18,7 @@ export default function CompanyPage() {
     {
       id: "representative",
       title: "代表者名",
-      content: "仮",
+      content: "U",
     },
     {
       id: "profile",
@@ -34,6 +34,18 @@ export default function CompanyPage() {
           className="text-blue-600 hover:underline"
         >
           subsuku.jp+contact@gmail.com
+        </a>
+      ),
+    },
+    {
+      id: "X",
+      title: "X",
+      content: (
+        <a
+          href="https://x.com/c4Ydw9AkGT72115"
+          className="text-blue-600 hover:underline"
+        >
+          公式アカウント
         </a>
       ),
     },
