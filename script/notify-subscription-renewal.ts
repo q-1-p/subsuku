@@ -57,7 +57,17 @@ ${subscriptionNames.map((name) => `・${name}`).join("\n")}
 ---------------------`,
     };
 
-    await transporter.sendMail(mailOptions);
+    let retryCount = 0;
+    while (retryCount < 3) {
+      try {
+        await transporter.sendMail(mailOptions);
+        break;
+      } catch (error) {
+        retryCount++;
+        console.warn("メール送信時にエラーが発生しました:", error);
+        await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
+      }
+    }
   }
 
   console.log(`${subscriptions.size}件のメールを送信しました`);
