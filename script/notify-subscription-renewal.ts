@@ -65,6 +65,9 @@ ${subscriptionNames.map((name) => `・${name}`).join("\n")}
       } catch (error) {
         retryCount++;
         console.warn("メール送信時にエラーが発生しました:", error);
+        if (3 <= retryCount) {
+          throw error;
+        }
         await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
       }
     }
