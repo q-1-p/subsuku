@@ -1,0 +1,75 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "assist": { 
+    "actions": { 
+      "source": { 
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              // ===== react packages =====
+              // react関連パッケージを優先してimport
+              { "type": false, "source": ["react*", "react/**"] },
+
+              // ===== npm packages =====
+              // react*,react/**以外のnpmパッケージを全てキャッチ
+              { "type": false, "source": ":PACKAGE:" },
+              ":BLANK_LINE:",
+
+              // ===== lib modules =====
+              // ./libディレクトリを優先してimport
+              { "type": false, "source": "./lib/**" },
+
+              // ===== user modules =====
+              // ./libディレクトリ以外のユーザー定義モジュールをまとめてキャッチ
+              { "type": false, "source": ":PATH:" },
+              ":BLANK_LINE:",
+
+              // ===== other imports =====
+              // 上記に引っかからない全てのimportをここでキャッチ
+              { "type": false },
+              ":BLANK_LINE:",
+
+              // ===== import types =====
+              // 最後にtype-only importをキャッチ
+              { "type": true }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "includes": ["**"]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "nursery": { "useSortedClasses": "warn" },
+      "correctness": {
+        "noUnusedImports": "warn",
+        "noUnusedVariables": "warn"
+      }
+    }
+  },
+  "css": {
+    "formatter": {
+      "enabled": true,
+      "indentStyle": "space",
+      "indentWidth": 2
+    },
+    "linter": {
+      "enabled": true
+    },
+    "parser": {
+      "cssModules": true
+    }
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  }
+}
