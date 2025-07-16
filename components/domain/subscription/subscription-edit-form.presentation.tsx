@@ -182,16 +182,17 @@ export function SubscriptionEditFormPresentation({
                       {showSuggestions && (
                         <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg">
                           {filteredSuggestions.map((suggestion) => (
-                            <div
+                            <button
                               key={suggestion}
-                              className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                              type="button"
+                              className="w-full cursor-pointer px-4 py-2 text-left hover:bg-gray-100"
                               onMouseDown={(e) => {
                                 e.preventDefault(); // onBlurが先に発火するのを防ぐ
                                 handleSuggestionClick(suggestion);
                               }}
                             >
                               {suggestion}
-                            </div>
+                            </button>
                           ))}
                         </div>
                       )}
