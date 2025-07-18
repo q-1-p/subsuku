@@ -4,7 +4,9 @@ import AggregationCard from "../../base/aggregation-card";
 
 export default function SubscriptionsCountCardPresentation({
   count,
-}: { count: number }) {
+}: {
+  count: number;
+}) {
   return (
     <AggregationCard
       title="サブスクリプション数"

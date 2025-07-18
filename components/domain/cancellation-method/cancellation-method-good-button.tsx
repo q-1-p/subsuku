@@ -1,8 +1,13 @@
 "use client";
 
+import { useActionState, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { ThumbsUp } from "lucide-react";
-import { useActionState, useState } from "react";
+
+import {
+  deleteGoodForCancellationMethod,
+  evaluateGoodToCancellationMethod,
+} from "./_lib/actions";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,10 +16,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  deleteGoodForCancellationMethod,
-  evaluateGoodToCancellationMethod,
-} from "./_lib/actions";
 
 export default function CancellationMethodGoodButton({
   cancellationMethodId,

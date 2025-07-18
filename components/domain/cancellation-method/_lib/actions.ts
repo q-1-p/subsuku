@@ -2,8 +2,9 @@
 
 import { auth } from "@clerk/nextjs/server";
 
-import type { CancellationMethodDetail } from "@/domain/type";
 import { searchCancellationMethods as search } from "./fetcher";
+
+import type { CancellationMethodDetail } from "@/domain/type";
 
 export async function searchCancellationMethods(
   _prev: unknown,

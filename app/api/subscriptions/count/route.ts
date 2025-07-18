@@ -1,9 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import type { IUserRepository } from "@/domain/user/user-repository";
+import { err, ok } from "@/lib/result";
+
 import { SubscriptionRepository } from "@/infrastructure/subscription-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
-import { err, ok } from "@/lib/result";
+
+import type { IUserRepository } from "@/domain/user/user-repository";
 
 const userRepository: IUserRepository = new UserRepository();
 const subscriptionRepository = new SubscriptionRepository();

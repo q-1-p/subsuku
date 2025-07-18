@@ -1,3 +1,5 @@
+import { formatDate } from "date-fns";
+
 import {
   Accordion,
   AccordionContent,
@@ -12,8 +14,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import type { CancellationMethodDetail } from "@/domain/type";
-import { formatDate } from "date-fns";
 
 export function CancellationMethodDetailCardPresentation({
   cancellationMethod,

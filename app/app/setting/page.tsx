@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-
 import { SiteHeader } from "@/components/domain/site/site-header";
 import { UserSettingBoard } from "@/components/domain/user/user-setting-board";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "設定 | さぶ空く",

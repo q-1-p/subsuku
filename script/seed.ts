@@ -11,8 +11,7 @@ import {
   subscriptionsTable,
   usersTable,
 } from "@/db/schema";
-import { currencyId } from "@/domain/type";
-import { timeUnit } from "@/domain/type";
+import { currencyId, timeUnit } from "@/domain/type";
 
 async function seed() {
   try {

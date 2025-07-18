@@ -1,7 +1,11 @@
+import { useActionState } from "react";
 import { useAtom } from "jotai";
 import { EditIcon, ExternalLink, Trash2Icon } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
+
+import { deleteCancellationMethod } from "./_lib/actions";
+import { cancellationMethodsAtom } from "./_lib/jotai";
+import { CancellationMethodLinkIcon } from "./cancellation-method-link-icon";
 
 import CopyTextToClipBoardButton from "@/components/case/copy-text-to-clipboard-button";
 import CancellationMethodBookmarkButton from "@/components/domain/cancellation-method/cancellation-method-bookmark-button";
@@ -20,10 +24,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import type { CancellationMethodDetail } from "@/domain/type";
-import { deleteCancellationMethod } from "./_lib/actions";
-import { cancellationMethodsAtom } from "./_lib/jotai";
-import { CancellationMethodLinkIcon } from "./cancellation-method-link-icon";
 
 export function CancellationMethodSummaryCard({
   cancellationMethod,

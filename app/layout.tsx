@@ -1,9 +1,11 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import type { Metadata } from "next";
 import { Toaster } from "sonner";
 
+import type { Metadata } from "next";
+
 import "@/app/globals.css";
+
 import SiteFooter from "@/components/domain/site/site-footer";
 
 export const metadata: Metadata = {

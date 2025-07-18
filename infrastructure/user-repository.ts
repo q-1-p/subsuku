@@ -1,5 +1,7 @@
-import { eq, inArray } from "drizzle-orm";
-import { sql } from "drizzle-orm";
+import { clerkClient } from "@clerk/nextjs/server";
+import { eq, inArray, sql } from "drizzle-orm";
+
+import { err, ok, type Result } from "@/lib/result";
 
 import { db, dbSocket } from "@/db";
 import {
@@ -11,9 +13,8 @@ import {
   usersTable,
 } from "@/db/schema";
 import { type UserId, validateUserId } from "@/domain/type";
+
 import type { IUserRepository } from "@/domain/user/user-repository";
-import { type Result, err, ok } from "@/lib/result";
-import { clerkClient } from "@clerk/nextjs/server";
 
 const findUserQuery = db.query.usersTable
   .findFirst({

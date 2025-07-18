@@ -1,14 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
+import { err } from "@/lib/result";
+
 import {
   validateCancellationMethodId,
   validateSubscriptionId,
 } from "@/domain/type";
-import type { IUserRepository } from "@/domain/user/user-repository";
 import { SubscriptionRepository } from "@/infrastructure/subscription-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
-import { err } from "@/lib/result";
+
+import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
+import type { IUserRepository } from "@/domain/user/user-repository";
 
 const userRepository: IUserRepository = new UserRepository();
 const subscriptionRepository: ISubscriptionRepository =

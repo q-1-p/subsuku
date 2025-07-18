@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { Button } from "../ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -9,11 +11,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
 
 export default function LoginDialog({
   children,
-}: { children: React.ReactNode }) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>

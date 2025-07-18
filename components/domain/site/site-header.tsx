@@ -2,10 +2,11 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+import UserIcon from "../user/user-icon";
+
 import Header from "@/components/base/header";
 import LoginDialog from "@/components/case/login-dialog";
 import { Button } from "@/components/ui/button";
-import UserIcon from "../user/user-icon";
 
 export async function SiteHeader({
   backLink,

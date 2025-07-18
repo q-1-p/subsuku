@@ -1,10 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { type } from "arktype";
 import { useAtom } from "jotai";
 import { Search } from "lucide-react";
-import { useEffect, useState } from "react";
+
+import { searchCancellationMethods } from "./_lib/actions";
+import { cancellationMethodsAtom } from "./_lib/jotai";
+import { CancellationMethodSummaryCard } from "./cancellation-method-summary-card";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,9 +20,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { searchCancellationMethods } from "./_lib/actions";
-import { cancellationMethodsAtom } from "./_lib/jotai";
-import { CancellationMethodSummaryCard } from "./cancellation-method-summary-card";
 
 const sortItem = {
   none: "none",

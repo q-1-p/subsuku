@@ -1,10 +1,11 @@
-import fs from "node:fs";
-import path from "node:path";
-import type { Metadata } from "next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import fs from "node:fs";
+import path from "node:path";
 import { SiteHeader } from "@/components/domain/site/site-header";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "利用規約 | さぶ空く",

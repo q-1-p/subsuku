@@ -1,7 +1,7 @@
 import { type } from "arktype";
-
-import { type Result, err, ok } from "@/lib/result";
 import { getDaysInMonth, getDaysInYear } from "date-fns";
+
+import { err, ok, type Result } from "@/lib/result";
 
 //#region Brand
 const userIdBrand = Symbol();

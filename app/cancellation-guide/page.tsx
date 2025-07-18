@@ -1,12 +1,13 @@
 import { SignedIn } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
-import type { Metadata } from "next";
 import Link from "next/link";
 
 import { CancellationMethodListPanel } from "@/components/domain/cancellation-method/cancellation-method-list-panel.container";
 import CancellationMethodSubmissionPanel from "@/components/domain/cancellation-method/cancellation-method-submission-panel";
 import { SiteHeader } from "@/components/domain/site/site-header";
 import { Button } from "@/components/ui/button";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "サブスクリプション解約ガイド | さぶ空く",

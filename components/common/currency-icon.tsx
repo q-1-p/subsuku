@@ -7,8 +7,9 @@ import {
   PoundSterling,
 } from "lucide-react";
 
-import type { CurrencyId } from "@/domain/type";
 import { currencyId as currencyIdType } from "@/domain/type";
+
+import type { CurrencyId } from "@/domain/type";
 
 export default function CurrencyIcon({
   className,

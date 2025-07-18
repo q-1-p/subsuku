@@ -4,7 +4,9 @@ import AggregationCard from "../../base/aggregation-card";
 
 export default function SubscriptionsMonthlyTotalFeeCardPresentation({
   fee,
-}: { fee: number }) {
+}: {
+  fee: number;
+}) {
   return (
     <AggregationCard
       title="登録金額"

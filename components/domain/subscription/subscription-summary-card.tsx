@@ -1,9 +1,12 @@
 "use client";
 
+import { useActionState } from "react";
 import { useSetAtom } from "jotai";
 import { EditIcon, Settings, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
+
+import { deleteSubscription } from "./_lib/actions";
+import { subscriptionsAtom } from "./_lib/jotai";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,12 +17,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { type SubscriptionDetail, timeUnitName } from "@/domain/type";
-import { deleteSubscription } from "./_lib/actions";
-import { subscriptionsAtom } from "./_lib/jotai";
 
 export default function SubscriptionSummaryCard({
   subscription,
-}: { subscription: SubscriptionDetail }) {
+}: {
+  subscription: SubscriptionDetail;
+}) {
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
     if (await deleteSubscription(_, formData)) {
       setSubscriptions((prev) => prev.filter((s) => s.id !== subscription.id));

@@ -1,15 +1,17 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { v4 } from "uuid";
 
-import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
+import { err } from "@/lib/result";
+
 import {
   validateCancellationMethod,
   validateCancellationMethodId,
 } from "@/domain/type";
-import type { IUserRepository } from "@/domain/user/user-repository";
 import { CancellationMethodRepository } from "@/infrastructure/cancellation-method-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
-import { err } from "@/lib/result";
-import { v4 } from "uuid";
+
+import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
+import type { IUserRepository } from "@/domain/user/user-repository";
 
 const userRepository: IUserRepository = new UserRepository();
 const cancellationMethodRepository: ICancellationMethodRepository =

@@ -1,10 +1,15 @@
 "use client";
 
+import { useActionState, useState } from "react";
 import { useForm, useTransform } from "@tanstack/react-form";
 import { type } from "arktype";
 import { Plus, TrashIcon } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+
+import {
+  registerCancellationMethod,
+  updateCancellationMethod,
+} from "./_lib/actions";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,16 +33,12 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
   type CancellationMethodDetail,
-  type SubscriptionDetail,
   cancellationMethodFreeTextSchema,
   cancellationMethodPrecautionsSchema,
   cancellationMethodStepsSchema,
+  type SubscriptionDetail,
   subscriptionNameSchema,
 } from "@/domain/type";
-import {
-  registerCancellationMethod,
-  updateCancellationMethod,
-} from "./_lib/actions";
 
 const cancellationMethodEditFormScheme = type({
   id: "string.uuid | string == 0",

@@ -6,7 +6,9 @@ import { SubscriptionEditFormPresentation } from "./subscription-edit-form.prese
 
 export async function SubscriptionEditForm({
   subscriptionId,
-}: { subscriptionId?: string }) {
+}: {
+  subscriptionId?: string;
+}) {
   const subscription = subscriptionId
     ? await fetchSubscription(subscriptionId)
     : undefined;

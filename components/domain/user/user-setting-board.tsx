@@ -1,12 +1,11 @@
 "use client";
 
+import { useActionState } from "react";
 import { Label } from "@radix-ui/react-label";
 import { useForm, useTransform } from "@tanstack/react-form";
 import { type } from "arktype";
-import { useActionState } from "react";
 import { toast } from "sonner";
 
-import { mailAddressSchema } from "@/domain/type";
 import { Button } from "../../ui/button";
 import {
   Card,
@@ -17,6 +16,8 @@ import {
 } from "../../ui/card";
 import { Input } from "../../ui/input";
 import { deleteAccount, updateEmail } from "./_lib/actions";
+
+import { mailAddressSchema } from "@/domain/type";
 
 const validator = type({
   mailAddress: mailAddressSchema,

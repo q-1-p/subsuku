@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import { SiteHeader } from "@/components/domain/site/site-header";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "運営者情報 | さぶ空く",

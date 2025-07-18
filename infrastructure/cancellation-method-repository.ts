@@ -1,5 +1,7 @@
 import { and, eq, inArray, like, sql } from "drizzle-orm";
 
+import { err, ok, type Result } from "@/lib/result";
+
 import { db, dbSocket } from "@/db";
 import {
   cancellationMethodBookmarksTable,
@@ -8,6 +10,7 @@ import {
   cancellationStepsTable,
   subscriptionsTable,
 } from "@/db/schema";
+
 import type { ICancellationMethodRepository } from "@/domain/cancellation-method/cancellation-method-repository";
 import type {
   CancellationMethod,
@@ -15,7 +18,6 @@ import type {
   CancellationMethodId,
   UserId,
 } from "@/domain/type";
-import { type Result, err, ok } from "@/lib/result";
 
 const searchNameQuery = db
   .select()

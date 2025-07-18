@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-
 import { CancellationMethodEditForm } from "@/components/domain/cancellation-method/cancellation-method-edit-form.container";
 import { SiteHeader } from "@/components/domain/site/site-header";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "解約方法編集 | さぶ空く",
@@ -14,7 +14,9 @@ export const metadata: Metadata = {
 
 export default async function Page({
   params,
-}: { params: Promise<{ id: string }> }) {
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   return (

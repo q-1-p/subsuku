@@ -1,9 +1,10 @@
-import type { WebhookEvent } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
 import { db } from "@/db";
 import { usersTable } from "@/db/schema";
-import { NextResponse } from "next/server";
+
+import type { WebhookEvent } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   console.log("Received webhook request");

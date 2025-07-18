@@ -4,7 +4,9 @@ import AggregationCard from "../../base/aggregation-card";
 
 export default function SubscriptionsYearlyFeeCardPresentation({
   fee,
-}: { fee: number }) {
+}: {
+  fee: number;
+}) {
   return (
     <AggregationCard
       title="年間コスト"

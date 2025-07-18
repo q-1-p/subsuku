@@ -1,8 +1,9 @@
 import "server-only";
 
-import type { SubscriptionDetail } from "@/domain/type";
 import { fetchSubscriptions } from "./_lib/fetcher";
 import SubscriptionListPresentation from "./subscription-list.presentation";
+
+import type { SubscriptionDetail } from "@/domain/type";
 
 export default async function SubscriptionList({
   upcoming,

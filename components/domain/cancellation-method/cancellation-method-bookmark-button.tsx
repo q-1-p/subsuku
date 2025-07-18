@@ -1,6 +1,11 @@
+import { useActionState, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { BookmarkCheckIcon, BookmarkPlusIcon } from "lucide-react";
-import { useActionState, useState } from "react";
+
+import {
+  bookmarkCancellationMethod,
+  releaseBookmarkForCancellationMethod,
+} from "./_lib/actions";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,10 +14,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  bookmarkCancellationMethod,
-  releaseBookmarkForCancellationMethod,
-} from "./_lib/actions";
 
 export default function CancellationMethodBookmarkButton({
   cancellationMethodId,

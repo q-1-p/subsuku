@@ -1,3 +1,5 @@
+import SubscriptionList from "./subscription-list.container";
+
 import {
   Card,
   CardContent,
@@ -5,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import SubscriptionList from "./subscription-list.container";
 
 export default function SubscriptionsToBeUpdatePanel({
   isOverView,

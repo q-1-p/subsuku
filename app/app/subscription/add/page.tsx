@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-
 import { SiteHeader } from "@/components/domain/site/site-header";
 import { SubscriptionEditForm } from "@/components/domain/subscription/subscription-edit-form.container";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "サブスクリプション追加 | さぶ空く",

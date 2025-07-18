@@ -1,5 +1,4 @@
 import { FileText, Plus } from "lucide-react";
-import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SiteHeader } from "@/components/domain/site/site-header";
@@ -11,6 +10,8 @@ import SubscriptionsToBeUpdatePanel from "@/components/domain/subscription/subsc
 import SubscriptionsYearlyFeeCard from "@/components/domain/subscription/subscriptions-yearly-fee-card.container";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "ダッシュボード | さぶ空く",

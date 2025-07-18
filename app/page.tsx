@@ -1,5 +1,4 @@
 import { ArrowRight } from "lucide-react";
-import type { Metadata } from "next";
 import Image from "next/image";
 
 import LoginDialog from "@/components/case/login-dialog";
@@ -9,6 +8,8 @@ import ClockIcon from "@/components/common/clock-icon";
 import FunctionCard from "@/components/common/function-card";
 import { SiteHeader } from "@/components/domain/site/site-header";
 import { Button } from "@/components/ui/button";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "さぶ空く",

@@ -8,9 +8,11 @@ import {
 } from "date-fns";
 import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
 
+import { err, ok, type Result } from "@/lib/result";
+import { CurrencyRepository } from "./currency-repository";
+
 import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
-import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 import {
   type CancellationMethodId,
   type CurrencyId,
@@ -18,11 +20,11 @@ import {
   type SubscriptionDetail,
   type SubscriptionId,
   type TimeUnit,
-  type UserId,
   timeUnit,
+  type UserId,
 } from "@/domain/type";
-import { type Result, err, ok } from "@/lib/result";
-import { CurrencyRepository } from "./currency-repository";
+
+import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 
 const findSubscriptionQuery = db.query.subscriptionsTable
   .findFirst({

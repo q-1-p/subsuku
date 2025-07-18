@@ -9,7 +9,9 @@ import { CancellationMethodEditFormPresentation } from "./cancellation-method-ed
 
 export async function CancellationMethodEditForm({
   cancellationMethodId,
-}: { cancellationMethodId?: string }) {
+}: {
+  cancellationMethodId?: string;
+}) {
   const cancellationMethod = cancellationMethodId
     ? await fetchCancellationMethod(cancellationMethodId)
     : undefined;

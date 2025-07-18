@@ -1,17 +1,20 @@
 "use client";
 
+import { useActionState } from "react";
 import { useAtom } from "jotai";
 import { Trash2 } from "lucide-react";
 import { redirect } from "next/navigation";
-import { useActionState } from "react";
 
-import { Button } from "@/components/ui/button";
 import { deleteSubscription } from "./_lib/actions";
 import { subscriptionsAtom } from "./_lib/jotai";
 
+import { Button } from "@/components/ui/button";
+
 export default function SubscriptionDeleteIcon({
   subscriptionId,
-}: { subscriptionId: string }) {
+}: {
+  subscriptionId: string;
+}) {
   const [subscriptions, setSubscriptions] = useAtom(subscriptionsAtom);
   const [_, action] = useActionState(async (_: unknown, formData: FormData) => {
     if (await deleteSubscription(_, formData)) {

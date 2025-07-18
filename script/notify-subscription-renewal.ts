@@ -1,8 +1,9 @@
-import { db } from "@/db";
-import { subscriptionsTable, usersTable } from "@/db/schema";
 import { addDays, formatDate } from "date-fns";
 import { eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
+
+import { db } from "@/db";
+import { subscriptionsTable, usersTable } from "@/db/schema";
 
 export const sendMail = async () => {
   const transporter = nodemailer.createTransport({

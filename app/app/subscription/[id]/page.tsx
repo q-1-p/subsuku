@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-
 import { SiteHeader } from "@/components/domain/site/site-header";
 import SubscriptionInformationPanel from "@/components/domain/subscription/subscription-information-panel";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "サブスクリプション詳細 | さぶ空く",
@@ -15,7 +15,9 @@ export const metadata: Metadata = {
 
 export default async function SubscriptionDetailPage({
   params,
-}: { params: Promise<{ id: string }> }) {
+}: {
+  params: Promise<{ id: string }>;
+}) {
   return (
     <>
       <SiteHeader backLink="/app/dashboard" backText="ダッシュボードに戻る" />
