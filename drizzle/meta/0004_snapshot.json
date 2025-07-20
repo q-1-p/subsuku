@@ -1,0 +1,507 @@
+{
+  "id": "ee015582-4e48-42dc-823e-5746a3eff9c0",
+  "prevId": "9f899804-142d-4296-bfa7-24d09275490e",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.cancellation_method_bookmarks": {
+      "name": "cancellation_method_bookmarks",
+      "schema": "",
+      "columns": {
+        "cancellation_method_id": {
+          "name": "cancellation_method_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "cancellation_method_bookmarks_cancellation_method_id_cancellation_methods_id_fk": {
+          "name": "cancellation_method_bookmarks_cancellation_method_id_cancellation_methods_id_fk",
+          "tableFrom": "cancellation_method_bookmarks",
+          "tableTo": "cancellation_methods",
+          "columnsFrom": [
+            "cancellation_method_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cancellation_method_bookmarks_user_id_users_id_fk": {
+          "name": "cancellation_method_bookmarks_user_id_users_id_fk",
+          "tableFrom": "cancellation_method_bookmarks",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "cancellation_method_bookmarks_cancellation_method_id_user_id_pk": {
+          "name": "cancellation_method_bookmarks_cancellation_method_id_user_id_pk",
+          "columns": [
+            "cancellation_method_id",
+            "user_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cancellation_method_goods": {
+      "name": "cancellation_method_goods",
+      "schema": "",
+      "columns": {
+        "cancellation_method_id": {
+          "name": "cancellation_method_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "cancellation_method_goods_cancellation_method_id_cancellation_methods_id_fk": {
+          "name": "cancellation_method_goods_cancellation_method_id_cancellation_methods_id_fk",
+          "tableFrom": "cancellation_method_goods",
+          "tableTo": "cancellation_methods",
+          "columnsFrom": [
+            "cancellation_method_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cancellation_method_goods_user_id_users_id_fk": {
+          "name": "cancellation_method_goods_user_id_users_id_fk",
+          "tableFrom": "cancellation_method_goods",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "cancellation_method_goods_cancellation_method_id_user_id_pk": {
+          "name": "cancellation_method_goods_cancellation_method_id_user_id_pk",
+          "columns": [
+            "cancellation_method_id",
+            "user_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cancellation_methods": {
+      "name": "cancellation_methods",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "subscription_name": {
+          "name": "subscription_name",
+          "type": "varchar(63)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_private": {
+          "name": "is_private",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "precautions": {
+          "name": "precautions",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "free_text": {
+          "name": "free_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url_to_cancel": {
+          "name": "url_to_cancel",
+          "type": "varchar(2083)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_user_id": {
+          "name": "created_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_cancellation_method_id": {
+          "name": "idx_cancellation_method_id",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cancellation_methods_created_user_id_users_id_fk": {
+          "name": "cancellation_methods_created_user_id_users_id_fk",
+          "tableFrom": "cancellation_methods",
+          "tableTo": "users",
+          "columnsFrom": [
+            "created_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cancellation_steps": {
+      "name": "cancellation_steps",
+      "schema": "",
+      "columns": {
+        "cancellation_method_id": {
+          "name": "cancellation_method_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sequential_order": {
+          "name": "sequential_order",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "procedure": {
+          "name": "procedure",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "cancellation_steps_cancellation_method_id_sequential_order_pk": {
+          "name": "cancellation_steps_cancellation_method_id_sequential_order_pk",
+          "columns": [
+            "cancellation_method_id",
+            "sequential_order"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.currencies": {
+      "name": "currencies",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "smallint",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "exchange_rate": {
+          "name": "exchange_rate",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.notifications": {
+      "name": "notifications",
+      "schema": "",
+      "columns": {
+        "title": {
+          "name": "title",
+          "type": "varchar(63)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "page_url": {
+          "name": "page_url",
+          "type": "varchar(2083)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.subscriptions": {
+      "name": "subscriptions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(63)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric(16, 8)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency_id": {
+          "name": "currency_id",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "next_update": {
+          "name": "next_update",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "update_cycle_number": {
+          "name": "update_cycle_number",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "update_cycle_unit": {
+          "name": "update_cycle_unit",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "linked_cancellation_method_id": {
+          "name": "linked_cancellation_method_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "idx_subscription_id": {
+          "name": "idx_subscription_id",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "subscriptions_user_id_users_id_fk": {
+          "name": "subscriptions_user_id_users_id_fk",
+          "tableFrom": "subscriptions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "subscriptions_currency_id_currencies_id_fk": {
+          "name": "subscriptions_currency_id_currencies_id_fk",
+          "tableFrom": "subscriptions",
+          "tableTo": "currencies",
+          "columnsFrom": [
+            "currency_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "subscriptions_linked_cancellation_method_id_cancellation_methods_id_fk": {
+          "name": "subscriptions_linked_cancellation_method_id_cancellation_methods_id_fk",
+          "tableFrom": "subscriptions",
+          "tableTo": "cancellation_methods",
+          "columnsFrom": [
+            "linked_cancellation_method_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "mail_address": {
+          "name": "mail_address",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clerk_id": {
+          "name": "clerk_id",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_mail_address_unique": {
+          "name": "users_mail_address_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "mail_address"
+          ]
+        },
+        "users_clerk_id_unique": {
+          "name": "users_clerk_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "clerk_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -8,7 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function NoticeIcon() {
+import type { Notification } from "@/domain/notification/notification";
+
+export function NotificationIconPresentation({
+  notifications,
+}: {
+  notifications: Notification[];
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -17,7 +23,11 @@ export default function NoticeIcon() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>sample</DropdownMenuItem>
+        {notifications.map((notification) => (
+          <DropdownMenuItem key={notification.updatedAt.toString()}>
+            <a href={notification.pageUrl ?? ""}>{notification.title}</a>
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -103,6 +103,12 @@ export const subscriptionsTable = pgTable(
   (table) => [index("idx_subscription_id").on(table.id)],
 );
 
+export const notificationTable = pgTable("notifications", {
+  title: varchar("title", { length: 63 }).notNull(),
+  pageUrl: varchar("page_url", { length: 2083 }),
+  updatedAt: timestamp("updated_at").primaryKey().defaultNow(),
+});
+
 export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   mailAddress: varchar("mail_address", { length: 255 }).notNull().unique(),

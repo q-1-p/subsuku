@@ -2,6 +2,7 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+import { NotificationIcon } from "../notification/notification-icon-container";
 import UserIcon from "../user/user-icon";
 
 import Header from "@/components/base/header";
@@ -28,6 +29,9 @@ export async function SiteHeader({
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
+          <div className="flex items-center gap-2">
+            <NotificationIcon />
+          </div>
           <div className="flex items-center gap-2">
             <UserIcon />
           </div>
