@@ -10,6 +10,9 @@ jobs:
   run-tests:
     name: Run tests
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app/browser
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

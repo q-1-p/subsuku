@@ -1,4 +1,6 @@
 {
+  "biome.lsp.bin": "./app/browser/node_modules/@biomejs/biome/bin/biome",
+  "biome.configurationPath": "./app/browser/biome.jsonc",
   "cSpell.words": [
     "arktype",
     "cmdk",
