@@ -14,7 +14,7 @@ jobs:
       OPEN_EXCHANGE_RATES_APP_ID: ${{ secrets.OPEN_EXCHANGE_RATES_APP_ID }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
