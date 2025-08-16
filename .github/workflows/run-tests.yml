@@ -1,4 +1,4 @@
-name: Run test
+name: Run tests
 
 on:
   push:
@@ -7,11 +7,12 @@ on:
     branches: [release]
 
 jobs:
-  small-tests:
-    name: Run Small Tests
+  run-tests:
+    name: Run tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
