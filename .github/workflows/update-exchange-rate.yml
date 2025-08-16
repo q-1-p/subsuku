@@ -9,6 +9,9 @@ jobs:
   cron:
     name: Update exchange rate
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app/browser
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       OPEN_EXCHANGE_RATES_APP_ID: ${{ secrets.OPEN_EXCHANGE_RATES_APP_ID }}
