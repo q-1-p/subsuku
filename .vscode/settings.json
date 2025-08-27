@@ -5,9 +5,15 @@
     "arktype",
     "cmdk",
     "opennextjs",
+    "serde",
     "sonner",
     "subsuku",
     "svix",
     "uuidv"
+  ],
+  "rust-analyzer.linkedProjects": [
+    "./internal/api/Cargo.toml",
+    "./internal/domain/Cargo.toml",
+    "./internal/infrastructure/Cargo.toml"
   ]
 }

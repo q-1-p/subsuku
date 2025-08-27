@@ -1,0 +1,23 @@
+FROM rust:latest
+
+# Install cargo-watch for hot reloading
+RUN cargo install cargo-watch
+
+WORKDIR /app
+
+# Copy workspace configuration first for better caching
+COPY Cargo.toml Cargo.lock ./
+
+# Copy source code
+COPY api ./api
+COPY domain ./domain
+COPY infrastructure ./infrastructure
+
+# Build dependencies first (for better caching)
+RUN cargo build --release
+
+# Expose port
+EXPOSE 8000
+
+# Use cargo-watch for hot reloading with more specific options
+CMD ["cargo", "watch", "-q", "-c", "-w", "api/src", "-w", "domain/src", "-w", "infrastructure/src", "-x", "run --bin api"]

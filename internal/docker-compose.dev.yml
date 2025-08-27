@@ -1,0 +1,32 @@
+version: '3.8'
+
+name: substrack
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: substrack-api:dev
+    container_name: substrack-api-dev
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount source code for hot reloading
+      - ./api:/app/api
+      - ./domain:/app/domain
+      - ./infrastructure:/app/infrastructure
+      - ./Cargo.toml:/app/Cargo.toml
+      - ./Cargo.lock:/app/Cargo.lock
+      # Cache cargo registry and target directory
+      - substrack-cargo-cache:/usr/local/cargo/registry
+      - substrack-target-cache:/app/target
+    environment:
+      - RUST_LOG=debug
+      - RUST_BACKTRACE=1
+    stdin_open: true
+    tty: true
+
+volumes:
+  substrack-cargo-cache:
+  substrack-target-cache:
