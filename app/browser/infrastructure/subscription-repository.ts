@@ -1,5 +1,4 @@
 import {
-  addDays,
   addMonths,
   addYears,
   differenceInDays,
@@ -17,7 +16,6 @@ import {
   type CancellationMethodId,
   type CurrencyId,
   type Subscription,
-  type SubscriptionDetail,
   type SubscriptionId,
   type TimeUnit,
   timeUnit,
@@ -26,16 +24,6 @@ import {
 
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 
-const findSubscriptionQuery = db.query.subscriptionsTable
-  .findFirst({
-    where: (subscription) =>
-      and(
-        eq(subscription.userId, sql.placeholder("userId")),
-        eq(subscription.id, sql.placeholder("subscriptionId")),
-      ),
-    orderBy: (subscription) => [asc(subscription.nextUpdate)],
-  })
-  .prepare("find");
 const searchSubscriptionsForNextUpdateQuery = db
   .select()
   .from(subscriptionsTable)
@@ -49,141 +37,10 @@ const searchSubscriptionsForNextUpdateQuery = db
   )
   .orderBy(asc(subscriptionsTable.nextUpdate))
   .prepare("searchForNextUpdate");
-const searchSubscriptionsQuery = db
-  .select()
-  .from(subscriptionsTable)
-  .where(
-    and(
-      eq(subscriptionsTable.userId, sql.placeholder("userId")),
-      eq(subscriptionsTable.active, sql.placeholder("active")),
-    ),
-  )
-  .orderBy(asc(subscriptionsTable.nextUpdate))
-  .prepare("findAll");
-
-const countSubscriptionsQuery = db
-  .select({ count: sql<number>`count(*)` })
-  .from(subscriptionsTable)
-  .where(
-    and(
-      eq(subscriptionsTable.userId, sql.placeholder("userId")),
-      eq(subscriptionsTable.active, sql.placeholder("active")),
-    ),
-  )
-  .prepare("count");
 
 export class SubscriptionRepository implements ISubscriptionRepository {
   private currencyRepository = new CurrencyRepository();
 
-  public find = async (
-    userId: UserId,
-    subscriptionId: SubscriptionId,
-  ): Promise<Result<SubscriptionDetail, string>> => {
-    const currenciesResult = await this.currencyRepository.findAll();
-    if (currenciesResult.type === err) {
-      return { type: err as typeof err, error: "" };
-    }
-
-    return findSubscriptionQuery
-      .execute({
-        userId: userId,
-        subscriptionId: subscriptionId,
-      })
-      .then((data) => {
-        if (!data) {
-          throw new Error("サブスクが見つかりませんでした");
-        }
-
-        return {
-          type: ok as typeof ok,
-          value: {
-            id: data.id,
-            name: data.name,
-            fee:
-              +data.amount *
-              Number(currenciesResult.value.get(data.currencyId as CurrencyId)),
-            amount: +data.amount,
-            currencyId: data.currencyId,
-            nextUpdate: new Date(data.nextUpdate),
-            updateCycle: {
-              number: data.updateCycleNumber,
-              unit: data.updateCycleUnit,
-            },
-            linkCancellationMethodId: data.linkedCancellationMethodId,
-          } as SubscriptionDetail,
-        };
-      })
-      .catch((error) => {
-        console.error(error);
-        return { type: err as typeof err, error: error.message };
-      });
-  };
-
-  public findAll = async (
-    userId: UserId,
-    active = true,
-    upcoming = false,
-  ): Promise<Result<SubscriptionDetail[], undefined>> => {
-    const today = format(new Date(), "yyyy-MM-dd");
-    const upcomingDate = format(addDays(new Date(), 7), "yyyy-MM-dd");
-    const currenciesResult = await this.currencyRepository.findAll();
-    if (currenciesResult.type === err) {
-      return { type: err as typeof err, error: undefined };
-    }
-
-    return (
-      upcoming
-        ? searchSubscriptionsForNextUpdateQuery
-        : searchSubscriptionsQuery
-    )
-      .execute({
-        userId: userId,
-        active,
-        today,
-        upcomingDate,
-      })
-      .then((x) => {
-        const subscriptions = x.map(
-          (data) =>
-            ({
-              id: data.id,
-              name: data.name,
-              fee:
-                +data.amount *
-                Number(
-                  currenciesResult.value.get(data.currencyId as CurrencyId),
-                ),
-              amount: +data.amount,
-              currencyId: data.currencyId,
-              nextUpdate: new Date(data.nextUpdate),
-              updateCycle: {
-                number: data.updateCycleNumber,
-                unit: data.updateCycleUnit,
-              },
-            }) as SubscriptionDetail,
-        );
-        return { type: ok as typeof ok, value: subscriptions };
-      })
-      .catch((error) => {
-        console.error(error);
-        return { type: err as typeof err, error: undefined };
-      });
-  };
-
-  public count = (
-    userId: UserId,
-    active = true,
-  ): Promise<Result<number, undefined>> => {
-    return countSubscriptionsQuery
-      .execute({ userId: userId, active })
-      .then((res) => {
-        return { type: ok as typeof ok, value: +res[0].count };
-      })
-      .catch((error) => {
-        console.error(error);
-        return { type: err as typeof err, error: undefined };
-      });
-  };
   public fetchMonthlyFee = async (
     userId: UserId,
     active = true,

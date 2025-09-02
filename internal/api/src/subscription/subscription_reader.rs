@@ -62,8 +62,22 @@ pub async fn get_subscriptions(headers: HeaderMap) -> impl IntoResponse {
     Ok((StatusCode::OK, Json(subscriptions)))
 }
 
-pub async fn count_registered_subscriptions() -> impl IntoResponse {
-    StatusCode::NOT_FOUND
+pub async fn count_registered_subscriptions(headers: HeaderMap) -> impl IntoResponse {
+    let authorization = match extract_authorization(&headers) {
+        Some(authorization) => authorization,
+        None => return Err(StatusCode::UNAUTHORIZED),
+    };
+    let clerk_id = match UserClerkId::new(&authorization) {
+        Ok(clerk_id) => clerk_id,
+        Err(_) => return Err(StatusCode::UNAUTHORIZED),
+    };
+
+    let count = match SubscriptionQueryRepository::count_subscriptions(&clerk_id).await {
+        Ok(r) => r,
+        Err(_) => return Err(StatusCode::BAD_REQUEST),
+    };
+
+    Ok((StatusCode::OK, Json(count)))
 }
 
 pub async fn get_monthly_fee() -> impl IntoResponse {

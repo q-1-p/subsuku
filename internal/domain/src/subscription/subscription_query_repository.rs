@@ -15,7 +15,7 @@ pub trait SubscriptionQueryRepository {
         user_clerk_id: &UserClerkId,
     ) -> Result<Vec<SubscriptionQueryObject>, ()>;
 
-    async fn count_subscriptions(user_clerk_id: &UserClerkId) -> Result<u8, String>;
+    async fn count_subscriptions(user_clerk_id: &UserClerkId) -> Result<u8, ()>;
 
     async fn get_monthly_fee(user_clerk_id: &UserClerkId) -> Result<f64, String>;
     async fn get_yearly_fee(user_clerk_id: &UserClerkId) -> Result<f64, String>;

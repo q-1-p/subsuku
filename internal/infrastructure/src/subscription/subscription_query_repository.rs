@@ -79,7 +79,6 @@ impl i for SubscriptionQueryRepository {
                 return Err(());
             }
         };
-
         let user_id = match get_user_id(user_clerk_id).await {
             Ok(r) => r,
             Err(_) => {
@@ -123,23 +122,32 @@ impl i for SubscriptionQueryRepository {
         }
     }
 
-    async fn count_subscriptions(user_clerk_id: &UserClerkId) -> Result<u8, String> {
+    async fn count_subscriptions(user_clerk_id: &UserClerkId) -> Result<u8, ()> {
         let pool = match get_pool().await {
             Ok(result) => result,
-            Err(e) => return Err(e.to_string()),
+            Err(e) => {
+                println!("Error: {}", e);
+                return Err(());
+            }
         };
-
         let user_id = match get_user_id(user_clerk_id).await {
             Ok(r) => r,
-            Err(_) => return Err("User id is not found".to_string()),
+            Err(e) => {
+                println!("Error: {}", e);
+                return Err(());
+            }
         };
+
         match sqlx::query_scalar::<_, i64>("SELECT COUNT(*) FROM subscriptions WHERE user_id = $1")
             .bind(&user_id.value)
             .fetch_one(pool)
             .await
         {
             Ok(count) => Ok(count as u8),
-            Err(e) => Err(e.to_string()),
+            Err(e) => {
+                println!("Error: {}", e);
+                Err(())
+            }
         }
     }
 
