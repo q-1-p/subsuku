@@ -1,4 +1,4 @@
-use chrono::{Datelike, Local, Months};
+use chrono::{Datelike, Local, Months, NaiveDate};
 use domain::{
     subscription::{
         subscription_id::SubscriptionId, subscription_query_object::SubscriptionQueryObject,
@@ -151,22 +151,28 @@ impl i for SubscriptionQueryRepository {
         }
     }
 
-    async fn get_monthly_fee(user_clerk_id: &UserClerkId) -> Result<f64, String> {
+    async fn get_monthly_fee(user_clerk_id: &UserClerkId) -> Result<f64, ()> {
         let pool = match get_pool().await {
             Ok(result) => result,
-            Err(e) => return Err(e.to_string()),
+            Err(e) => {
+                println!("Error: {}", e);
+                return Err(());
+            }
         };
         let user_id = match get_user_id(user_clerk_id).await {
             Ok(r) => r,
-            Err(_) => return Err("User id is not found".to_string()),
+            Err(_) => {
+                println!("User id is not found");
+                return Err(());
+            }
         };
 
         let today = Local::now().date_naive();
         let next_month = today.checked_add_months(Months::new(1)).unwrap();
-        let duration = next_month.signed_duration_since(today).num_days();
 
         #[derive(sqlx::FromRow)]
         pub struct Row {
+            next_update: NaiveDate,
             update_cycle_number: i16,
             update_cycle_unit: i16,
             fee: f64,
@@ -174,6 +180,7 @@ impl i for SubscriptionQueryRepository {
         match sqlx::query_as::<_, Row>(
             "
             SELECT
+                subscriptions.next_update,
                 subscriptions.update_cycle_number,
                 subscriptions.update_cycle_unit,
                 SUM((subscriptions.amount::float8) * (currencies.exchange_rate::float8))::float8 as fee
@@ -183,32 +190,37 @@ impl i for SubscriptionQueryRepository {
                 currencies
                 ON subscriptions.currency_id = currencies.id
             WHERE
-                user_id = $1 
+                user_id = $1
                 AND subscriptions.next_update >= $2
                 AND subscriptions.next_update < $3
+            GROUP BY
+                subscriptions.next_update,
+                subscriptions.update_cycle_number,
+                subscriptions.update_cycle_unit
             ",
         )
         .bind(&user_id.value)
         .bind(today)
-        .bind(next_month)
+        .bind(next_month_date)
         .fetch_all(pool)
         .await
         {
             Ok(rows) => {
                 let monthly_fee = rows.iter().fold(0.0, |acc, x| {
-                    acc + x.fee
-                        * match x.update_cycle_unit as u8 {
-                            UpdateCycleId::DAILY => {
-                                (duration / x.update_cycle_number as i64) as f64
-                            }
-                            UpdateCycleId::MONTHLY => 1.0,
-                            UpdateCycleId::YEARLY => 1.0,
-                            _ => 0.0,
-                        }
+                    let update_count: u8 = match x.update_cycle_unit as u8 {
+                        UpdateCycleId::DAILY => (next_month_date.signed_duration_since(x.next_update).num_days() as f32 / x.update_cycle_number as f32).ceil() as u8,
+                        UpdateCycleId::MONTHLY => 1,
+                        UpdateCycleId::YEARLY => 1,
+                        _ => 0,
+                    };
+                    acc + x.fee * update_count as f64
                 });
                 Ok(monthly_fee)
             }
-            Err(e) => Err(e.to_string()),
+            Err(e) => {
+                println!("Error: {}", e);
+                Err(())
+            }
         }
     }
     async fn get_yearly_fee(user_clerk_id: &UserClerkId) -> Result<f64, String> {
@@ -247,6 +259,9 @@ impl i for SubscriptionQueryRepository {
                 user_id = $1
                 AND subscriptions.next_update >= $2
                 AND subscriptions.next_update < $3
+            GROUP BY
+                subscriptions.update_cycle_number,
+                subscriptions.update_cycle_unit
             ",
         )
         .bind(&user_id.value)

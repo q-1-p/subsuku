@@ -7,10 +7,6 @@ import type {
 } from "../type";
 
 export interface ISubscriptionRepository {
-  fetchMonthlyFee: (
-    userId: UserId,
-    active?: boolean,
-  ) => Promise<Result<number, undefined>>;
   fetchYearlyFee: (
     userId: UserId,
     active?: boolean,

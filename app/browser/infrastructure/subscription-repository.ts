@@ -41,64 +41,6 @@ const searchSubscriptionsForNextUpdateQuery = db
 export class SubscriptionRepository implements ISubscriptionRepository {
   private currencyRepository = new CurrencyRepository();
 
-  public fetchMonthlyFee = async (
-    userId: UserId,
-    active = true,
-  ): Promise<Result<number, undefined>> => {
-    const today = new Date();
-    const nextMonthDate = addMonths(today, 1);
-
-    const currenciesResult = await new CurrencyRepository().findAll();
-    if (currenciesResult.type === err) {
-      return { type: err as typeof err, error: undefined };
-    }
-
-    return await searchSubscriptionsForNextUpdateQuery
-      .execute({
-        userId: userId,
-        active,
-        today: format(today, "yyyy-MM-dd"),
-        nextUpdate: format(nextMonthDate, "yyyy-MM-dd"),
-      })
-      .then((datum) => {
-        if (datum.length === 0) {
-          return {
-            type: ok as typeof ok,
-            value: 0,
-          };
-        }
-
-        const fee = datum
-          .map(
-            (data) =>
-              +data.amount *
-              Number(
-                currenciesResult.value.get(data.currencyId as CurrencyId),
-              ) *
-              ((unit: TimeUnit) => {
-                switch (unit) {
-                  case timeUnit.day: {
-                    return Math.ceil(
-                      differenceInDays(nextMonthDate, data.nextUpdate) /
-                        data.updateCycleNumber,
-                    );
-                  }
-                  default:
-                    return 1;
-                }
-              })(data.updateCycleUnit as TimeUnit),
-          )
-          .reduce((a, b) => a + b);
-        return {
-          type: ok as typeof ok,
-          value: fee,
-        };
-      })
-      .catch((error) => {
-        console.error(error);
-        return { type: err as typeof err, error: undefined };
-      });
-  };
   public fetchYearlyFee = async (
     userId: UserId,
     active = true,
