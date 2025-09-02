@@ -2,18 +2,15 @@ use uuid::Uuid;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct UserId {
-    pub value: String,
+    pub value: Uuid,
 }
 
 impl UserId {
     pub fn new(id: &str) -> Result<Self, String> {
-        if Uuid::parse_str(id).is_err() {
-            return Err("User ID must be a valid UUID".to_string());
+        match Uuid::parse_str(id) {
+            Ok(uuid) => Ok(Self { value: uuid }),
+            Err(_) => Err("User ID must be a valid UUID".to_string()),
         }
-
-        Ok(Self {
-            value: id.to_string(),
-        })
     }
 }
 
@@ -26,7 +23,7 @@ mod tests {
         let valid_uuid = "550e8400-e29b-41d4-a716-446655440000";
         let result = UserId::new(valid_uuid);
         assert!(result.is_ok());
-        assert_eq!(result.unwrap().value, valid_uuid);
+        assert_eq!(result.unwrap().value.to_string(), valid_uuid);
     }
 
     #[test]

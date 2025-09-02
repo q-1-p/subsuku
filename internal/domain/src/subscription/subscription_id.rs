@@ -3,7 +3,7 @@ use uuid::Uuid;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SubscriptionId {
-    pub value: String,
+    pub value: Uuid,
 }
 
 impl fmt::Display for SubscriptionId {
@@ -14,13 +14,10 @@ impl fmt::Display for SubscriptionId {
 
 impl SubscriptionId {
     pub fn new(id: &str) -> Result<Self, String> {
-        if Uuid::parse_str(id).is_err() {
-            return Err("Subscription ID must be a valid UUID".to_string());
+        match Uuid::parse_str(id) {
+            Ok(uuid) => Ok(Self { value: uuid }),
+            Err(_) => Err("Subscription ID must be a valid UUID".to_string()),
         }
-
-        Ok(Self {
-            value: id.to_string(),
-        })
     }
 }
 
@@ -32,7 +29,7 @@ mod tests {
     fn test_subscription_id_creation() {
         let uuid_str = "550e8400-e29b-41d4-a716-446655440000";
         let id = SubscriptionId::new(uuid_str).unwrap();
-        assert_eq!(id.value, uuid_str);
+        assert_eq!(id.value.to_string(), uuid_str);
     }
 
     #[test]

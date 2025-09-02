@@ -53,8 +53,8 @@ impl i for SubscriptionQueryRepository {
                 currencies as r
                 ON l.currency_id = r.id
             WHERE
-                l.user_id = $1::uuid
-                AND l.id = $2::uuid
+                l.user_id = $1
+                AND l.id = $2
             ",
         )
         .bind(&user_id.value)
@@ -106,7 +106,7 @@ impl i for SubscriptionQueryRepository {
                 currencies as r
                 ON l.currency_id = r.id
             WHERE
-                l.user_id = $1::uuid
+                l.user_id = $1
             ORDER BY
                 l.next_update ASC
             ",
