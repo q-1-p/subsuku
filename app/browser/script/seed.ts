@@ -118,7 +118,7 @@ async function seedSubscriptions(
     .from(subscriptionsTable)
     .then((res) => +res[0].count);
   if (subscriptionsCount === 0) {
-    // サブスクリプションデータの挿入
+    // サブスクデータの挿入
     await db.insert(subscriptionsTable).values([
       {
         id: uuidv4(),

@@ -4,9 +4,8 @@ import { SubscriptionEditForm } from "@/components/domain/subscription/subscript
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "サブスクリプション追加 | さぶ空く",
-  description:
-    "サブスクリプション追加ページです。新しいサブスクリプションの詳細を入力できます。",
+  title: "サブスク追加 | さぶ空く",
+  description: "サブスク追加ページです。新しいサブスクの詳細を入力できます。",
   robots: {
     index: false,
     follow: false,
@@ -21,9 +20,9 @@ export default function Page() {
         <div className="mx-auto max-w-2xl">
           <div className="flex flex-col gap-6">
             <div>
-              <h1 className="font-bold text-2xl">サブスクリプションを追加</h1>
+              <h1 className="font-bold text-2xl">サブスクを追加</h1>
               <p className="mt-1 text-muted-foreground text-sm">
-                新しいサブスクリプションの詳細を入力してください
+                新しいサブスクの詳細を入力してください
               </p>
             </div>
             <SubscriptionEditForm />

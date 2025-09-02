@@ -72,7 +72,7 @@ export function CancellationMethodLinkIcon({
           <DialogHeader>
             <DialogTitle>解約方法を結びつける</DialogTitle>
             <DialogDescription>
-              どのサブスクリプションに結びつけるか選択してください
+              どのサブスクに結びつけるか選択してください
             </DialogDescription>
           </DialogHeader>
           <div className="py-2">

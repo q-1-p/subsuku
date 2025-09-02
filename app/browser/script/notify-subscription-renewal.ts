@@ -45,13 +45,13 @@ export const sendMail = async () => {
     const mailOptions = {
       from: `さぶ空く <${process.env.MAIL_ADDRESS_FOR_NOTIFICATION}>`,
       to: mailAddress,
-      subject: "サブスクリプション更新通知メール",
-      text: `明日、以下のサブスクリプションが更新されます
+      subject: "サブスク更新通知メール",
+      text: `明日、以下のサブスクが更新されます
 
 ${subscriptionNames.map((name) => `・${name}`).join("\n")}
 
 ---------------------
-配信元:       さぶ空く - サブスクリプション管理サービス
+配信元:       さぶ空く - サブスク管理サービス
 サービスURL:  https://substrack.jp
 問い合わせ先: https://tricky-chokeberry-957.notion.site/2051ac83cb968081bd9eecb412a31e92?pvs=105
 配信停止:     http://substrack.jp/app/dashboard から、登録しているサブスクを全て削除してください

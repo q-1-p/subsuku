@@ -4,9 +4,8 @@ import SubscriptionInformationPanel from "@/components/domain/subscription/subsc
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "サブスクリプション詳細 | さぶ空く",
-  description:
-    "サブスクリプション詳細ページです。サブスクリプションの詳細を確認できます。",
+  title: "サブスク詳細 | さぶ空く",
+  description: "サブスク詳細ページです。サブスクの詳細を確認できます。",
   robots: {
     index: false,
     follow: false,

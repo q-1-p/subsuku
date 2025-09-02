@@ -91,7 +91,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       })
       .then((data) => {
         if (!data) {
-          throw new Error("サブスクリプションが見つかりませんでした");
+          throw new Error("サブスクが見つかりませんでした");
         }
 
         return {

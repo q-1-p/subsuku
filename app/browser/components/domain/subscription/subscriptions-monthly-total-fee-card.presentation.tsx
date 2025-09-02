@@ -11,7 +11,7 @@ export default function SubscriptionsMonthlyTotalFeeCardPresentation({
     <AggregationCard
       title="登録金額"
       totalResult={`¥${Math.round(fee).toLocaleString()}`}
-      description="登録されているサブスクリプションの総額"
+      description="登録されているサブスクの総額"
     >
       <CreditCard className="h-4 w-4 text-muted-foreground" />
     </AggregationCard>
