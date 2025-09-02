@@ -90,13 +90,12 @@ export type SubscriptionOverview = {
 export type SubscriptionDetail = {
   id: string;
   name: string;
-  active: boolean;
   fee: number;
   amount: number;
   currencyId: CurrencyId;
   nextUpdate: Date;
   updateCycle: UpdateCycle;
-  linkCancellationMethodId: CancellationMethodId;
+  linkCancellationMethodId: string;
 };
 
 export type CancellationMethodDetail = {

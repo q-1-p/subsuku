@@ -3,7 +3,11 @@ import { v4 } from "uuid";
 
 import { err } from "@/lib/result";
 
-import { validateSubscription, validateSubscriptionId } from "@/domain/type";
+import {
+  type SubscriptionDetail,
+  validateSubscription,
+  validateSubscriptionId,
+} from "@/domain/type";
 import { SubscriptionRepository } from "@/infrastructure/subscription-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
 
@@ -15,29 +19,45 @@ const subscriptionRepository: ISubscriptionRepository =
   new SubscriptionRepository();
 
 export async function GET(req: NextRequest) {
-  const userIdResult = await userRepository.findId(
-    req.headers.get("Authorization") as string,
-  );
-  if (userIdResult.type === err) {
-    return NextResponse.json({}, { status: 401 });
-  }
+  return await fetch(
+    `${process.env.BACKEND_URL}/subscription/${req.nextUrl.searchParams.get("id")}`,
+    {
+      cache: "no-store",
+      headers: {
+        Authorization: req.headers.get("Authorization") as string,
+      },
+      method: "GET",
+    },
+  )
+    .then((res) => {
+      if (!res.ok) {
+        return NextResponse.json({}, { status: res.status });
+      }
 
-  const subscriptionIdResult = validateSubscriptionId(
-    req.nextUrl.searchParams.get("id"),
-  );
-  if (subscriptionIdResult.type === err) {
-    return NextResponse.json({}, { status: 400 });
-  }
-
-  const subscriptionResult = await subscriptionRepository.find(
-    userIdResult.value,
-    subscriptionIdResult.value,
-  );
-  if (subscriptionResult.type === err) {
-    return NextResponse.json({}, { status: 400 });
-  }
-
-  return NextResponse.json(subscriptionResult.value, { status: 200 });
+      return res.json();
+    })
+    .then((subscription) => {
+      return NextResponse.json(
+        {
+          id: subscription.id,
+          name: subscription.name,
+          fee: subscription.fee,
+          amount: subscription.amount,
+          currencyId: subscription.currency_id,
+          nextUpdate: subscription.next_update,
+          updateCycle: {
+            number: subscription.update_cycle_number,
+            unit: subscription.update_cycle_unit_id,
+          },
+          linkCancellationMethodId: subscription.linked_cancellation_method_id,
+        } as SubscriptionDetail,
+        { status: 200 },
+      );
+    })
+    .catch((error) => {
+      console.error(error);
+      return NextResponse.json({}, { status: 400 });
+    });
 }
 
 export async function POST(req: NextRequest) {

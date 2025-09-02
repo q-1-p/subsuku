@@ -16,7 +16,6 @@ describe("SubscriptionBillingInformationCardPresentation", () => {
     const mock: SubscriptionDetail = {
       id: "1",
       name: "Netflix",
-      active: true,
       fee: 1500,
       amount: 100,
       currencyId: currencyId.usd,
@@ -41,7 +40,6 @@ describe("SubscriptionBillingInformationCardPresentation", () => {
     const mock: SubscriptionDetail = {
       id: "1",
       name: "Netflix",
-      active: true,
       fee: 1500,
       amount: 100,
       currencyId: currencyId.usd,
@@ -65,7 +63,6 @@ describe("SubscriptionBillingInformationCardPresentation", () => {
     const mock: SubscriptionDetail = {
       id: "1",
       name: "Netflix",
-      active: true,
       fee: 1500,
       amount: 100,
       currencyId: currencyId.usd,

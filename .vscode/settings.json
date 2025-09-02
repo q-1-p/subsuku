@@ -3,10 +3,16 @@
   "biome.configurationPath": "./app/browser/biome.jsonc",
   "cSpell.words": [
     "arktype",
+    "chrono",
     "cmdk",
+    "Datelike",
+    "dotenv",
+    "ILIKE",
     "opennextjs",
+    "rustls",
     "serde",
     "sonner",
+    "sqlx",
     "subsuku",
     "svix",
     "uuidv"

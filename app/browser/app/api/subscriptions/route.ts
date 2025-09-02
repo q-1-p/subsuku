@@ -1,34 +1,42 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { err, ok } from "@/lib/result";
-
-import { SubscriptionRepository } from "@/infrastructure/subscription-repository";
-import { UserRepository } from "@/infrastructure/user-repository";
-
-import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
-import type { IUserRepository } from "@/domain/user/user-repository";
-
-const userRepository: IUserRepository = new UserRepository();
-const subscriptionRepository: ISubscriptionRepository =
-  new SubscriptionRepository();
+import type { SubscriptionDetail } from "@/domain/type";
 
 export async function GET(req: NextRequest) {
-  const userIdResult = await userRepository.findId(
-    req.headers.get("Authorization") as string,
-  );
-  if (userIdResult.type === err) {
-    return NextResponse.json({}, { status: 401 });
-  }
+  return await fetch(`${process.env.BACKEND_URL}/subscriptions`, {
+    cache: "no-store",
+    headers: {
+      Authorization: req.headers.get("Authorization") as string,
+    },
+    method: "GET",
+  })
+    .then((res) => {
+      if (!res.ok) {
+        return NextResponse.json({}, { status: res.status });
+      }
 
-  const subscriptionsResult = await subscriptionRepository.findAll(
-    userIdResult.value,
-    req.nextUrl.searchParams.get("active") !== "false",
-    req.nextUrl.searchParams.get("upcoming") === "true",
-  );
-  switch (subscriptionsResult.type) {
-    case ok:
-      return NextResponse.json(subscriptionsResult.value, { status: 200 });
-    case err:
+      return res.json();
+    })
+    .then((data) => {
+      const subscriptions = data.map((datum) => {
+        return {
+          id: datum.id,
+          name: datum.name,
+          fee: datum.fee,
+          amount: datum.amount,
+          currencyId: datum.currency_id,
+          nextUpdate: datum.next_update,
+          updateCycle: {
+            number: datum.update_cycle_number,
+            unit: datum.update_cycle_unit_id,
+          },
+          linkCancellationMethodId: datum.linked_cancellation_method_id,
+        } as SubscriptionDetail;
+      });
+      return NextResponse.json(subscriptions, { status: 200 });
+    })
+    .catch((error) => {
+      console.error(error);
       return NextResponse.json({}, { status: 400 });
-  }
+    });
 }

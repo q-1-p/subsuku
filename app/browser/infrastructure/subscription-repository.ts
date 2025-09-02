@@ -99,7 +99,6 @@ export class SubscriptionRepository implements ISubscriptionRepository {
           value: {
             id: data.id,
             name: data.name,
-            active: data.active,
             fee:
               +data.amount *
               Number(currenciesResult.value.get(data.currencyId as CurrencyId)),
@@ -149,7 +148,6 @@ export class SubscriptionRepository implements ISubscriptionRepository {
             ({
               id: data.id,
               name: data.name,
-              active: data.active,
               fee:
                 +data.amount *
                 Number(
