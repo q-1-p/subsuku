@@ -22,17 +22,11 @@ impl i for SubscriptionQueryRepository {
     ) -> Result<SubscriptionQueryObject, ()> {
         let pool = match get_pool().await {
             Ok(result) => result,
-            Err(e) => {
-                println!("Error: {}", e);
-                return Err(());
-            }
+            Err(_) => return Err(()),
         };
         let user_id = match get_user_id(user_clerk_id).await {
             Ok(r) => r,
-            Err(e) => {
-                println!("Error: {}", e);
-                return Err(());
-            }
+            Err(_) => return Err(()),
         };
 
         match sqlx::query_as::<_, SubscriptionRow>(
@@ -74,17 +68,11 @@ impl i for SubscriptionQueryRepository {
     ) -> Result<Vec<SubscriptionQueryObject>, ()> {
         let pool = match get_pool().await {
             Ok(result) => result,
-            Err(e) => {
-                println!("Error: {}", e);
-                return Err(());
-            }
+            Err(_) => return Err(()),
         };
         let user_id = match get_user_id(user_clerk_id).await {
             Ok(r) => r,
-            Err(_) => {
-                println!("User id is not found");
-                return Err(());
-            }
+            Err(_) => return Err(()),
         };
 
         match sqlx::query_as::<_, SubscriptionRow>(
@@ -125,17 +113,11 @@ impl i for SubscriptionQueryRepository {
     async fn count_subscriptions(user_clerk_id: &UserClerkId) -> Result<u8, ()> {
         let pool = match get_pool().await {
             Ok(result) => result,
-            Err(e) => {
-                println!("Error: {}", e);
-                return Err(());
-            }
+            Err(_) => return Err(()),
         };
         let user_id = match get_user_id(user_clerk_id).await {
             Ok(r) => r,
-            Err(e) => {
-                println!("Error: {}", e);
-                return Err(());
-            }
+            Err(_) => return Err(()),
         };
 
         match sqlx::query_scalar::<_, i64>("SELECT COUNT(*) FROM subscriptions WHERE user_id = $1")
@@ -154,17 +136,11 @@ impl i for SubscriptionQueryRepository {
     async fn get_monthly_fee(user_clerk_id: &UserClerkId) -> Result<f64, ()> {
         let pool = match get_pool().await {
             Ok(result) => result,
-            Err(e) => {
-                println!("Error: {}", e);
-                return Err(());
-            }
+            Err(_) => return Err(()),
         };
         let user_id = match get_user_id(user_clerk_id).await {
             Ok(r) => r,
-            Err(_) => {
-                println!("User id is not found");
-                return Err(());
-            }
+            Err(_) => return Err(()),
         };
 
         let today = Local::now().date_naive();
@@ -226,17 +202,11 @@ impl i for SubscriptionQueryRepository {
     async fn get_yearly_fee(user_clerk_id: &UserClerkId) -> Result<f64, ()> {
         let pool = match get_pool().await {
             Ok(result) => result,
-            Err(e) => {
-                println!("Error: {}", e);
-                return Err(());
-            }
+            Err(_) => return Err(()),
         };
         let user_id = match get_user_id(user_clerk_id).await {
             Ok(r) => r,
-            Err(_) => {
-                println!("User id is not found");
-                return Err(());
-            }
+            Err(_) => return Err(()),
         };
 
         let today = Local::now().date_naive();

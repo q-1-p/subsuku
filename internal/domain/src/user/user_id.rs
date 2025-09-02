@@ -6,10 +6,13 @@ pub struct UserId {
 }
 
 impl UserId {
-    pub fn new(id: &str) -> Result<Self, String> {
+    pub fn new(id: &str) -> Result<Self, ()> {
         match Uuid::parse_str(id) {
             Ok(uuid) => Ok(Self { value: uuid }),
-            Err(_) => Err("User ID must be a valid UUID".to_string()),
+            Err(_) => {
+                println!("User ID must be a valid UUID");
+                Err(())
+            }
         }
     }
 }
@@ -31,14 +34,12 @@ mod tests {
         let invalid_uuid = "invalid-uuid";
         let result = UserId::new(invalid_uuid);
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), "User ID must be a valid UUID");
     }
 
     #[test]
     fn test_empty_string() {
         let result = UserId::new("");
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), "User ID must be a valid UUID");
     }
 
     #[test]

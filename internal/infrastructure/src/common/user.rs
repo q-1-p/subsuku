@@ -3,10 +3,10 @@ use sqlx::types::Uuid;
 
 use crate::common::sqlx::get_pool;
 
-pub async fn get_user_id(user_clerk_id: &UserClerkId) -> Result<UserId, String> {
+pub async fn get_user_id(user_clerk_id: &UserClerkId) -> Result<UserId, ()> {
     let pool = match get_pool().await {
         Ok(result) => result,
-        Err(e) => return Err(e.to_string()),
+        Err(_) => return Err(()),
     };
 
     match sqlx::query_scalar::<_, Uuid>("SELECT id FROM users WHERE clerk_id = $1")
@@ -16,8 +16,8 @@ pub async fn get_user_id(user_clerk_id: &UserClerkId) -> Result<UserId, String> 
     {
         Ok(id) => match UserId::new(id.to_string().as_str()) {
             Ok(user_id) => Ok(user_id),
-            Err(e) => return Err(e.to_string()),
+            Err(_) => Err(()),
         },
-        Err(e) => return Err(e.to_string()),
+        Err(_) => Err(()),
     }
 }
