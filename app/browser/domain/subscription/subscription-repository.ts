@@ -1,4 +1,3 @@
-import type { Result } from "../../lib/result";
 import type {
   CancellationMethodId,
   Subscription,
@@ -7,11 +6,6 @@ import type {
 } from "../type";
 
 export interface ISubscriptionRepository {
-  fetchYearlyFee: (
-    userId: UserId,
-    active?: boolean,
-  ) => Promise<Result<number, undefined>>;
-
   insert: (
     userId: UserId,
     subscriptionRegistered: Subscription,

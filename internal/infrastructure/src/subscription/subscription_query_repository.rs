@@ -168,10 +168,10 @@ impl i for SubscriptionQueryRepository {
         };
 
         let today = Local::now().date_naive();
-        let next_month = today.checked_add_months(Months::new(1)).unwrap();
+        let next_month_date = today.checked_add_months(Months::new(1)).unwrap();
 
         #[derive(sqlx::FromRow)]
-        pub struct Row {
+        struct Row {
             next_update: NaiveDate,
             update_cycle_number: i16,
             update_cycle_unit: i16,
@@ -223,23 +223,28 @@ impl i for SubscriptionQueryRepository {
             }
         }
     }
-    async fn get_yearly_fee(user_clerk_id: &UserClerkId) -> Result<f64, String> {
+    async fn get_yearly_fee(user_clerk_id: &UserClerkId) -> Result<f64, ()> {
         let pool = match get_pool().await {
             Ok(result) => result,
-            Err(e) => return Err(e.to_string()),
+            Err(e) => {
+                println!("Error: {}", e);
+                return Err(());
+            }
         };
         let user_id = match get_user_id(user_clerk_id).await {
             Ok(r) => r,
-            Err(_) => return Err("User id is not found".to_string()),
+            Err(_) => {
+                println!("User id is not found");
+                return Err(());
+            }
         };
 
         let today = Local::now().date_naive();
-        let next_year = today.checked_add_months(Months::new(12)).unwrap();
-        let duration_date = next_year.signed_duration_since(today).num_days();
-        let duration_month = (next_year.month() + 12 - today.month()) % 12;
+        let next_year_date = today.checked_add_months(Months::new(12)).unwrap();
 
         #[derive(sqlx::FromRow)]
-        pub struct Row {
+        struct Row {
+            next_update: NaiveDate,
             update_cycle_number: i16,
             update_cycle_unit: i16,
             fee: f64,
@@ -247,11 +252,12 @@ impl i for SubscriptionQueryRepository {
         match sqlx::query_as::<_, Row>(
             "
             SELECT
+                subscriptions.next_update,
                 subscriptions.update_cycle_number,
                 subscriptions.update_cycle_unit,
                 SUM((subscriptions.amount::float8) * (currencies.exchange_rate::float8))::float8 as fee
             FROM
-                subscriptions 
+                subscriptions
             LEFT JOIN
                 currencies
                 ON subscriptions.currency_id = currencies.id
@@ -260,33 +266,37 @@ impl i for SubscriptionQueryRepository {
                 AND subscriptions.next_update >= $2
                 AND subscriptions.next_update < $3
             GROUP BY
+                subscriptions.next_update,
                 subscriptions.update_cycle_number,
                 subscriptions.update_cycle_unit
             ",
         )
         .bind(&user_id.value)
         .bind(today)
-        .bind(next_year)
+        .bind(next_year_date)
         .fetch_all(pool)
         .await
         {
             Ok(rows) => {
                 let yearly_fee = rows.iter().fold(0.0, |acc, x| {
-                    acc + x.fee
-                        * match x.update_cycle_unit as u8 {
-                            UpdateCycleId::DAILY => {
-                                (duration_date / x.update_cycle_number as i64) as f64
-                            }
-                            UpdateCycleId::MONTHLY => {
-                                (duration_month / x.update_cycle_number as u32) as f64
-                            }
-                            UpdateCycleId::YEARLY => 1.0,
-                            _ => 0.0,
-                        }
+                    let update_count: u8 = match x.update_cycle_unit as u8 {
+                        UpdateCycleId::DAILY => (next_year_date.signed_duration_since(x.next_update).num_days() as f32 / x.update_cycle_number as f32).ceil() as u8,
+                        UpdateCycleId::MONTHLY => {
+                            let duration_year = next_year_date.year() - x.next_update.year();
+                            let duration_month = next_year_date.month() as i32 - x.next_update.month() as i32 + if next_year_date.day() < x.next_update.day() { 0 } else { 1 };
+                            ((duration_year * 12) as f32 + duration_month as f32 / x.update_cycle_number as f32).ceil() as u8
+                        },
+                        UpdateCycleId::YEARLY => 1,
+                        _ => 0,
+                    };
+                    acc + x.fee * update_count as f64
                 });
                 Ok(yearly_fee)
             }
-            Err(e) => Err(e.to_string()),
+            Err(e) => {
+                println!("Error: {}", e);
+                Err(())
+            },
         }
     }
 }

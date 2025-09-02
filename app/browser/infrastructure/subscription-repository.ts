@@ -1,108 +1,19 @@
-import {
-  addMonths,
-  addYears,
-  differenceInDays,
-  differenceInMonths,
-  format,
-} from "date-fns";
-import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
-
-import { err, ok, type Result } from "@/lib/result";
-import { CurrencyRepository } from "./currency-repository";
+import { addMonths, addYears, format } from "date-fns";
+import { and, eq, lt } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
 import {
   type CancellationMethodId,
-  type CurrencyId,
   type Subscription,
   type SubscriptionId,
-  type TimeUnit,
   timeUnit,
   type UserId,
 } from "@/domain/type";
 
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 
-const searchSubscriptionsForNextUpdateQuery = db
-  .select()
-  .from(subscriptionsTable)
-  .where(
-    and(
-      eq(subscriptionsTable.userId, sql.placeholder("userId")),
-      eq(subscriptionsTable.active, sql.placeholder("active")),
-      gte(subscriptionsTable.nextUpdate, sql.placeholder("today")),
-      lt(subscriptionsTable.nextUpdate, sql.placeholder("nextUpdate")),
-    ),
-  )
-  .orderBy(asc(subscriptionsTable.nextUpdate))
-  .prepare("searchForNextUpdate");
-
 export class SubscriptionRepository implements ISubscriptionRepository {
-  private currencyRepository = new CurrencyRepository();
-
-  public fetchYearlyFee = async (
-    userId: UserId,
-    active = true,
-  ): Promise<Result<number, undefined>> => {
-    const today = new Date();
-    const nextYearDate = addYears(today, 1);
-
-    const currenciesResult = await new CurrencyRepository().findAll();
-    if (currenciesResult.type === err) {
-      return { type: err as typeof err, error: undefined };
-    }
-
-    return await searchSubscriptionsForNextUpdateQuery
-      .execute({
-        userId: userId,
-        active,
-        today: format(today, "yyyy-MM-dd"),
-        nextUpdate: format(nextYearDate, "yyyy-MM-dd"),
-      })
-      .then((datum) => {
-        if (datum.length === 0) {
-          return {
-            type: ok as typeof ok,
-            value: 0,
-          };
-        }
-
-        const fee = datum
-          .map(
-            (data) =>
-              +data.amount *
-              Number(
-                currenciesResult.value.get(data.currencyId as CurrencyId),
-              ) *
-              ((unit: TimeUnit) => {
-                switch (unit) {
-                  case timeUnit.day: {
-                    return Math.ceil(
-                      differenceInDays(nextYearDate, data.nextUpdate) /
-                        data.updateCycleNumber,
-                    );
-                  }
-                  case timeUnit.month:
-                    return Math.ceil(
-                      (differenceInMonths(nextYearDate, data.nextUpdate) + 1) /
-                        data.updateCycleNumber,
-                    );
-                  default:
-                    return 1;
-                }
-              })(data.updateCycleUnit as TimeUnit),
-          )
-          .reduce((a, b) => a + b);
-
-        return { type: ok as typeof ok, value: fee };
-      })
-      .catch((error) => {
-        console.error(error);
-        return { type: err as typeof err, error: undefined };
-      });
-  };
-
   public insert = (userId: UserId, subscription: Subscription) => {
     return db
       .insert(subscriptionsTable)

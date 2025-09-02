@@ -18,5 +18,5 @@ pub trait SubscriptionQueryRepository {
     async fn count_subscriptions(user_clerk_id: &UserClerkId) -> Result<u8, ()>;
 
     async fn get_monthly_fee(user_clerk_id: &UserClerkId) -> Result<f64, ()>;
-    async fn get_yearly_fee(user_clerk_id: &UserClerkId) -> Result<f64, String>;
+    async fn get_yearly_fee(user_clerk_id: &UserClerkId) -> Result<f64, ()>;
 }
