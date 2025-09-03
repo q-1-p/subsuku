@@ -251,11 +251,7 @@ impl i for SubscriptionQueryRepository {
                 let yearly_fee = rows.iter().fold(0.0, |acc, x| {
                     let update_count: u8 = match x.update_cycle_unit as u8 {
                         UpdateCycleId::DAILY => (next_year_date.signed_duration_since(x.next_update).num_days() as f32 / x.update_cycle_number as f32).ceil() as u8,
-                        UpdateCycleId::MONTHLY => {
-                            let duration_year = next_year_date.year() - x.next_update.year();
-                            let duration_month = next_year_date.month() as i32 - x.next_update.month() as i32 + if next_year_date.day() < x.next_update.day() { 0 } else { 1 };
-                            ((duration_year * 12) as f32 + duration_month as f32 / x.update_cycle_number as f32).ceil() as u8
-                        },
+                        UpdateCycleId::MONTHLY => ((months_since(next_year_date, x.next_update).unwrap() + 1) as f32 / x.update_cycle_number as f32).ceil() as u8,
                         UpdateCycleId::YEARLY => 1,
                         _ => 0,
                     };
@@ -268,5 +264,17 @@ impl i for SubscriptionQueryRepository {
                 Err(())
             },
         }
+    }
+}
+
+fn months_since(this: NaiveDate, base: NaiveDate) -> Option<u32> {
+    let mut months = (this.year() - base.year()) * 12 + (this.month() as i32 - base.month() as i32);
+    if this.day() < base.day() {
+        months -= 1;
+    }
+
+    match months >= 0 {
+        true => Some(months as u32),
+        false => None,
     }
 }

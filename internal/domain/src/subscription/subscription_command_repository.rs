@@ -14,4 +14,14 @@ pub trait SubscriptionCommandRepository {
         user_clerk_id: &UserClerkId,
         subscription: &Subscription,
     ) -> Result<(), ()>;
+    async fn delete_subscription(
+        user_clerk_id: &UserClerkId,
+        subscription_id: &SubscriptionId,
+    ) -> Result<(), ()>;
+
+    async fn link_cancellation_method(
+        user_clerk_id: &UserClerkId,
+        subscription_id: &SubscriptionId,
+        cancellation_method_id: &CancellationMethodId,
+    ) -> Result<(), ()>;
 }

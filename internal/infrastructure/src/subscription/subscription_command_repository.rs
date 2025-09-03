@@ -98,4 +98,59 @@ impl i for SubscriptionCommandRepository {
             }
         }
     }
+
+    async fn delete_subscription(
+        user_clerk_id: &UserClerkId,
+        subscription_id: &SubscriptionId,
+    ) -> Result<(), ()> {
+        let pool = match get_pool().await {
+            Ok(result) => result,
+            Err(_) => return Err(()),
+        };
+        let user_id = match get_user_id(user_clerk_id).await {
+            Ok(r) => r,
+            Err(_) => return Err(()),
+        };
+
+        match sqlx::query("DELETE FROM subscriptions WHERE user_id = $1 AND id = $2")
+            .bind(&user_id.value)
+            .bind(&subscription_id.value)
+            .execute(pool)
+            .await
+        {
+            Ok(_) => Ok(()),
+            Err(e) => {
+                println!("Error: {}", e);
+                Err(())
+            }
+        }
+    }
+
+    async fn link_cancellation_method(
+        user_clerk_id: &UserClerkId,
+        subscription_id: &SubscriptionId,
+        cancellation_method_id: &CancellationMethodId,
+    ) -> Result<(), ()> {
+        let pool = match get_pool().await {
+            Ok(result) => result,
+            Err(()) => return Err(()),
+        };
+        let user_id = match get_user_id(user_clerk_id).await {
+            Ok(r) => r,
+            Err(_) => return Err(()),
+        };
+
+        match sqlx::query("UPDATE subscriptions SET linked_cancellation_method_id = $1 WHERE user_id = $2 AND id = $3")
+            .bind(&cancellation_method_id.value)
+            .bind(&user_id.value)
+            .bind(&subscription_id.value)
+            .execute(pool)
+            .await {
+                Ok(_) => Ok(()),
+                Err(e) => {
+                    println!("Error: {}", e);
+                    Err(())
+            }
+        }
+    }
 }
