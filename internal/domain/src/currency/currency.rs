@@ -11,7 +11,7 @@ pub enum Currency {
 }
 
 impl Currency {
-    pub fn new(id: u16) -> Result<Self, String> {
+    pub fn new(id: u16) -> Result<Self, ()> {
         match id {
             CurrencyId::CNY => Ok(Currency::CNY),
             CurrencyId::JPY => Ok(Currency::JPY),
@@ -19,7 +19,10 @@ impl Currency {
             CurrencyId::USD => Ok(Currency::USD),
             CurrencyId::EUR => Ok(Currency::EUR),
             CurrencyId::BTC => Ok(Currency::BTC),
-            _ => Err(format!("Unsupported currency ID: {}", id)),
+            _ => {
+                println!("Unsupported currency ID: {}", id);
+                Err(())
+            }
         }
     }
 
@@ -53,6 +56,5 @@ mod tests {
     fn test_currency_new_invalid_id() {
         let result = Currency::new(9999);
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), "Unsupported currency ID: 9999");
     }
 }

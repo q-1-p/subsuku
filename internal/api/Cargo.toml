@@ -11,3 +11,5 @@ tokio = { version = "1.47.1", features = ["rt-multi-thread"] }
 
 domain = { path = "../domain" }
 infrastructure = { path = "../infrastructure" }
+chrono = "0.4.41"
+uuid = "1.2.2"

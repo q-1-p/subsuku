@@ -257,7 +257,7 @@ export function SubscriptionEditFormPresentation({
                         {(field) => (
                           <>
                             <Select
-                              name="currencyId"
+                              name="currency_id"
                               defaultValue={`${field.state.value}`}
                               onValueChange={(e) =>
                                 field.handleChange(+e as CurrencyId)
@@ -294,7 +294,7 @@ export function SubscriptionEditFormPresentation({
                   {(field) => (
                     <div className="relative">
                       <Input
-                        name="updateCycle.number"
+                        name="update_cycle_number"
                         min={1}
                         max={99}
                         value={field.state.value}
@@ -315,7 +315,7 @@ export function SubscriptionEditFormPresentation({
                 <form.Field name="updateCycle.unit">
                   {(field) => (
                     <Select
-                      name="updateCycle.unit"
+                      name="update_cycle_unit_id"
                       defaultValue={`${field.state.value}`}
                       onValueChange={(e) => field.handleChange(+e as TimeUnit)}
                     >
@@ -358,7 +358,7 @@ export function SubscriptionEditFormPresentation({
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           <input
                             type="hidden"
-                            name="nextUpdate"
+                            name="next_update"
                             value={field.state.value}
                           />
                         </Button>

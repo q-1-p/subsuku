@@ -12,9 +12,10 @@ impl fmt::Display for SubscriptionName {
 }
 
 impl SubscriptionName {
-    pub fn new(name: &str) -> Result<Self, String> {
+    pub fn new(name: &str) -> Result<Self, ()> {
         if name.len() < 1 || name.len() > 32 {
-            return Err("Name must be between 1 and 32 characters".to_string());
+            println!("Name must be between 1 and 32 characters");
+            return Err(());
         }
 
         Ok(Self {

@@ -1,13 +1,9 @@
+import { format } from "date-fns";
 import { type NextRequest, NextResponse } from "next/server";
-import { v4 } from "uuid";
 
 import { err } from "@/lib/result";
 
-import {
-  type SubscriptionDetail,
-  validateSubscription,
-  validateSubscriptionId,
-} from "@/domain/type";
+import { type SubscriptionDetail, validateSubscriptionId } from "@/domain/type";
 import { SubscriptionRepository } from "@/infrastructure/subscription-repository";
 import { UserRepository } from "@/infrastructure/user-repository";
 
@@ -19,7 +15,7 @@ const subscriptionRepository: ISubscriptionRepository =
   new SubscriptionRepository();
 
 export async function GET(req: NextRequest) {
-  return await fetch(
+  return fetch(
     `${process.env.BACKEND_URL}/subscription/${req.nextUrl.searchParams.get("id")}`,
     {
       cache: "no-store",
@@ -61,69 +57,62 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const userIdResult = await userRepository.findId(
-    req.headers.get("Authorization") as string,
-  );
-  if (userIdResult.type === err) {
-    return NextResponse.json({}, { status: 401 });
-  }
-
   const formData = await req.formData();
-  const subscriptionRegistered = validateSubscription({
-    id: v4(),
-    name: formData.get("name") as string,
-    active: true,
-    amount: Number(formData.get("amount")),
-    currencyId: Number(formData.get("currencyId")),
-    nextUpdate: new Date(formData.get("nextUpdate") as string),
-    updateCycle: {
-      number: Number(formData.get("updateCycle.number")),
-      unit: Number(formData.get("updateCycle.unit")),
+  return fetch(`${process.env.BACKEND_URL}/subscription`, {
+    cache: "no-store",
+    headers: {
+      Authorization: req.headers.get("Authorization") as string,
+      "Content-Type": "application/json",
     },
-  });
-  if (subscriptionRegistered.type === err) {
-    return NextResponse.json({}, { status: 400 });
-  }
-
-  const isRegistered = await subscriptionRepository.insert(
-    userIdResult.value,
-    subscriptionRegistered.value,
-  );
-
-  return NextResponse.json({ status: isRegistered ? 200 : 400 });
+    method: "POST",
+    body: JSON.stringify({
+      name: formData.get("name") as string,
+      active: true,
+      amount: Number(formData.get("amount")),
+      currency_id: Number(formData.get("currency_id")),
+      next_update: format(
+        new Date(formData.get("next_update") as string),
+        "yyyy-MM-dd",
+      ),
+      update_cycle_number: Number(formData.get("update_cycle_number")),
+      update_cycle_unit_id: Number(formData.get("update_cycle_unit_id")),
+    }),
+  })
+    .then((res) => NextResponse.json({}, { status: res.status }))
+    .catch((error) => {
+      console.error(error);
+      return NextResponse.json({}, { status: 400 });
+    });
 }
 
 export async function PUT(req: NextRequest) {
-  const userIdResult = await userRepository.findId(
-    req.headers.get("Authorization") as string,
-  );
-  if (userIdResult.type === err) {
-    return NextResponse.json({}, { status: 401 });
-  }
-
   const formData = await req.formData();
-  const subscriptionUpdated = validateSubscription({
-    id: formData.get("id") as string,
-    name: formData.get("name") as string,
-    active: true,
-    amount: Number(formData.get("amount")),
-    currencyId: Number(formData.get("currencyId")),
-    nextUpdate: new Date(formData.get("nextUpdate") as string),
-    updateCycle: {
-      number: Number(formData.get("updateCycle.number")),
-      unit: Number(formData.get("updateCycle.unit")),
+  return fetch(`${process.env.BACKEND_URL}/subscription`, {
+    cache: "no-store",
+    headers: {
+      Authorization: req.headers.get("Authorization") as string,
+      "Content-Type": "application/json",
     },
-  });
-  if (subscriptionUpdated.type === err) {
-    return NextResponse.json({}, { status: 400 });
-  }
-
-  const isUpdated = await subscriptionRepository.update(
-    userIdResult.value,
-    subscriptionUpdated.value,
-  );
-
-  return NextResponse.json({}, { status: isUpdated ? 200 : 400 });
+    method: "PUT",
+    body: JSON.stringify({
+      id: formData.get("id") as string,
+      name: formData.get("name") as string,
+      active: true,
+      amount: Number(formData.get("amount")),
+      currency_id: Number(formData.get("currency_id")),
+      next_update: format(
+        new Date(formData.get("next_update") as string),
+        "yyyy-MM-dd",
+      ),
+      update_cycle_number: Number(formData.get("update_cycle_number")),
+      update_cycle_unit_id: Number(formData.get("update_cycle_unit_id")),
+    }),
+  })
+    .then((res) => NextResponse.json({}, { status: res.status }))
+    .catch((error) => {
+      console.error(error);
+      return NextResponse.json({}, { status: 400 });
+    });
 }
 
 export async function DELETE(req: NextRequest) {

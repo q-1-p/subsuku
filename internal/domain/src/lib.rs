@@ -1,3 +1,4 @@
+pub mod cancellation_method;
 pub mod currency;
 pub mod mail_address;
 pub mod subscription;

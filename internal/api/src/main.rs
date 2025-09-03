@@ -12,15 +12,25 @@ mod subscription;
 mod user;
 
 use crate::{
-    cancellation_method::{cancellation_method_reader::{get_cancellation_method, get_cancellation_methods}, cancellation_method_writer::{add_bookmark, add_good, delete_bookmark, delete_cancellation_method, delete_good, register_cancellation_method, update_cancellation_method}}, notification::notification_reader::get_notification, subscription::{
+    cancellation_method::{
+        cancellation_method_reader::{get_cancellation_method, get_cancellation_methods},
+        cancellation_method_writer::{
+            add_bookmark, add_good, delete_bookmark, delete_cancellation_method, delete_good,
+            register_cancellation_method, update_cancellation_method,
+        },
+    },
+    notification::notification_reader::get_notification,
+    subscription::{
         subscription_reader::{
             count_registered_subscriptions, get_monthly_fee, get_subscription, get_subscriptions,
             get_yearly_fee,
         },
         subscription_writer::{
-            delete_subscription, link_subscription_to_cancellation_method, register_subscription,
+            add_subscription, delete_subscription, link_subscription_to_cancellation_method,
+            update_subscription,
         },
-    }, user::user_writer::{delete_user, register_user, update_user}
+    },
+    user::user_writer::{delete_user, register_user, update_user},
 };
 
 #[tokio::main]
@@ -44,12 +54,12 @@ async fn main() {
         .route("/cancellation-methods", get(get_cancellation_methods))
         .route("/notifications", get(get_notification))
         .route(
-            "/subscription/{id}",
-            get(get_subscription)
-                .post(register_subscription)
-                .put(register_subscription)
+            "/subscription",
+            post(add_subscription)
+                .put(update_subscription)
                 .delete(delete_subscription),
         )
+        .route("/subscription/{id}", get(get_subscription))
         .route(
             "/subscription/link",
             patch(link_subscription_to_cancellation_method),

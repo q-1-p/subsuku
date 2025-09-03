@@ -7,14 +7,17 @@ pub struct UpdateCycle {
 }
 
 impl UpdateCycle {
-    pub fn new(update_cycle_number: u8, update_cycle_unit: u8) -> Result<Self, String> {
+    pub fn new(update_cycle_number: u8, update_cycle_unit: u8) -> Result<Self, ()> {
         let number = match update_cycle_number {
             1..=255 => update_cycle_number,
-            _ => return Err("Invalid update cycle number".to_string()),
+            _ => {
+                println!("Invalid update cycle number");
+                return Err(());
+            }
         };
         let unit = match UpdateCycleUnit::new(update_cycle_unit) {
             Ok(result) => result,
-            Err(e) => return Err(e),
+            Err(_) => return Err(()),
         };
 
         Ok(Self { number, unit })
@@ -35,7 +38,6 @@ mod tests {
     fn test_new_invalid_number_zero() {
         let result = UpdateCycle::new(0, 1);
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), "Invalid update cycle number");
     }
 
     #[test]

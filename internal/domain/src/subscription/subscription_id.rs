@@ -13,10 +13,13 @@ impl fmt::Display for SubscriptionId {
 }
 
 impl SubscriptionId {
-    pub fn new(id: &str) -> Result<Self, String> {
+    pub fn new(id: &str) -> Result<Self, ()> {
         match Uuid::parse_str(id) {
             Ok(uuid) => Ok(Self { value: uuid }),
-            Err(_) => Err("Subscription ID must be a valid UUID".to_string()),
+            Err(_) => {
+                print!("Subscription ID must be a valid UUID");
+                Err(())
+            }
         }
     }
 }
@@ -49,6 +52,5 @@ mod tests {
     fn test_subscription_id_invalid_uuid() {
         let result = SubscriptionId::new("invalid-uuid");
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), "Subscription ID must be a valid UUID");
     }
 }
