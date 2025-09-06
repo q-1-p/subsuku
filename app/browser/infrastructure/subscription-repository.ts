@@ -5,7 +5,6 @@ import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
 import {
   type CancellationMethodId,
-  type Subscription,
   type SubscriptionId,
   timeUnit,
   type UserId,
@@ -14,25 +13,6 @@ import {
 import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
 
 export class SubscriptionRepository implements ISubscriptionRepository {
-  public insert = (userId: UserId, subscription: Subscription) => {
-    return db
-      .insert(subscriptionsTable)
-      .values({
-        name: subscription.name,
-        userId: userId,
-        amount: subscription.amount.toString(),
-        currencyId: subscription.currencyId,
-        nextUpdate: format(subscription.nextUpdate, "yyyy-MM-dd"),
-        updateCycleNumber: subscription.updateCycle.number,
-        updateCycleUnit: subscription.updateCycle.unit,
-      })
-      .then(() => true)
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
-  };
-
   public updateNextUpdate = async () => {
     const today = format(new Date(), "yyyy-MM-dd");
     const updateSubscriptions = await db
@@ -59,30 +39,6 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         .where(eq(subscriptionsTable.id, subscription.id));
     }
   };
-  public update = (userId: UserId, subscription: Subscription) => {
-    return db
-      .update(subscriptionsTable)
-      .set({
-        name: subscription.name,
-        userId: userId,
-        amount: subscription.amount.toString(),
-        currencyId: subscription.currencyId,
-        nextUpdate: format(subscription.nextUpdate, "yyyy-MM-dd"),
-        updateCycleNumber: subscription.updateCycle.number,
-        updateCycleUnit: subscription.updateCycle.unit,
-      })
-      .where(
-        and(
-          eq(subscriptionsTable.userId, userId),
-          eq(subscriptionsTable.id, subscription.id),
-        ),
-      )
-      .then(() => true)
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
-  };
 
   public linkCancellationMethod = (
     userId: UserId,
@@ -94,25 +50,6 @@ export class SubscriptionRepository implements ISubscriptionRepository {
       .set({
         linkedCancellationMethodId: cancellationMethodId,
       })
-      .where(
-        and(
-          eq(subscriptionsTable.userId, userId),
-          eq(subscriptionsTable.id, subscriptionId),
-        ),
-      )
-      .then(() => true)
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
-  };
-
-  public delete = (
-    userId: UserId,
-    subscriptionId: SubscriptionId,
-  ): Promise<boolean> => {
-    return db
-      .delete(subscriptionsTable)
       .where(
         and(
           eq(subscriptionsTable.userId, userId),

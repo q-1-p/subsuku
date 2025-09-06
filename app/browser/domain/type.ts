@@ -7,14 +7,12 @@ import { err, ok, type Result } from "@/lib/result";
 const userIdBrand = Symbol();
 const mailAddressBrand = Symbol();
 const subscriptionIdBrand = Symbol();
-const subscriptionNameBrand = Symbol();
 const updateCycleBrand = Symbol();
 const cancellationMethodIdBrand = Symbol();
 const cancellationMethodUrlBrand = Symbol();
 const cancellationMethodPrecautionsBrand = Symbol();
 const cancellationMethodFreeTextBrand = Symbol();
 
-const subscriptionBrand = Symbol();
 const cancellationMethodBrand = Symbol();
 //#endregion
 
@@ -45,15 +43,6 @@ export const cancellationMethodSchema = type({
   freeText: cancellationMethodFreeTextSchema,
   updatedAt: "Date",
   linkSubscriptionId: "string.uuid | null | undefined",
-});
-export const subscriptionSchema = type({
-  id: subscriptionIdSchema,
-  name: subscriptionNameSchema,
-  active: "boolean",
-  amount: "number",
-  currencyId: currencyIdSchema,
-  nextUpdate: "Date",
-  updateCycle: updateCycleSchema,
 });
 
 export const currencyId = {
@@ -124,9 +113,6 @@ export type MailAddress = typeof mailAddressSchema.infer & {
 export type SubscriptionId = typeof subscriptionIdSchema.infer & {
   [subscriptionIdBrand]: unknown;
 };
-export type SubscriptionName = typeof subscriptionNameSchema.infer & {
-  [subscriptionNameBrand]: unknown;
-};
 // 独自定義型を含めているとschemaが作れないため、直接objectを指定する
 export type UpdateCycle = { number: number; unit: TimeUnit } & {
   [updateCycleBrand]: unknown;
@@ -146,9 +132,6 @@ export type CancellationMethodFreeText =
     [cancellationMethodFreeTextBrand]: unknown;
   };
 
-export type Subscription = typeof subscriptionSchema.infer & {
-  [subscriptionBrand]: unknown;
-};
 export type CancellationMethod = typeof cancellationMethodSchema.infer & {
   [cancellationMethodBrand]: unknown;
 };
@@ -172,16 +155,6 @@ export function validateSubscriptionId(
   }
   return { type: ok, value: validated as SubscriptionId };
 }
-export function validateSubscriptionName(
-  value: unknown,
-): Result<SubscriptionName, string> {
-  const validated = subscriptionNameSchema(value);
-  if (validated instanceof type.errors) {
-    console.error(validated.summary);
-    return { type: err, error: validated.summary };
-  }
-  return { type: ok, value: validated as SubscriptionName };
-}
 export function validateCancellationMethodId(
   value: unknown,
 ): Result<CancellationMethodId, string> {
@@ -193,25 +166,6 @@ export function validateCancellationMethodId(
   return { type: ok, value: validated as CancellationMethodId };
 }
 
-export function validateSubscription(d: {
-  id: string;
-  name: string;
-  active: boolean;
-  amount: number;
-  currencyId: number;
-  nextUpdate: Date;
-  updateCycle: {
-    number: number;
-    unit: number;
-  };
-}): Result<Subscription, string> {
-  const validated = subscriptionSchema(d);
-  if (validated instanceof type.errors) {
-    console.error(validated.summary);
-    return { type: err, error: validated.summary };
-  }
-  return { type: ok, value: validated as Subscription };
-}
 export function validateCancellationMethod(
   d: typeof cancellationMethodSchema.infer,
 ): Result<CancellationMethod, string> {
