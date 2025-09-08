@@ -1,18 +1,11 @@
 import { addMonths, addYears, format } from "date-fns";
-import { and, eq, lt } from "drizzle-orm";
+import { eq, lt } from "drizzle-orm";
 
 import { db } from "@/db";
 import { subscriptionsTable } from "@/db/schema";
-import {
-  type CancellationMethodId,
-  type SubscriptionId,
-  timeUnit,
-  type UserId,
-} from "@/domain/type";
+import { timeUnit } from "@/domain/type";
 
-import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
-
-export class SubscriptionRepository implements ISubscriptionRepository {
+export class SubscriptionRepository {
   public updateNextUpdate = async () => {
     const today = format(new Date(), "yyyy-MM-dd");
     const updateSubscriptions = await db
@@ -38,28 +31,5 @@ export class SubscriptionRepository implements ISubscriptionRepository {
         })
         .where(eq(subscriptionsTable.id, subscription.id));
     }
-  };
-
-  public linkCancellationMethod = (
-    userId: UserId,
-    subscriptionId: SubscriptionId,
-    cancellationMethodId: CancellationMethodId,
-  ) => {
-    return db
-      .update(subscriptionsTable)
-      .set({
-        linkedCancellationMethodId: cancellationMethodId,
-      })
-      .where(
-        and(
-          eq(subscriptionsTable.userId, userId),
-          eq(subscriptionsTable.id, subscriptionId),
-        ),
-      )
-      .then(() => true)
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
   };
 }

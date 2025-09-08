@@ -133,7 +133,7 @@ impl i for SubscriptionCommandRepository {
     ) -> Result<(), ()> {
         let pool = match get_pool().await {
             Ok(result) => result,
-            Err(()) => return Err(()),
+            Err(_) => return Err(()),
         };
         let user_id = match get_user_id(user_clerk_id).await {
             Ok(r) => r,

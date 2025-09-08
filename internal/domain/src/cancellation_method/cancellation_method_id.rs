@@ -2,7 +2,7 @@ use uuid::Uuid;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CancellationMethodId {
-    pub value: String,
+    pub value: Uuid,
 }
 
 impl CancellationMethodId {
@@ -12,7 +12,7 @@ impl CancellationMethodId {
         }
 
         Ok(Self {
-            value: id.to_string(),
+            value: Uuid::parse_str(id).unwrap(),
         })
     }
 }
@@ -27,7 +27,7 @@ mod tests {
         let result = CancellationMethodId::new(valid_uuid);
 
         assert!(result.is_ok());
-        assert_eq!(result.unwrap().value, valid_uuid);
+        assert_eq!(result.unwrap().value, Uuid::parse_str(valid_uuid).unwrap());
     }
 
     #[test]

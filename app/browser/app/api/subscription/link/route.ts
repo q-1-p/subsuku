@@ -1,48 +1,22 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { err } from "@/lib/result";
-
-import {
-  validateCancellationMethodId,
-  validateSubscriptionId,
-} from "@/domain/type";
-import { SubscriptionRepository } from "@/infrastructure/subscription-repository";
-import { UserRepository } from "@/infrastructure/user-repository";
-
-import type { ISubscriptionRepository } from "@/domain/subscription/subscription-repository";
-import type { IUserRepository } from "@/domain/user/user-repository";
-
-const userRepository: IUserRepository = new UserRepository();
-const subscriptionRepository: ISubscriptionRepository =
-  new SubscriptionRepository();
-
 export async function PATCH(req: NextRequest) {
-  const userIdResult = await userRepository.findId(
-    req.headers.get("Authorization") as string,
-  );
-  if (userIdResult.type === err) {
-    return NextResponse.json({}, { status: 401 });
-  }
-
   const formData = await req.formData();
-  const subscriptionIdResult = validateSubscriptionId(
-    formData.get("subscriptionId"),
-  );
-  const cancellationMethodIdResult = validateCancellationMethodId(
-    formData.get("cancellationMethodId"),
-  );
-  if (
-    subscriptionIdResult.type === err ||
-    cancellationMethodIdResult.type === err
-  ) {
-    return NextResponse.json({}, { status: 400 });
-  }
-
-  const result = await subscriptionRepository.linkCancellationMethod(
-    userIdResult.value,
-    subscriptionIdResult.value,
-    cancellationMethodIdResult.value,
-  );
-
-  return NextResponse.json({}, { status: result ? 200 : 400 });
+  return fetch(`${process.env.BACKEND_URL}/subscription/link`, {
+    cache: "no-store",
+    headers: {
+      Authorization: req.headers.get("Authorization") as string,
+      "Content-Type": "application/json",
+    },
+    method: "PATCH",
+    body: JSON.stringify({
+      subscription_id: formData.get("subscriptionId") as string,
+      cancellation_method_id: formData.get("cancellationMethodId") as string,
+    }),
+  })
+    .then((res) => NextResponse.json({}, { status: res.status }))
+    .catch((error) => {
+      console.error(error);
+      return NextResponse.json({}, { status: 400 });
+    });
 }
