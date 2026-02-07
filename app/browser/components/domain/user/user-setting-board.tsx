@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { Label } from "@radix-ui/react-label";
-import { useForm, useTransform } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { type } from "arktype";
 import { toast } from "sonner";
 
@@ -66,7 +66,6 @@ export function UserSettingBoard() {
     defaultValues: {
       mailAddress: "",
     },
-    transform: useTransform((baseForm) => baseForm, [saveSettings]),
     validators: {
       onMount: validator,
       onChangeAsync: validator,

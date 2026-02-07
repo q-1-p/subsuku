@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { useForm, useTransform } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { type } from "arktype";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
@@ -110,7 +110,6 @@ export function SubscriptionEditFormPresentation({
       },
       nextUpdate: subscription?.nextUpdate.toString() ?? "",
     },
-    transform: useTransform((baseForm) => baseForm, [action]),
     validators: {
       onMount: subscriptionFormScheme,
       onChangeAsync: subscriptionFormScheme,

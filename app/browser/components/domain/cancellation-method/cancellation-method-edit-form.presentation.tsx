@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { useForm, useTransform } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { type } from "arktype";
 import { Plus, TrashIcon } from "lucide-react";
 import Link from "next/link";
@@ -99,7 +99,6 @@ export function CancellationMethodEditFormPresentation({
       freeText: cancellationMethod?.freeText ?? "",
       linkSubscriptionId: "",
     },
-    transform: useTransform((baseForm) => baseForm, [action]),
     validators: {
       onMount: cancellationMethodEditFormScheme,
       onChangeAsync: cancellationMethodEditFormScheme,
