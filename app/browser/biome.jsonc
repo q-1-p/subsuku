@@ -40,7 +40,7 @@
     }
   },
   "files": {
-    "includes": ["**", "!**/ui/**", "!drizzle/**"]
+    "includes": ["**", "!**/ui", "!drizzle"]
   },
   "formatter": {
     "indentStyle": "space"

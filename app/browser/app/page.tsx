@@ -34,7 +34,7 @@ export default function Home() {
                     サブスクを賢く管理
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                    サブスクリプションの一覧を円換算で管理し、更新日前にメール通知。解約方法もまとめて確認できます。
+                    サブスクの一覧を円換算で管理し、更新日前にメール通知。解約方法もまとめて確認できます。
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -66,7 +66,7 @@ export default function Home() {
                   主な機能
                 </h2>
                 <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-ui/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                  サブスクリプション管理をシンプルに、そして効率的に。
+                  サブスク管理をシンプルに、そして効率的に。
                 </p>
               </div>
             </div>

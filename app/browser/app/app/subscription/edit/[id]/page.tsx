@@ -4,9 +4,8 @@ import { SubscriptionEditForm } from "@/components/domain/subscription/subscript
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "サブスクリプション編集 | さぶ空く",
-  description:
-    "サブスクリプション編集ページです。サブスクリプションの詳細を修正できます。",
+  title: "サブスク編集 | さぶ空く",
+  description: "サブスク編集ページです。サブスクの詳細を修正できます。",
   robots: {
     index: false,
     follow: false,
@@ -25,9 +24,9 @@ export default async function Page({
         <div className="mx-auto max-w-2xl">
           <div className="flex flex-col gap-6">
             <div>
-              <h1 className="font-bold text-2xl">サブスクリプションを編集</h1>
+              <h1 className="font-bold text-2xl">サブスクを編集</h1>
               <p className="mt-1 text-muted-foreground text-sm">
-                サブスクリプションの詳細を修正してください
+                サブスクの詳細を修正してください
               </p>
             </div>
             <SubscriptionEditForm subscriptionId={(await params).id} />

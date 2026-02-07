@@ -15,8 +15,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "ダッシュボード | さぶ空く",
-  description:
-    "ダッシュボードページです。サブスクリプション情報の確認などができます。",
+  description: "ダッシュボードページです。サブスク情報の確認などができます。",
   robots: {
     index: false,
     follow: false,

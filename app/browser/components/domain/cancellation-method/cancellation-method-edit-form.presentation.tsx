@@ -139,11 +139,9 @@ export function CancellationMethodEditFormPresentation({
             {!cancellationMethod && (
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="link-toggle">
-                    サブスクリプションと関連付ける
-                  </Label>
+                  <Label htmlFor="link-toggle">サブスクと関連付ける</Label>
                   <p className="text-muted-foreground text-xs">
-                    あなたが管理しているサブスクリプションと関連付けます
+                    あなたが管理しているサブスクと関連付けます
                   </p>
                 </div>
                 <Switch
@@ -215,8 +213,7 @@ export function CancellationMethodEditFormPresentation({
                   return (
                     <>
                       <Label htmlFor="name">
-                        サブスクリプション名{" "}
-                        <span className="text-red-500">*</span>
+                        サブスク名 <span className="text-red-500">*</span>
                       </Label>
                       <div className="relative">
                         <Input
@@ -369,7 +366,7 @@ export function CancellationMethodEditFormPresentation({
             <form.Field name="freeText">
               {(field) => (
                 <Textarea
-                  className=" rounded-xl"
+                  className="rounded-xl"
                   name="freeText"
                   placeholder="自由記述欄"
                   value={field.state.value}

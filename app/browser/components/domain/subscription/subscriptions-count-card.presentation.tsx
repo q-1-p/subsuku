@@ -9,9 +9,9 @@ export default function SubscriptionsCountCardPresentation({
 }) {
   return (
     <AggregationCard
-      title="サブスクリプション数"
+      title="サブスク数"
       totalResult={count}
-      description="アクティブなサブスクリプションのみ"
+      description="アクティブなサブスクのみ"
     >
       <ReceiptText className="h-4 w-4 text-muted-foreground" />
     </AggregationCard>

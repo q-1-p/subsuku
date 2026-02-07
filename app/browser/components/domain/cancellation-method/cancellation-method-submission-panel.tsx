@@ -23,7 +23,7 @@ export default function CancellationMethodSubmissionPanel() {
       <CardContent>
         <div className="space-y-4">
           <p>
-            サブスクリプションの解約方法は頻繁に変更されることがあります。最新の解約方法を知っている場合は、ぜひ共有してください。あなたの投稿が他のユーザーの役に立ちます。
+            サブスクの解約方法は頻繁に変更されることがあります。最新の解約方法を知っている場合は、ぜひ共有してください。あなたの投稿が他のユーザーの役に立ちます。
           </p>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="flex flex-col items-center gap-2 rounded-xl bg-secondary/30 p-4">

@@ -88,10 +88,10 @@ export function SubscriptionEditFormPresentation({
         ? await updateSubscription(_, formData)
         : await registerSubscription(_, formData)
     ) {
-      alert("サブスクリプションを登録しました");
+      alert("サブスクを登録しました");
       window.location.href = "/app/dashboard";
     } else {
-      alert("サブスクリプションの登録に失敗しました");
+      alert("サブスクの登録に失敗しました");
     }
 
     form.state.isSubmitting = false;
@@ -126,7 +126,7 @@ export function SubscriptionEditFormPresentation({
   return (
     <Card className="overflow-hidden rounded-2xl border shadow-sm">
       <CardHeader>
-        <CardTitle>サブスクリプション情報</CardTitle>
+        <CardTitle>サブスク情報</CardTitle>
         <CardDescription>サービスの基本情報を入力してください</CardDescription>
       </CardHeader>
       <CardContent>
@@ -164,7 +164,7 @@ export function SubscriptionEditFormPresentation({
 
                 return (
                   <>
-                    <h4>サブスクリプション名</h4>
+                    <h4>サブスク名</h4>
                     <div className="relative">
                       <Input
                         name="name"

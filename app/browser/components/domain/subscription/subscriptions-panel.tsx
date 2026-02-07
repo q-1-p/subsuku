@@ -21,7 +21,7 @@ export default function SubscriptionsPanel({
     >
       <CardHeader>
         <CardTitle>サブスク一覧</CardTitle>
-        <CardDescription>アクティブなサブスクリプションの一覧</CardDescription>
+        <CardDescription>アクティブなサブスクの一覧</CardDescription>
       </CardHeader>
       <CardContent>
         <SubscriptionList upcoming={false} isOverView={isOverView} />
