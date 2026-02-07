@@ -1,1 +1,8 @@
+# dependencies
+node_modules
+
+# local env files
+.env*
+
+# other
 .DS_Store

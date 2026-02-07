@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "domain",
+  "private": true,
+  "type": "module"
+}

@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/app/*": ["./app/*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/domain/*": ["../../packages/domain/src/*"],
+      "@/infrastructure/*": ["../../packages/infrastructure/src/*"],
+      "@/functional/*": ["../../packages/functional/src/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  }
+}

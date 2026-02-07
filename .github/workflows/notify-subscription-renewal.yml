@@ -9,9 +9,6 @@ jobs:
   cron:
     name: Notify subscription renewal
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./app/browser
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       MAIL_ADDRESS_FOR_NOTIFICATION: ${{ secrets.MAIL_ADDRESS_FOR_NOTIFICATION }}
@@ -31,4 +28,4 @@ jobs:
         run: bun install
 
       - name: Execute script
-        run: bun script/notify-subscription-renewal.ts
+        run: bun scripts/notify-subscription-renewal.ts

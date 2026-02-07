@@ -9,9 +9,6 @@ jobs:
   cron:
     name: Update next update date
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./app/browser
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       TZ: 'Asia/Tokyo'
@@ -28,4 +25,4 @@ jobs:
         run: bun install
 
       - name: Execute script
-        run: bun script/update-next-update.ts
+        run: bun scripts/update-next-update.ts
