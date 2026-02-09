@@ -2,7 +2,7 @@
 node_modules
 
 # local env files
-.env*
+.env.keys
 
 # other
 .DS_Store

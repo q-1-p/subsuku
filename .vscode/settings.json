@@ -1,9 +1,20 @@
 {
   "biome.lsp.bin": "./app/browser/node_modules/@biomejs/biome/bin/biome",
   "biome.configurationPath": "./app/browser/biome.jsonc",
+  "cSpell.ignorePaths": [
+    "package-lock.json",
+    "node_modules",
+    "vscode-extension",
+    ".env",
+    ".git/{info,lfs,logs,refs,objects}/**",
+    ".git/{index,*refs,*HEAD}",
+    ".vscode",
+    ".vscode-insiders"
+  ],
   "cSpell.words": [
     "arktype",
     "cmdk",
+    "dotenvx",
     "neondatabase",
     "opennextjs",
     "registrator",
