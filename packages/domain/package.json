@@ -2,5 +2,8 @@
   "$schema": "https://json.schemastore.org/package",
   "name": "domain",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "arktype": "^2.1.29"
+  }
 }

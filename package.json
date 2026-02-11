@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "dotenvx run -- bun run --cwd apps/browser build",
+    "build": "bun run --cwd apps/browser build",
     "db:generate": "dotenvx run -- drizzle-kit generate",
     "db:migrate": "dotenvx run -- drizzle-kit migrate",
     "db:push": "dotenvx run -- drizzle-kit push",
@@ -18,16 +18,11 @@
     "packages/*"
   ],
   "dependencies": {
-    "@clerk/clerk-sdk-node": "^5.1.6",
-    "@clerk/nextjs": "^6.37.3",
-    "@neondatabase/serverless": "^1.0.2",
     "@types/nodemailer": "^6.4.22",
-    "arktype": "^2.1.29",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.43.1",
     "drizzle-seed": "^0.3.1",
     "nodemailer": "^7.0.13",
-    "svix": "^1.84.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

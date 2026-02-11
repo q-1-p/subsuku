@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
-import { db } from "@/db";
+import { db } from "@/infrastructure/index";
 import { usersTable } from "@/infrastructure/schema";
 
 import type { WebhookEvent } from "@clerk/nextjs/server";

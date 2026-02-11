@@ -5,7 +5,7 @@ import type {
   SubscriptionDetail,
   SubscriptionId,
   UserId,
-} from "../../type";
+} from "../type";
 
 export interface ISubscriptionRepository {
   find: (
